@@ -1,0 +1,29 @@
+{
+    "name": "Experiment1",
+    "base":"<xml> @itn@ </xml>",
+    "sweeps": {
+        "itn": {
+            "itn80": {
+                "@itn@":"80 @irs@"
+            },
+            "itn90": {
+                "@itn@": "@irs@ 90"
+            }
+        },
+        "irs": {
+            "irs66": {
+                "@irs@":"66"
+            },
+            "irs77": {
+                "@irs@": "77"
+            }
+        }
+     },
+    "combinations":
+    [
+        ["itn", "irs"],
+        ["itn80", "irs66"],
+        ["itn80", "irs77"],
+        ["itn90", "irs66"]
+    ]
+}

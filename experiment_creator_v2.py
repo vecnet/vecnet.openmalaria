@@ -1,0 +1,119 @@
+__author__ = 'Alexander'
+
+import  json
+import itertools
+import sys
+
+class ExperimentDescription:
+    """
+    OpenMalaria experiment description is a json file. This class is an SDK for working with that file format.
+    """
+    def __init__(self, experiment):
+        # Accept both json string and dictionary as an input. string is converted to dict automatically
+        if isinstance(experiment, str):
+            experiment = json.loads(experiment)
+        if isinstance(experiment, file):
+            experiment = json.load(experiment)
+        if not isinstance(experiment, dict):
+            raise TypeError("experiment should be either string or dict")
+
+        self.experiment = experiment
+        if "name" in self.experiment:
+            self.name = self.experiment["name"]
+        else:
+            self.name = "Unnamed Experiment"
+
+    def __str__(self):
+        return self.name
+
+    def _product(self, sweeps):
+        if len(sweeps) == 0:
+            return None
+        lst = []
+        for sweep in sweeps:
+            lst.append(self.experiment["sweeps"][sweep].keys())
+        product = itertools.product(*lst)
+        return product
+
+    def _apply_changes(self, scenario, sweep_name, arm_name):
+        arm = self.experiment["sweeps"][sweep_name][arm_name]
+        for param_change in arm:
+            # Each arm may contain more that one parameter
+            # changes are applied in a random order
+            scenario = scenario.replace(param_change, arm[param_change])
+        return scenario
+
+    def _apply_combination(self, scenario, sweeps_applied, combination):
+        for i in range(0, len(sweeps_applied)):
+        # Apply sweeps in order defined by user
+            sweep = sweeps_applied[i]
+            arm = combination[i]
+            scenario = self._apply_changes(scenario, sweep, arm)
+        return scenario
+
+
+    def scenarios(self):
+        """
+        Generator function. Spits out scenarios for this experiment
+        """
+        sweeps_all = self.experiment["sweeps"].keys()
+        # First item in combinations list is a list of sweeps, then - all combinations
+        sweeps_non_fully_factorial = self.experiment["combinations"][0]
+        combinations = self.experiment["combinations"][1:]
+
+        sweeps_fully_factorial = list(set(sweeps_all)-set(sweeps_non_fully_factorial))
+
+        for combination in combinations:
+            scenario = self._apply_combination(self.experiment["base"], sweeps_non_fully_factorial, combination)
+            product = self._product(sweeps_fully_factorial)
+            if product is not None:
+                # Apply fully factorial sweeps
+                for combination1 in product:
+                    yield self._apply_combination(scenario, sweeps_fully_factorial, combination1)
+            else:
+                yield scenario
+
+
+def run_tests():
+    experiment = {}
+    experiment["base"] = "<xml>@itn@ @irs@ </xml>"
+    experiment["sweeps"] = {}
+    experiment["sweeps"]["itn"] = {"itn 80":{"@itn@":"80"},"itn 90":{"@itn@":"90"}}
+    experiment["sweeps"]["irs"] = {"irs 66":{"@irs@":"66"},"irs 90":{"@irs@":"90"}}
+    experiment["combinations"] = [
+["itn","irs"],
+["itn 80", "irs 66"],
+["itn 80", "irs 90"],
+["itn 90", "irs 66"]
+]
+
+    exp = ExperimentDescription(experiment)
+    print exp
+    for scenario in exp.scenarios():
+        print scenario
+
+    print "experiment1.json"
+    fp = open("experiment1.json", "r")
+    exp=ExperimentDescription(json.load(fp))
+    for scenario in exp.scenarios():
+        print scenario
+
+    print "experiment2.json"
+    with open("experiment2.json", "r") as fp:
+        exp=ExperimentDescription(fp)
+    for scenario in exp.scenarios():
+        print scenario
+
+    print "experiment3.json"
+    with open("experiment3.json", "r") as fp:
+        exp=ExperimentDescription(fp)
+    for scenario in exp.scenarios():
+        print scenario
+
+    print "hello"
+
+if __name__ == "__main__":
+    if sys.argv[1] == "--test":
+        run_tests()
+        exit()
+    pass
