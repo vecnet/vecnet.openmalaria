@@ -1,8 +1,10 @@
 __author__ = 'Alexander'
 
-import  json
+import json
 import itertools
 import sys
+import re
+
 
 class ExperimentDescription:
     """
@@ -38,6 +40,9 @@ class ExperimentDescription:
     def _apply_changes(self, scenario, sweep_name, arm_name):
         arm = self.experiment["sweeps"][sweep_name][arm_name]
         for param_change in arm:
+            # arm substitution string should start and end with an @
+            if re.match("^@.*@$",param_change) is None:
+                raise RuntimeError("arm substitution string should start and end with an @, for example @@param1@@")
             # Each arm may contain more that one parameter
             # changes are applied in a random order
             scenario = scenario.replace(param_change, arm[param_change])
@@ -50,7 +55,6 @@ class ExperimentDescription:
             arm = combination[i]
             scenario = self._apply_changes(scenario, sweep, arm)
         return scenario
-
 
     def scenarios(self):
         """
@@ -110,7 +114,16 @@ def run_tests():
     for scenario in exp.scenarios():
         print scenario
 
-    print "hello"
+    print "experiment4.json"
+    with open("experiment4.json", "r") as fp:
+        exp=ExperimentDescription(fp)
+    try:
+        for scenario in exp.scenarios():
+            print scenario
+    except RuntimeError:
+        print "[PASS] Runtime Error raised as expected."
+    else:
+        print "[FAILED] Not RuntimeError exception raised"
 
 if __name__ == "__main__":
     if sys.argv[1] == "--test":
