@@ -1,0 +1,44 @@
+{
+    "name": "Experiment1",
+    "base":"<xml> @itn@ @param1@ @param2@ @seasonality@</xml>",
+    "sweeps": {
+        "itn": {
+            "itn80": {
+                "@itn@":"80 @irs@"
+            },
+            "itn90": {
+                "@itn@": "@irs@ 90"
+            }
+        },
+        "irs": {
+            "irs66": {"@irs@":"66"},
+            "irs77": {"@irs@": "77"}
+        },
+        "params": {
+            "1": {"@param1@": "1", "@param2@": "2"},
+            "2": {"@param1@": "2", "@param2@": "2"},
+            "3": {"@param1@": "3", "@param2@": "2"}
+        },
+        "seasonality": {
+            "Dry climate": {"@seasonality@": "dry"},
+            "Wet climate": {"@seasonality@": "wet"},
+            "No climate (moon)": {"@seasonality@": ""}
+        }
+     },
+    "combinations": {
+        "ITN and IRS applied together": [
+            ["itn", "irs"],
+            ["itn80", "irs66"],
+            ["itn80", "irs77"],
+            ["itn90", "irs66"]
+        ],
+        "Seasonality and parameters": [
+            ["params", "seasonality"],
+            ["1", "Dry climate"],
+            ["2", "Wet climate"],
+            ["2", "No climate (moon)"],
+            ["3", "Dry climate"]
+        ]
+    }
+
+}
