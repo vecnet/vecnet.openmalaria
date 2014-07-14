@@ -1,3 +1,4 @@
+#!/bin/env python2
 __author__ = 'Alexander'
 
 import json
@@ -170,7 +171,7 @@ def run_tests():
 
 
 if __name__ == "__main__":
-    if sys.argv[1] == "--test":
+    if len(sys.argv) > 1 and sys.argv[1] == "--test":
         run_tests()
         exit()
     pass
