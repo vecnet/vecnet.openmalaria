@@ -8,6 +8,7 @@ import json
 import itertools
 import sys
 import re
+from cStringIO import StringIO
 
 
 class ExperimentDescription:
@@ -107,30 +108,54 @@ class ExperimentDescription:
     def add_arm(self, sweep, arm_name, parameters):
         self.experiment["sweeps"][sweep][arm_name] = parameters
 
+def do_test(experiment_data, required_output):
+    exp = ExperimentDescription(experiment_data)
+    print exp,
+    output = StringIO()
+    for scenario in exp.scenarios():
+        print >>output, scenario
+    required = StringIO(required_output)
+    #TODO: ignore line-end-chars in comparison
+    #TODO: allow documents (currently lines) in any order
+    if output.getvalue() == required.getvalue():
+        print ": [PASS]"
+    else:
+        print ": [FAIL]; found:"
+        print output.getvalue()
+        print "Expected:"
+        print required.getvalue()
+
 def run_tests():
+    # experiment 0
     experiment = {}
     experiment["base"] = "<xml>@itn@ @irs@ </xml>"
     experiment["sweeps"] = {}
     experiment["sweeps"]["itn"] = {"itn 80":{"@itn@":"80"},"itn 90":{"@itn@":"90"}}
     experiment["sweeps"]["irs"] = {"irs 66":{"@irs@":"66"},"irs 90":{"@irs@":"90"}}
     experiment["combinations"] = [
-["itn","irs"],
-["itn 80", "irs 66"],
-["itn 80", "irs 90"],
-["itn 90", "irs 66"]
-]
-
-    exp = ExperimentDescription(experiment)
-    print exp
-    for scenario in exp.scenarios():
-        print scenario
-
-    print "experiment1.json"
-    fp = open("experiment1.json", "r")
-    exp=ExperimentDescription(json.load(fp))
-    for scenario in exp.scenarios():
-        print scenario
-
+        ["itn","irs"],
+        ["itn 80", "irs 66"],
+        ["itn 80", "irs 90"],
+        ["itn 90", "irs 66"]
+    ]
+    do_test(experiment, """<xml>80 66 </xml>
+<xml>80 90 </xml>
+<xml>90 66 </xml>
+""")
+    
+    with open("experiment1.json", "r") as fp:
+        do_test(fp, """<xml> 80 66 model1 </xml>
+<xml> 80 66 model3 </xml>
+<xml> 80 66 model2 </xml>
+<xml> 80 77 model1 </xml>
+<xml> 80 77 model3 </xml>
+<xml> 80 77 model2 </xml>
+<xml> 90 66 model1 </xml>
+<xml> 90 66 model3 </xml>
+<xml> 90 66 model2 </xml>
+""")
+    
+    # TODO: update below with expected outcomes, e.g. as above
     print "experiment2.json"
     with open("experiment2.json", "r") as fp:
         exp=ExperimentDescription(fp)
