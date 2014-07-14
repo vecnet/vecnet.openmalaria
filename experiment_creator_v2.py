@@ -198,6 +198,13 @@ def run_tests():
         print scenario
 
 
+    print "experiment7.json"
+    with open("experiment7.json", "r") as fp:
+        exp=ExperimentDescription(fp)
+    for scenario in exp.scenarios():
+        print scenario
+
+
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "--test":
         run_tests()
