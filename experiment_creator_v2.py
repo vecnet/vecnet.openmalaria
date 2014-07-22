@@ -2,8 +2,6 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 # the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-__author__ = 'Alexander'
-
 import json
 import itertools
 import sys
@@ -47,7 +45,7 @@ class ExperimentDescription:
         for param_change in arm:
             # arm substitution string should start and end with an @
             if re.match("^@.*@$",param_change) is None:
-                raise RuntimeError("arm substitution string should start and end with an @, for example @@param1@@")
+                raise RuntimeError("arm substitution string should start and end with an @, for example @param1@")
             # Each arm may contain more that one parameter
             # changes are applied in a random order
             param_value = arm[param_change]
@@ -71,9 +69,14 @@ class ExperimentDescription:
         sweeps_all = self.experiment["sweeps"].keys()
         if isinstance(self.experiment["combinations"], list):
             # For backward compatibility with experiments1-4s
-            # First item in combinations list is a list of sweeps, then - all combinations
-            sweeps_non_fully_factorial = self.experiment["combinations"][0]
-            combinations = self.experiment["combinations"][1:]
+            if self.experiment["combinations"] == []:
+                # Fully factorial experiment, shortcut for "combinations":[[],[]]
+                sweeps_non_fully_factorial = []
+                combinations = []
+            else:
+                # First item in combinations list is a list of sweeps, then - all combinations
+                sweeps_non_fully_factorial = self.experiment["combinations"][0]
+                combinations = self.experiment["combinations"][1:]
 
             sweeps_fully_factorial = list(set(sweeps_all)-set(sweeps_non_fully_factorial))
 
@@ -88,8 +91,15 @@ class ExperimentDescription:
                     yield scenario
         else:
             for key, combinations_ in self.experiment["combinations"].items():
-                sweeps_non_fully_factorial = combinations_[0]
-                combinations = combinations_[1:]
+                if combinations_ == []:
+                    # Fully factorial experiment, shortcut for "combinations":[[],[]]
+                    sweeps_non_fully_factorial = []
+                    combinations = []
+                else:
+                    # First item in combinations list is a list of sweeps\
+                    sweeps_non_fully_factorial = combinations_[0]
+                    # then - all combinations
+                    combinations = combinations_[1:]
 
                 sweeps_fully_factorial = list(set(sweeps_all)-set(sweeps_non_fully_factorial))
 
@@ -197,6 +207,17 @@ def run_tests():
     for scenario in exp.scenarios():
         print scenario
 
+    # Erin's experiment - first attempt to convert it to new JSON experiment description
+    print "experiment6.json"
+    with open("experiment6.json", "r") as fp:
+        exp=ExperimentDescription(fp)
+    number = 0
+    for scenario in exp.scenarios():
+        number += 1
+    if number == 18:
+        print "[PASS]"
+    else:
+        print "[FAIL]"
 
     print "experiment7.json"
     with open("experiment7.json", "r") as fp:
@@ -204,6 +225,17 @@ def run_tests():
     for scenario in exp.scenarios():
         print scenario
 
+    # Fully factorial experiment, testing "combinations":[]
+    print "experiment8.json"
+    with open("experiment7.json", "r") as fp:
+        exp=ExperimentDescription(fp)
+    number = 0
+    for scenario in exp.scenarios():
+        number += 1
+    if number == 27:
+        print "[PASS]"
+    else:
+        print "[FAIL]"
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "--test":
