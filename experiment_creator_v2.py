@@ -174,13 +174,13 @@ def run_tests():
 <xml> 90 66 model2 </xml>
 """)
     
-    # TODO: update below with expected outcomes, e.g. as above
-    print "experiment2.json"
     with open("experiment2.json", "r") as fp:
-        exp=ExperimentDescription(fp)
-    for scenario in exp.scenarios():
-        print scenario
+        do_test(fp, """<xml> 80 66 </xml>
+<xml> 80 77 </xml>
+<xml> 66 90 </xml>
+""")
 
+    # TODO: update below with expected outcomes, e.g. as above
     print "experiment3.json"
     with open("experiment3.json", "r") as fp:
         exp=ExperimentDescription(fp)

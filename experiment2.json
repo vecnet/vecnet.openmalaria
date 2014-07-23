@@ -1,5 +1,5 @@
 {
-    "name": "Experiment1",
+    "name": "Experiment 2",
     "base":"<xml> @itn@ </xml>",
     "sweeps": {
         "itn": {
