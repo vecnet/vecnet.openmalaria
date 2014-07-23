@@ -180,24 +180,21 @@ def run_tests():
 <xml> 66 90 </xml>
 """)
 
-    # TODO: update below with expected outcomes, e.g. as above
-    print "experiment3.json"
     with open("experiment3.json", "r") as fp:
-        exp=ExperimentDescription(fp)
-    for scenario in exp.scenarios():
-        print scenario
+        do_test(fp, """<xml> 80 66 1 1</xml>
+<xml> 80 77 2 2</xml>
+<xml> 66 90 1 1</xml>
+""")
 
-    print "experiment4.json"
     with open("experiment4.json", "r") as fp:
-        exp=ExperimentDescription(fp)
-    try:
-        for scenario in exp.scenarios():
-            print scenario
-    except RuntimeError:
-        print "[PASS] Runtime Error raised as expected."
-    else:
-        print "[FAILED] Not RuntimeError exception raised"
+        try:
+            do_test(fp, "")
+        except RuntimeError:
+            print "[PASS] Runtime Error raised as expected."
+        else:
+            print "[FAILED] Not RuntimeError exception raised"
 
+    # TODO: update below with expected outcomes, e.g. as above
     print "experiment5.json"
     with open("experiment5.json", "r") as fp:
         exp=ExperimentDescription(fp)
