@@ -69,6 +69,7 @@ class ExperimentDescription:
         sweeps_all = self.experiment["sweeps"].keys()
         if isinstance(self.experiment["combinations"], list):
             # For backward compatibility with experiments1-4s
+            #TODO: multiple ways of doing the same thing is not good; change test cases 1-4 and remove this first case
             if self.experiment["combinations"] == []:
                 # Fully factorial experiment, shortcut for "combinations":[[],[]]
                 sweeps_non_fully_factorial = []
@@ -90,6 +91,14 @@ class ExperimentDescription:
                 else:
                     yield scenario
         else:
+            #TODO: this needs to be done in multiple steps:
+            #1) calculate sweeps_non_fully_factorial (depends on ALL combinations_ items)
+            #2) produce a list of all combinations of fully factorial sweeps
+            #3) take the dot (inner) product of the list above (fully factorial arm combinations)
+            #   with the first combinations list, that with the second combination list, ... 
+            #4) write out the document for each in (3), which should specify one arm for each
+            #   sweep with no repetition of combinations
+            #Note: most of (3) could be done in step (1), avoiding the need to iterate over the lists of combinations twice
             for key, combinations_ in self.experiment["combinations"].items():
                 if combinations_ == []:
                     # Fully factorial experiment, shortcut for "combinations":[[],[]]
