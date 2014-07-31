@@ -4,10 +4,7 @@
 
 import json
 import itertools
-import sys
 import re
-from cStringIO import StringIO
-
 
 class ExperimentDescription:
     """
@@ -15,7 +12,7 @@ class ExperimentDescription:
     """
     def __init__(self, experiment):
         # Accept both json string and dictionary as an input. string is converted to dict automatically
-        if isinstance(experiment, str):
+        if isinstance(experiment, (str, unicode)):
             experiment = json.loads(experiment)
         if isinstance(experiment, file):
             experiment = json.load(experiment)
@@ -45,7 +42,7 @@ class ExperimentDescription:
         for param_change in arm:
             # arm substitution string should start and end with an @
             if re.match("^@.*@$",param_change) is None:
-                raise RuntimeError("arm substitution string should start and end with an @, for example @param1@")
+                raise TypeError("arm substitution string should start and end with an @, for example @param1@")
             # Each arm may contain more that one parameter
             # changes are applied in a random order
             param_value = arm[param_change]
@@ -73,7 +70,7 @@ class ExperimentDescription:
             if self.experiment["combinations"] == []:
                 # Fully factorial experiment, shortcut for "combinations":[[],[]]
                 sweeps_non_fully_factorial = []
-                combinations = []
+                combinations = [[]]
             else:
                 # First item in combinations list is a list of sweeps, then - all combinations
                 sweeps_non_fully_factorial = self.experiment["combinations"][0]
@@ -103,7 +100,7 @@ class ExperimentDescription:
                 if combinations_ == []:
                     # Fully factorial experiment, shortcut for "combinations":[[],[]]
                     sweeps_non_fully_factorial = []
-                    combinations = []
+                    combinations = [[]]
                 else:
                     # First item in combinations list is a list of sweeps\
                     sweeps_non_fully_factorial = combinations_[0]
@@ -121,130 +118,13 @@ class ExperimentDescription:
                             yield self._apply_combination(scenario, sweeps_fully_factorial, combination1)
                     else:
                         yield scenario
+
     def add_sweep(self, sweep_name):
        self.experiment["sweeps"][sweep_name] = {}
 
     def add_arm(self, sweep, arm_name, parameters):
         self.experiment["sweeps"][sweep][arm_name] = parameters
 
-def do_test(experiment_data, required_output):
-    exp = ExperimentDescription(experiment_data)
-    print exp,
-    output = StringIO()
-    for scenario in exp.scenarios():
-        print >>output, scenario
-    required = StringIO(required_output)
-    #TODO: ignore line-end-chars in comparison
-    #TODO: allow documents (currently lines) in any order
-    if output.getvalue() == required.getvalue():
-        print ": [PASS]"
-    else:
-        print ": [FAIL]; found:"
-        print output.getvalue()
-        print "Expected:"
-        print required.getvalue()
-
-def run_tests():
-    # experiment 0
-    experiment = {}
-    experiment["base"] = "<xml>@itn@ @irs@ </xml>"
-    experiment["sweeps"] = {}
-    experiment["sweeps"]["itn"] = {"itn 80":{"@itn@":"80"},"itn 90":{"@itn@":"90"}}
-    experiment["sweeps"]["irs"] = {"irs 66":{"@irs@":"66"},"irs 90":{"@irs@":"90"}}
-    experiment["combinations"] = [
-        ["itn","irs"],
-        ["itn 80", "irs 66"],
-        ["itn 80", "irs 90"],
-        ["itn 90", "irs 66"]
-    ]
-    do_test(experiment, """<xml>80 66 </xml>
-<xml>80 90 </xml>
-<xml>90 66 </xml>
-""")
-    
-    with open("experiment1.json", "r") as fp:
-        do_test(fp, """<xml> 80 66 model1 </xml>
-<xml> 80 66 model3 </xml>
-<xml> 80 66 model2 </xml>
-<xml> 80 77 model1 </xml>
-<xml> 80 77 model3 </xml>
-<xml> 80 77 model2 </xml>
-<xml> 90 66 model1 </xml>
-<xml> 90 66 model3 </xml>
-<xml> 90 66 model2 </xml>
-""")
-    
-    with open("experiment2.json", "r") as fp:
-        do_test(fp, """<xml> 80 66 </xml>
-<xml> 80 77 </xml>
-<xml> 66 90 </xml>
-""")
-
-    with open("experiment3.json", "r") as fp:
-        do_test(fp, """<xml> 80 66 1 1</xml>
-<xml> 80 77 2 2</xml>
-<xml> 66 90 1 1</xml>
-""")
-
-    with open("experiment4.json", "r") as fp:
-        try:
-            do_test(fp, "")
-        except RuntimeError:
-            print "[PASS] Runtime Error raised as expected."
-        else:
-            print "[FAILED] Not RuntimeError exception raised"
-
-    # TODO: update below with expected outcomes, e.g. as above
-    print "experiment5.json"
-    with open("experiment5.json", "r") as fp:
-        exp=ExperimentDescription(fp)
-    for scenario in exp.scenarios():
-        print scenario
-
-    # Testing add_sweeps and add_arms functions
-    print "experiment1.json modified"
-    fp = open("experiment1.json", "r")
-    exp=ExperimentDescription(json.load(fp))
-    exp.experiment["base"] = "<xml> @itn@ @irs@ @model@ @p1@ (@p2@) </xml>"
-    exp.add_sweep("test")
-    exp.add_arm("test", "1", {"@p1@":2, "@p2@":"1"})
-    exp.add_arm("test", "2", {"@p1@":1, "@p2@":"hey"})
-
-    for scenario in exp.scenarios():
-        print scenario
-
-    # Erin's experiment - first attempt to convert it to new JSON experiment description
-    print "experiment6.json"
-    with open("experiment6.json", "r") as fp:
-        exp=ExperimentDescription(fp)
-    number = 0
-    for scenario in exp.scenarios():
-        number += 1
-    if number == 18:
-        print "[PASS]"
-    else:
-        print "[FAIL]"
-
-    print "experiment7.json"
-    with open("experiment7.json", "r") as fp:
-        exp=ExperimentDescription(fp)
-    for scenario in exp.scenarios():
-        print scenario
-
-    # Fully factorial experiment, testing "combinations":[]
-    print "experiment8.json"
-    with open("experiment7.json", "r") as fp:
-        exp=ExperimentDescription(fp)
-    number = 0
-    for scenario in exp.scenarios():
-        number += 1
-    if number == 27:
-        print "[PASS]"
-    else:
-        print "[FAIL]"
-
 if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == "--test":
-        run_tests()
-        exit()
+    print "use \"python test.py\" to run unittest"
     pass
