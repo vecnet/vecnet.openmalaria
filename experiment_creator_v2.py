@@ -44,7 +44,7 @@ class ExperimentDescription:
             if re.match("^@.*@$",param_change) is None:
                 raise TypeError("arm substitution string should start and end with an @, for example @param1@")
             # Each arm may contain more that one parameter
-            # changes are applied in a random order
+            # changes are applied in a random order currently
             param_value = arm[param_change]
             if isinstance(param_value, (int, float)):
                 param_value = str(param_value)
@@ -59,6 +59,25 @@ class ExperimentDescription:
             scenario = self._apply_changes(scenario, sweep, arm)
         return scenario
 
+    def _scenarios(self, product, sweeps_in_this_combination):
+        new_combination_list = product
+        new_product = self._product(sweeps_in_this_combination)
+        if new_product is not None:
+            new_product = list(new_product)
+        else:
+            return product
+        if product == []:
+            if new_product is not None:
+                return new_product
+            else:
+                return product
+        if new_product is not None:
+            new_combination_list = []
+            for item in itertools.product(product, new_product):
+                new_combination_list.append(list(itertools.chain(*item)))
+        return new_combination_list
+
+
     def scenarios(self):
         """
         Generator function. Spits out scenarios for this experiment
@@ -66,15 +85,72 @@ class ExperimentDescription:
         sweeps_all = self.experiment["sweeps"].keys()
         if isinstance(self.experiment["combinations"], list):
             # For backward compatibility with experiments1-4s
-            #TODO: multiple ways of doing the same thing is not good; change test cases 1-4 and remove this first case
-            if self.experiment["combinations"] == []:
+            combinations_in_experiment = {" ": self.experiment["combinations"]}
+            #if self.experiment["combinations"] == []:
+            #    # Special notation for fully-factorial experiments
+            #    combinations_in_experiment = {" ":[[],[]]}
+        else:
+            # Combinations must be a dictionary in this particular case
+            combinations_in_experiment = self.experiment["combinations"]
+
+
+        #TODO: this needs to be done in multiple steps:
+        #1) calculate sweeps_non_fully_factorial (depends on ALL combinations_ items)
+        #2) produce a list of all combinations of fully factorial sweeps
+        #3) take the dot (inner) product of the list above (fully factorial arm combinations)
+        #   with the first combinations list, that with the second combination list, ...
+        #4) write out the document for each in (3), which should specify one arm for each
+        #   sweep with no repetition of combinations
+        #Note: most of (3) could be done in step (1), avoiding the need to iterate over the lists of combinations twice
+
+        # Get the list of fully factorial sweeps
+        all_sweeps_non_fully_factorial = []
+        for key, combinations_ in combinations_in_experiment.items():
+            # generate all permutations of all combinations
+            if combinations_ == []:
                 # Fully factorial experiment, shortcut for "combinations":[[],[]]
                 sweeps_non_fully_factorial = []
                 combinations = [[]]
             else:
-                # First item in combinations list is a list of sweeps, then - all combinations
-                sweeps_non_fully_factorial = self.experiment["combinations"][0]
-                combinations = self.experiment["combinations"][1:]
+                # First item in combinations list is a list of sweeps\
+                sweeps_non_fully_factorial = combinations_[0]
+                # then - all combinations
+                combinations = combinations_[1:]
+            for item in sweeps_non_fully_factorial:
+                all_sweeps_non_fully_factorial.append(item)
+        sweeps_fully_factorial = list(set(sweeps_all) - set(all_sweeps_non_fully_factorial))
+        print "fully fact: %s" % sweeps_fully_factorial
+
+        product = []
+        for key, combinations_ in combinations_in_experiment.items():
+            # generate all permutations of all combinations
+            if combinations_ == []:
+                # Fully factorial experiment, shortcut for "combinations":[[],[]]
+                sweeps_non_fully_factorial = []
+                combinations = [[]]
+            else:
+                # First item in combinations list is a list of sweeps\
+                sweeps_non_fully_factorial = combinations_[0]
+                # then - all combinations
+                combinations = combinations_[1:]
+            product = self._scenarios(product, sweeps_non_fully_factorial)
+            #product = list(product)
+            print product
+
+        # Generate cartesian product of fully factorial sweeps + non fully factorial sweeps
+        pass
+        #print product
+
+        for key, combinations_ in combinations_in_experiment.items():
+            if combinations_ == []:
+                # Fully factorial experiment, shortcut for "combinations":[[],[]]
+                sweeps_non_fully_factorial = []
+                combinations = [[]]
+            else:
+                # First item in combinations list is a list of sweeps\
+                sweeps_non_fully_factorial = combinations_[0]
+                # then - all combinations
+                combinations = combinations_[1:]
 
             sweeps_fully_factorial = list(set(sweeps_all)-set(sweeps_non_fully_factorial))
 
@@ -87,37 +163,6 @@ class ExperimentDescription:
                         yield self._apply_combination(scenario, sweeps_fully_factorial, combination1)
                 else:
                     yield scenario
-        else:
-            #TODO: this needs to be done in multiple steps:
-            #1) calculate sweeps_non_fully_factorial (depends on ALL combinations_ items)
-            #2) produce a list of all combinations of fully factorial sweeps
-            #3) take the dot (inner) product of the list above (fully factorial arm combinations)
-            #   with the first combinations list, that with the second combination list, ... 
-            #4) write out the document for each in (3), which should specify one arm for each
-            #   sweep with no repetition of combinations
-            #Note: most of (3) could be done in step (1), avoiding the need to iterate over the lists of combinations twice
-            for key, combinations_ in self.experiment["combinations"].items():
-                if combinations_ == []:
-                    # Fully factorial experiment, shortcut for "combinations":[[],[]]
-                    sweeps_non_fully_factorial = []
-                    combinations = [[]]
-                else:
-                    # First item in combinations list is a list of sweeps\
-                    sweeps_non_fully_factorial = combinations_[0]
-                    # then - all combinations
-                    combinations = combinations_[1:]
-
-                sweeps_fully_factorial = list(set(sweeps_all)-set(sweeps_non_fully_factorial))
-
-                for combination in combinations:
-                    scenario = self._apply_combination(self.experiment["base"], sweeps_non_fully_factorial, combination)
-                    product = self._product(sweeps_fully_factorial)
-                    if product is not None:
-                        # Apply fully factorial sweeps
-                        for combination1 in product:
-                            yield self._apply_combination(scenario, sweeps_fully_factorial, combination1)
-                    else:
-                        yield scenario
 
     def add_sweep(self, sweep_name):
        self.experiment["sweeps"][sweep_name] = {}
