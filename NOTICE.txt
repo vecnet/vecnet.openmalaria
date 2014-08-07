@@ -1,0 +1,14 @@
+The vecnet.openmalaria package
+https://github.com/vecnet/vecnet.openmalaria
+
+Copyright 2014 University of Notre Dame
+Copyright 2014 Swiss Tropical and Public Health Institute
+
+Contributors:
+  Alex Vyushkov, Center for Research Computing, University of Notre Dame
+  Diggory Hardy, Swiss Tropical and Public Health Institute, Basel, Switzerland
+  Jimm Domingo, Center for Research Computing, University of Notre Dame
+
+This project is licensed under the Mozilla Public License, version 2.0 (the
+"License").  A copy of the License is in the project file "LICENSE.txt",
+and is also available at http://mozilla.org/MPL/2.0/.
