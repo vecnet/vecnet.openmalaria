@@ -1,0 +1,99 @@
+{
+    "name": "Net Experiment",
+    "description": "Experiment provided by Casey as a use case for multiple combinations",
+    "base":"<xml>: @deterrency@ ; @preKilling@ , @postKilling@ ; @coverage@ , @usage@ :</xml>",
+    "sweeps": {
+        "deterrency": {
+            "lo": {
+                "@deterrency@":"0.10"
+            },
+            "lm": {
+                "@deterrency@":"0.30"
+            },
+            "md": {
+                "@deterrency@":"0.50"
+            },
+            "hm": {
+                "@deterrency@":"0.70"
+            },
+            "hi": {
+                "@deterrency@":"0.90"
+            }
+        },
+        "preKilling": {
+            "lo": {
+                "@preKilling@":"0.15"
+            },
+            "lm": {
+                "@preKilling@":"0.30"
+            },
+            "hm": {
+                "@preKilling@":"0.45"
+            },
+            "hi": {
+                "@preKilling@":"0.60"
+            }
+        },
+        "postKilling": {
+            "lo": {
+                "@postKilling@":"0.05882353"
+            },
+            "lm": {
+                "@postKilling@":"0.14285714"
+            },
+            "hm": {
+                "@postKilling@":"0.27272727"
+            },
+            "hi": {
+                "@postKilling@":"0.50000000"
+            }
+        },
+        "coverage": {
+            "lo": {
+                "@coverage@":"0.70"
+            },
+            "md": {
+                "@coverage@":"0.80"
+            },
+            "hi": {
+                "@coverage@":"0.90"
+            }
+        },
+        "usage": {
+            "lo": {
+                "@usage@":"0.50"
+            },
+            "lm": {
+                "@usage@":"0.60"
+            },
+            "md": {
+                "@usage@":"0.70"
+            },
+            "hm": {
+                "@usage@":"0.80"
+            },
+            "hi": {
+                "@usage@":"0.90"
+            }
+        }
+     },
+    "combinations": {
+        "Killing Effects": [
+            ["preKilling", "postKilling"],
+            ["lo", "lo"],
+            ["lm", "lm"],
+            ["hm", "hm"],
+            ["hi", "hi"]
+        ],
+        "Deployment Effects": [
+            ["coverage", "usage"],
+            ["lo", "lo"],
+            ["lo", "lm"],
+            ["md", "lm"],
+            ["md", "md"],
+            ["md", "hm"],
+            ["hi", "hm"],
+            ["hi", "hi"]
+        ]
+    }
+}
