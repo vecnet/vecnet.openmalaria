@@ -374,5 +374,16 @@ class TestExperimentDescription(unittest.TestCase):
         self.assertEqual(len(expected_results), len(results))
         self.assertEqual(set(results), expected_results)
 
+    def test_add_sweep(self):
+        experiment = {"base": "<xml>@itn@ @irs@ </xml>",
+                      "sweeps": {
+                          "itn": {"itn 80": {"@itn@": "80"}, "itn 90": {"@itn@": "90"}},
+                          "irs": {"irs 66": {"@irs@": "66"}, "irs 90": {"@irs@": "90"}}
+                      }
+        }
+        exp = ExperimentDescription(experiment)
+        exp.add_sweep("test")
+        self.assertIn("test", exp.experiment["sweeps"])
+
 if __name__ == "__main__":
     unittest.main()
