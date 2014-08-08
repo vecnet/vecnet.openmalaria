@@ -1,3 +1,4 @@
+#!/bin/env python2
 # -*- coding: utf-8 -*-
 #
 # This file is part of the vecnet.openmalaria package.
