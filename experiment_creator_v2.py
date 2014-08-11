@@ -1,4 +1,3 @@
-#!/bin/env python2
 # -*- coding: utf-8 -*-
 #
 # This file is part of the vecnet.openmalaria package.
@@ -11,7 +10,6 @@
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import json
-import itertools
 import re
 
 class ExperimentDescription:
@@ -32,6 +30,11 @@ class ExperimentDescription:
             self.name = self.experiment["name"]
         else:
             self.name = "Unnamed Experiment"
+
+        if "basefile" in self.experiment:
+            # Load baseline scenario from external file
+            with open(self.experiment["basefile"]) as fp:
+                self.experiment["base"] = fp.read()
 
     def __str__(self):
         return self.name
@@ -138,7 +141,3 @@ class ExperimentDescription:
 
     def add_arm(self, sweep, arm_name, parameters):
         self.experiment["sweeps"][sweep][arm_name] = parameters
-
-if __name__ == "__main__":
-    print "use \"python test.py\" to run unittest"
-    pass

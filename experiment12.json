@@ -1,0 +1,34 @@
+{
+    "name": "Experiment 12",
+    "basefile":"experiment12.xml",
+    "sweeps": {
+        "itn": {
+            "itn80": {
+                "@itn@":"80"
+            },
+            "itn90": {
+                "@itn@": "90"
+            }
+        },
+        "irs": {
+            "irs66": {
+                "@irs@":"66"
+            },
+            "irs77": {
+                "@irs@": "77"
+            }
+        },
+        "model": {
+            "1": {"@model@":"model1"},
+            "2": {"@model@":"model2"}
+        }
+     },
+    "combinations":{
+    "Just one combination": [
+        ["itn", "irs", "model"],
+        ["itn80", "irs66", "1"],
+        ["itn80", "irs77", "2"],
+        ["itn90", "irs66","2"]
+    ]
+    }
+}
