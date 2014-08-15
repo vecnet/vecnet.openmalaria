@@ -141,3 +141,4 @@ class ExperimentDescription:
 
     def add_arm(self, sweep, arm_name, parameters):
         self.experiment["sweeps"][sweep][arm_name] = parameters
+
