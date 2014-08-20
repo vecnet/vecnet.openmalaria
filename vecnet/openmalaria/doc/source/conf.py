@@ -41,7 +41,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'vecnet.openmalaria'
-copyright = u'2014, Alex Vyushkov, Diggory Hardy, Jimm Domingo'
+copyright = u'2014, University of Notre Dame, Swiss Tropical and Public Health Institute'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

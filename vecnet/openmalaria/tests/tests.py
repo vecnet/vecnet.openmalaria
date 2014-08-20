@@ -30,8 +30,6 @@ class TestExperimentDescription(unittest.TestCase):
 
         result = list(exp.scenarios())
         return result
-        #self.assertEqual(len(result), len(expected_result), "Wrong number of scenario generated")  # Test for duplicates
-        #self.assertEqual(set(result), expected_result, "experiment1.json test failed") # Test if content of scenarios is correct
 
     def test_initialization(self):
         self.assertRaises(TypeError, ExperimentDescription, 1)
@@ -63,7 +61,7 @@ class TestExperimentDescription(unittest.TestCase):
 
         self.assertEqual(len(result), len(expected_result), "Wrong number of scenario generated")  # Test for duplicates
         self.assertEqual(set(result), expected_result,
-                         "experiment1.json test failed") # Test if content of scenarios is correct
+                         "experiment1.json test failed")  # Test if content of scenarios is correct
 
     def test_str(self):
         """ Testing experiment creation from a python string """
@@ -150,7 +148,7 @@ class TestExperimentDescription(unittest.TestCase):
         result = list(exp.scenarios())
         self.assertEqual(exp.name, "Experiment 1")
         self.assertEqual(len(result), 9)  # Test for duplicates
-        self.assertEqual(set(result), expected_result) # Test if content of scenarios is correct
+        self.assertEqual(set(result), expected_result)  # Test if content of scenarios is correct
 
     def test_2(self):
         results = self.do_test("experiment2.json")
@@ -220,7 +218,7 @@ class TestExperimentDescription(unittest.TestCase):
                             u"<xml> 90 66 model2 </xml>"})
         result = self.do_test("experiment9.json")
         self.assertEqual(len(result), 3)  # Test for duplicates
-        self.assertEqual(set(result), expected_result) # Test if content of scenarios is correct
+        self.assertEqual(set(result), expected_result)  # Test if content of scenarios is correct
 
     def test_10(self):
         """ Fully factorial experiment.
@@ -382,12 +380,11 @@ class TestExperimentDescription(unittest.TestCase):
              Baseline is loaded from external file
         """
         expected_result = ({u"<xml> 80\n66 model1 </xml>",
-                                u"<xml> 80\n77 model2 </xml>",
-                                u"<xml> 90\n66 model2 </xml>"})
+                            u"<xml> 80\n77 model2 </xml>",
+                            u"<xml> 90\n66 model2 </xml>"})
         result = self.do_test("experiment12.json")
         self.assertEqual(len(result), 3)  # Test for duplicates
-        self.assertEqual(set(result), expected_result) # Test if content of scenarios is correct
-
+        self.assertEqual(set(result), expected_result)  # Test if content of scenarios is correct
 
     def test_add_sweep(self):
         experiment = {"base": "<xml>@itn@ @irs@ </xml>",
@@ -399,6 +396,7 @@ class TestExperimentDescription(unittest.TestCase):
         exp = ExperimentDescription(experiment)
         exp.add_sweep("test")
         self.assertIn("test", exp.experiment["sweeps"])
+
 
 if __name__ == "__main__":
     unittest.main()
