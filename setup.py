@@ -10,25 +10,28 @@
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-from distutils.core import setup
-
-# Utility function to read the README file.
-#def read(fname):
-#    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+from setuptools import setup, find_packages
 
 setup(
     name="vecnet.openmalaria",
     version="0.1.0",
     author="Alex Vyushkov, Diggory Hardy",
     author_email="vecnet@vecnet.org",
-    description="Bla",
-    license="MPLv2",
-    keywords="openamalaria",
+    description="Openmalaria library for VecNet-CI project",
+    license="MPL 2.0",
+    keywords="openamalaria malaria vecnet",
     url="https://github.com/vecnet/vecnet.openmalaria",
-    packages=['vecnet', 'vecnet.openmalaria'],
-    #long_description=read('README'),
+    packages=find_packages(),  # https://pythonhosted.org/setuptools/setuptools.html#using-find-packages
+    namespace_packages=['vecnet', ],
+    install_requires=[],
     classifiers=[
         "Development Status :: 3 - Alpha",
+        "License :: OSI Approved :: Mozilla Public License",
+        "Intended Audience :: Developers",
+        "Operating System :: OS Independent",
         "Programming Language :: Python",
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 2.7",
+        "Topic :: Software Development :: Libraries :: Python Modules",
     ],
 )
