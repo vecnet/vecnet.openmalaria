@@ -1,0 +1,1 @@
+python -m vecnet.openmalaria.bin.expand %1
