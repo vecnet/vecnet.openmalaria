@@ -12,6 +12,7 @@
 
 import unittest
 import json
+import os
 
 from vecnet.openmalaria.experiment_creator_v2 import ExperimentDescription
 
@@ -385,6 +386,19 @@ class TestExperimentDescription(unittest.TestCase):
         result = self.do_test("experiment12.json")
         self.assertEqual(len(result), 3)  # Test for duplicates
         self.assertEqual(set(result), expected_result)  # Test if content of scenarios is correct
+
+    def test_13(self):
+        """ Arm value is loaded from external file"""
+        current_directory = os.getcwd()
+        os.chdir("experiment13")
+        expected_result = ({u"<xml> 80\n66 <model> model1 </model> </xml>",
+                            u"<xml> 80\n77 <model> model2 </model> </xml>",
+                            u"<xml> 90\n66 <model> model2 </model> </xml>"})
+        result = self.do_test("experiment13.json")
+        os.chdir(current_directory)
+        self.assertEqual(len(result), 3)  # Test for duplicates
+        self.assertEqual(set(result), expected_result)  # Test if content of scenarios is correct
+
 
     def test_add_sweep(self):
         experiment = {"base": "<xml>@itn@ @irs@ </xml>",

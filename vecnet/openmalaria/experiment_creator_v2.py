@@ -50,6 +50,10 @@ class ExperimentDescription:
             param_value = arm[param_change]
             if isinstance(param_value, (int, float)):
                 param_value = str(param_value)
+            if param_value[0:7] == "file://":
+                with open(param_value[7:], "r") as fp:
+                    param_value = fp.read()
+
             scenario = scenario.replace(param_change, param_value)
         return scenario
 
