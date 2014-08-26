@@ -28,7 +28,7 @@ setup(
     install_requires=[],
     classifiers=[
         "Development Status :: 3 - Alpha",
-        "License :: OSI Approved :: Mozilla Public License",
+        "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
         "Intended Audience :: Developers",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
