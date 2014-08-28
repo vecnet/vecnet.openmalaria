@@ -14,12 +14,12 @@ import sys
 
 from vecnet.openmalaria.experiment_creator_v2 import ExperimentDescription
 
-
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
+def main(*args):
+    if len(args) != 2:
         print "USAGE: %s filename" % sys.argv[0]
-        filename = "experiment1.json"
-        #exit(0)
+        return -1
+        # filename = "experiment1.json"
+        # exit(0)
     else:
         filename = sys.argv[1]
 
@@ -33,3 +33,8 @@ if __name__ == "__main__":
             fp.write(scenario)
         i += 1
     print "%s scenarios generated" % (i-1)
+    return 0
+
+if __name__ == "__main__":
+    status = main(*sys.argv)
+    sys.exit(status)
