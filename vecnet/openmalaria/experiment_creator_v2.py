@@ -12,6 +12,17 @@
 import json
 import re
 
+class Scenario:
+    def __init__(self, xml, parameters=None):
+        self.xml = xml
+        self.parameters = parameters
+
+    def __str__(self):
+        return self.xml
+
+    def __unicode__(self):
+        return self.xml
+
 class ExperimentDescription:
     """
     OpenMalaria experiment description is a json file. This class is an SDK for working with that file format.
@@ -136,7 +147,8 @@ class ExperimentDescription:
         sweep_names = all_combinations[0][0]
         combinations = all_combinations[0][1]
         for combination in combinations:
-            scenario = self._apply_combination(self.experiment["base"], sweep_names, combination)
+            scenario = Scenario(self._apply_combination(self.experiment["base"], sweep_names, combination))
+            scenario.parameters = dict(zip(sweep_names, combination))
             yield scenario
     
 

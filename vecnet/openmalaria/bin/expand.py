@@ -11,6 +11,7 @@
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import sys
+import csv
 
 from vecnet.openmalaria.experiment_creator_v2 import ExperimentDescription
 
@@ -28,10 +29,24 @@ def main(*args):
         exp = ExperimentDescription(fp)
 
     i = 1
+    keys = exp.experiment["sweeps"].keys()
+    csvfile = open("scenarios.csv","w")
+    # Write "header" of csv file
+    csvfile.write("filename")
+    for key in keys:
+        csvfile.write("," + key)
+    csvfile.write("\n")
+
     for scenario in exp.scenarios():
         with open("scenario%s.xml" % i, "w") as fp:
-            fp.write(scenario)
+            fp.write(scenario.xml)
+        # Write parameters values used to generate this scenario
+        csvfile.write("scenario%s.xml" % i)
+        for key in keys:
+            csvfile.write("," + scenario.parameters.pop(key))
+        csvfile.write("\n")
         i += 1
+    csvfile.close()
     print "%s scenarios generated" % (i-1)
     return 0
 

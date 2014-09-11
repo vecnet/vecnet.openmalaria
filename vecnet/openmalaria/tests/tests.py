@@ -29,7 +29,8 @@ class TestExperimentDescription(unittest.TestCase):
         else:
             exp = experiment
 
-        result = list(exp.scenarios())
+        #result = list(exp.scenarios())
+        result = list(scenario.xml for scenario in exp.scenarios())
         return result
 
     def test_initialization(self):
@@ -132,7 +133,7 @@ class TestExperimentDescription(unittest.TestCase):
                             u"<xml> 90 66 model3 1 (hey) </xml>",
                             u"<xml> 90 66 model2 1 (hey) </xml>", })
 
-        self.assertEqual(set(exp.scenarios()), expected_result)
+        self.assertEqual(set(scenario.xml for scenario in exp.scenarios()), expected_result)
 
     def test_1(self):
         with open("experiment1.json") as fp:
@@ -146,7 +147,7 @@ class TestExperimentDescription(unittest.TestCase):
                             u"<xml> 90 66 model1 </xml>",
                             u"<xml> 90 66 model3 </xml>",
                             u"<xml> 90 66 model2 </xml>"})
-        result = list(exp.scenarios())
+        result = list(scenario.xml for scenario in exp.scenarios())
         self.assertEqual(exp.name, "Experiment 1")
         self.assertEqual(len(result), 9)  # Test for duplicates
         self.assertEqual(set(result), expected_result)  # Test if content of scenarios is correct
