@@ -14,7 +14,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="vecnet.openmalaria",
-    version="0.1.2",
+    version="0.1.3",
     author="Alex Vyushkov, Diggory Hardy",
     author_email="vecnet@vecnet.org",
     description="Openmalaria library for VecNet-CI project",
@@ -25,6 +25,7 @@ setup(
     # If omitted, the source directory defaults to the same directory as the setup script.
     packages=find_packages(),  # https://pythonhosted.org/setuptools/setuptools.html#using-find-packages
     namespace_packages=['vecnet', ],
+    scripts=['bin/om_expand.cmd'],
     install_requires=[],
     classifiers=[
         "Development Status :: 3 - Alpha",
