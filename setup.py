@@ -19,7 +19,7 @@ setup(
     author_email="vecnet@vecnet.org",
     description="Openmalaria library for VecNet-CI project",
     license="MPL 2.0",
-    keywords="openamalaria malaria vecnet",
+    keywords="openmalaria malaria vecnet",
     url="https://github.com/vecnet/vecnet.openmalaria",
     # find_packages() takes a source directory and two lists of package name patterns to exclude and include.
     # If omitted, the source directory defaults to the same directory as the setup script.
