@@ -1,0 +1,29 @@
+{
+    "name": "Experiment 15",
+    "base":"<xml> @value@ @seed@ </xml>",
+    "sweeps": {
+        "itn": {
+            "Coverage 80%": {
+                "@value@": "80"
+            },
+            "Coverage 90%": {
+                "@value@": "90"
+            },
+            "Coverage 100%": {
+                "@value@": "100"
+            }
+        },
+        "seed": {
+             "11": {"@seed@": "11"},
+             "15": {"@seed@": "15"},
+             "31": {"@seed@": "31"}
+         }
+     },
+    "combinations":
+    [
+        ["itn", "seed"],
+        ["Coverage 80%", "11"],
+        ["Coverage 90%", "15"],
+        ["Coverage 100%", "31"]
+    ]
+}

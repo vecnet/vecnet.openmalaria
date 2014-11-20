@@ -2,6 +2,10 @@
 Changelog
 =========
 
+0.2.0
+* [+] Added seed generation for every scenario (optional)
+* [+] Added get_schema_version_from_xml function
+
 0.1.3
 =====
 

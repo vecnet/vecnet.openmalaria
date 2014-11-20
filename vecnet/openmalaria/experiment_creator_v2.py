@@ -76,11 +76,11 @@ class ExperimentDescription:
             scenario = self._apply_changes(scenario, sweep, arm)
         return scenario
 
-
     def scenarios(self):
         """
         Generator function. Spits out scenarios for this experiment
         """
+        seed = 1024
         sweeps_all = self.experiment["sweeps"].keys()
         if "combinations" in self.experiment:
             if isinstance(self.experiment["combinations"], list):
@@ -149,6 +149,10 @@ class ExperimentDescription:
         for combination in combinations:
             scenario = Scenario(self._apply_combination(self.experiment["base"], sweep_names, combination))
             scenario.parameters = dict(zip(sweep_names, combination))
+            # Replace seed
+            if seed not in sweeps_all:
+                seed += 1
+                scenario.xml = scenario.xml.replace("@seed@", str(seed))
             yield scenario
     
 
