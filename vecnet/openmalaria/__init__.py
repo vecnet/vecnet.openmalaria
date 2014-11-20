@@ -25,4 +25,17 @@
 # else:
 #     __version__ = _dist.version
 
+from xml.etree import ElementTree
+import StringIO
+
+def get_schema_version_from_xml(xml):
+    """ Get schemaVersion attribute from OpenMalaria scenario file
+    xml - open file or content of xml document to be processed
+    """
+    if isinstance(xml, (str, unicode)):
+        xml = StringIO.StringIO(xml)
+    tree = ElementTree.parse(xml)
+    root = tree.getroot()
+    return root.attrib.get('schemaVersion', None)
+
 from .experiment_creator_v2 import ExperimentDescription

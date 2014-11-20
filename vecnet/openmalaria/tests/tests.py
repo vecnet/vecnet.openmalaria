@@ -400,6 +400,25 @@ class TestExperimentDescription(unittest.TestCase):
         self.assertEqual(len(result), 3)  # Test for duplicates
         self.assertEqual(set(result), expected_result)  # Test if content of scenarios is correct
 
+    def test_14(self):
+        """ Automatic seed replacement """
+        result = self.do_test("experiment14.json")
+        expected_result =({u'<xml> 80 1025 </xml>',
+                           u'<xml> 90 1026 </xml>',
+                           u'<xml> 100 1027 </xml>'})
+        self.assertEqual(len(result), 3)  # Test for duplicates
+        self.assertEqual(set(result), expected_result)  # Test if content of scenarios is correct
+        pass
+
+    def test_15(self):
+        """ No automatic seed replacement if sweep "seed" is defined"""
+        result = self.do_test("experiment15.json")
+        expected_result =({u'<xml> 80 11 </xml>',
+                           u'<xml> 90 15 </xml>',
+                           u'<xml> 100 31 </xml>'})
+        self.assertEqual(len(result), 3)  # Test for duplicates
+        self.assertEqual(set(result), expected_result)  # Test if content of scenarios is correct
+        pass
 
     def test_add_sweep(self):
         experiment = {"base": "<xml>@itn@ @irs@ </xml>",
