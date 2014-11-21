@@ -11,6 +11,7 @@
 
 import json
 import re
+from .helpers import prime_numbers
 
 class Scenario:
     def __init__(self, xml, parameters=None):
@@ -80,7 +81,7 @@ class ExperimentDescription:
         """
         Generator function. Spits out scenarios for this experiment
         """
-        seed = 1024
+        seed = prime_numbers(1000)
         sweeps_all = self.experiment["sweeps"].keys()
         if "combinations" in self.experiment:
             if isinstance(self.experiment["combinations"], list):
@@ -150,9 +151,9 @@ class ExperimentDescription:
             scenario = Scenario(self._apply_combination(self.experiment["base"], sweep_names, combination))
             scenario.parameters = dict(zip(sweep_names, combination))
             # Replace seed
-            if seed not in sweeps_all:
-                seed += 1
-                scenario.xml = scenario.xml.replace("@seed@", str(seed))
+
+            if "seed" not in sweeps_all:
+                scenario.xml = scenario.xml.replace("@seed@", str(seed.next()))
             yield scenario
     
 

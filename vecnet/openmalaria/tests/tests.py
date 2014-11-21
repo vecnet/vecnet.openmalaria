@@ -403,9 +403,9 @@ class TestExperimentDescription(unittest.TestCase):
     def test_14(self):
         """ Automatic seed replacement """
         result = self.do_test("experiment14.json")
-        expected_result =({u'<xml> 80 1025 </xml>',
-                           u'<xml> 90 1026 </xml>',
-                           u'<xml> 100 1027 </xml>'})
+        expected_result =({u'<xml> 80 1009 </xml>',
+                           u'<xml> 90 1013 </xml>',
+                           u'<xml> 100 1019 </xml>'})
         self.assertEqual(len(result), 3)  # Test for duplicates
         self.assertEqual(set(result), expected_result)  # Test if content of scenarios is correct
         pass

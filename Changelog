@@ -2,6 +2,11 @@
 Changelog
 =========
 
+0.2.1
+* [+] Prime numbers are used for seed generation
+* [+] Fixed problem with om_expand, linux line ending is now used
+
+
 0.2.0
 * [+] Added seed generation for every scenario (optional)
 * [+] Added get_schema_version_from_xml function
