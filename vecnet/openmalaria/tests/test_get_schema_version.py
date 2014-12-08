@@ -37,6 +37,14 @@ class TestExperimentDescription(unittest.TestCase):
         with open(os.path.join("get_schema_version_from_xml","non_om_xml.xml")) as fp:
             schema_version = get_schema_version_from_xml(fp.read())
             self.assertIsNone(schema_version)
+        # Test empty string
+        schema_version = get_schema_version_from_xml("")
+        self.assertIsNone(schema_version)
+
+        # Test non-xml string
+        schema_version = get_schema_version_from_xml("abcdef")
+        self.assertIsNone(schema_version)
+
 
 if __name__ == "__main__":
     unittest.main()

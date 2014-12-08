@@ -2,6 +2,9 @@
 Changelog
 =========
 
+0.2.2
+* [*] get_schema_version_from_xml returns None if empty or non-xml string is given as input
+
 0.2.1
 * [+] Prime numbers are used for seed generation
 * [+] Fixed problem with om_expand, linux line ending is now used
