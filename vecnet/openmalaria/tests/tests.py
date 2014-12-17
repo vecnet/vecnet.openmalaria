@@ -22,7 +22,7 @@ class TestExperimentDescription(unittest.TestCase):
         pass
 
     @staticmethod
-    def do_test(experiment):
+    def do_test(experiment, generate_seed=False):
         if isinstance(experiment, (str, unicode)):
             with open(experiment) as fp:
                 exp = ExperimentDescription(fp)
@@ -30,7 +30,7 @@ class TestExperimentDescription(unittest.TestCase):
             exp = experiment
 
         #result = list(exp.scenarios())
-        result = list(scenario.xml for scenario in exp.scenarios())
+        result = list(scenario.xml for scenario in exp.scenarios(generate_seed=generate_seed))
         return result
 
     def test_initialization(self):
@@ -402,7 +402,7 @@ class TestExperimentDescription(unittest.TestCase):
 
     def test_14(self):
         """ Automatic seed replacement """
-        result = self.do_test("experiment14.json")
+        result = self.do_test("experiment14.json", generate_seed=True)
         expected_result =({u'<xml> 80 1009 </xml>',
                            u'<xml> 90 1013 </xml>',
                            u'<xml> 100 1019 </xml>'})
@@ -412,7 +412,7 @@ class TestExperimentDescription(unittest.TestCase):
 
     def test_15(self):
         """ No automatic seed replacement if sweep "seed" is defined"""
-        result = self.do_test("experiment15.json")
+        result = self.do_test("experiment15.json", generate_seed=False)
         expected_result =({u'<xml> 80 11 </xml>',
                            u'<xml> 90 15 </xml>',
                            u'<xml> 100 31 </xml>'})

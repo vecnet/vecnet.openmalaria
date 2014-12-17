@@ -77,7 +77,7 @@ class ExperimentDescription:
             scenario = self._apply_changes(scenario, sweep, arm)
         return scenario
 
-    def scenarios(self):
+    def scenarios(self, generate_seed=False):
         """
         Generator function. Spits out scenarios for this experiment
         """
@@ -150,10 +150,13 @@ class ExperimentDescription:
         for combination in combinations:
             scenario = Scenario(self._apply_combination(self.experiment["base"], sweep_names, combination))
             scenario.parameters = dict(zip(sweep_names, combination))
-            # Replace seed
 
-            if "seed" not in sweeps_all:
-                scenario.xml = scenario.xml.replace("@seed@", str(seed.next()))
+            if generate_seed:
+                # Replace seed if requested by the user
+                if "@seed@" in scenario.xml:
+                    scenario.xml = scenario.xml.replace("@seed@", str(seed.next()))
+                else:
+                    raise(RuntimeError("@seed@ placeholder is not found"))
             yield scenario
     
 

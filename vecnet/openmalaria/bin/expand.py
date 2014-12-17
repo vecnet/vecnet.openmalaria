@@ -11,20 +11,12 @@
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import sys
-import csv
+import argparse
 
 from vecnet.openmalaria.experiment_creator_v2 import ExperimentDescription
 
-def main(*args):
-    if len(args) != 2:
-        print "USAGE: %s filename" % sys.argv[0]
-        return -1
-        # filename = "experiment1.json"
-        # exit(0)
-    else:
-        filename = sys.argv[1]
+def main(filename, generate_seed=False):
 
-    print filename
     with open(filename) as fp:
         exp = ExperimentDescription(fp)
 
@@ -37,7 +29,7 @@ def main(*args):
         csvfile.write("," + key)
     csvfile.write("\n")
 
-    for scenario in exp.scenarios():
+    for scenario in exp.scenarios(generate_seed=generate_seed):
         with open("scenario%s.xml" % i, "w") as fp:
             fp.write(scenario.xml)
         # Write parameters values used to generate this scenario
@@ -51,5 +43,17 @@ def main(*args):
     return 0
 
 if __name__ == "__main__":
-    status = main(*sys.argv)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("exp_spec_name", help="Experiment specification filename")
+    parser.add_argument("--seed",
+                        help="Automatically replace @seed@ placeholder with a seed number",
+                        action="store_true")
+    args = parser.parse_args()
+
+    try:
+        status = main(filename=args.exp_spec_name,
+                  generate_seed=args.seed)
+    except (RuntimeError, IOError) as e:
+        print "Error: %s" % e
+        status = 1
     sys.exit(status)
