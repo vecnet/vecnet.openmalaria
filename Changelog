@@ -2,6 +2,14 @@
 Changelog
 =========
 
+0.2.3
+=====
+* [+] Added JSON schema for validating Experiment Specification
+* [+] Added generate_seed parameter to ExperimentDescription.scenarios() iterator.
+      If set, @seed@ placeholder will be replaced with seed number
+* [+] Added --seed option to om_expand scripts.
+      If set, @seed@ placeholder will be replaced with seed number
+
 0.2.2
 * [*] get_schema_version_from_xml returns None if empty or non-xml string is given as input
 
