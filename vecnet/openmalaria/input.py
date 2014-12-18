@@ -15,6 +15,9 @@ from xml.etree.ElementTree import ParseError
 
 class XmlInputFile:
     def __init__(self, xml):
+        """
+        xml - string, contents of xml file or open file handle
+        """
         if hasattr(xml, "read"):
             self.xml = xml.read()
         else:
@@ -61,6 +64,9 @@ class XmlInputFile:
         return survey_time_list
 
     def _get_age_groups(self, section):
+        """
+        AgeGroup structure is the same in monitoring and demographics section, so we can use one function to parse both
+        """
         age_group_list = list()
         lowerbound = section.attrib["lowerbound"]
         for age_group in section.findall("group"):
