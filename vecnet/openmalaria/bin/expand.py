@@ -13,7 +13,7 @@
 import sys
 import argparse
 
-from vecnet.openmalaria.experiment_creator_v2 import ExperimentDescription
+from vecnet.openmalaria.experiment import ExperimentDescription
 
 def main(filename, generate_seed=False):
 

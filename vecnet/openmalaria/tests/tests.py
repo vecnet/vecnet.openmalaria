@@ -14,7 +14,7 @@ import unittest
 import json
 import os
 
-from vecnet.openmalaria.experiment_creator_v2 import ExperimentDescription
+from vecnet.openmalaria.experiment import ExperimentDescription
 
 
 class TestExperimentDescription(unittest.TestCase):
