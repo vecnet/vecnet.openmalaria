@@ -67,7 +67,6 @@ class OutputParser:
                     cts_output_data[measures[i]].append(float(data[i]))
             # Can also check if timesteps are in order
             cts_output_data.pop("timestep")
-            print cts_output_data.keys()
             self.cts_output_data = cts_output_data
 
     def _parse_survey_output_file(self, survey_output_file):
@@ -126,10 +125,10 @@ class OutputParser:
     def get_survey_measure_name(self, measure_id, third_dimension):
         measure_name = ""
         if surveyFileMap[measure_id][1] == "age group":
-            age_group = self.get_monitoring_age_group(third_dimension)
+            age_group = self.get_monitoring_age_group(third_dimension-1)
             age_group_name = "%s - %s" %(age_group["lowerbound"], age_group["upperbound"])
             measure_name = "(%s)" % age_group_name
-        measure_name = surveyFileMap[measure_id] + measure_name
+        measure_name = surveyFileMap[measure_id][0] + measure_name
         return measure_name
 
 

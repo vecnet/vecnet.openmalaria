@@ -13,13 +13,14 @@
 from vecnet.openmalaria.input import XmlInputFile
 import unittest
 
-class TestExperimentDescription(unittest.TestCase):
+
+class TestXmlInputFile(unittest.TestCase):
     def setUp(self):
         pass
 
     def test_survey_timesteps_property(self):
         xml_file = XmlInputFile(open("input\\scenario70k60c.xml"))
-        self.assertEqual(xml_file.survey_timesteps, [730,736,742,748])
+        self.assertEqual(xml_file.survey_timesteps, [730, 736, 742, 748])
         xml_file = XmlInputFile(open("input\\scenario70k60c_no_surveys.xml"))
         self.assertEqual(xml_file.survey_timesteps, [])
         xml_file = XmlInputFile("<xml></xml>")

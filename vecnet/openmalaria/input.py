@@ -70,8 +70,8 @@ class XmlInputFile:
         age_group_list = list()
         lowerbound = section.attrib["lowerbound"]
         for age_group in section.findall("group"):
-            upperbound = age_group.attrib("upperbound")
-            age_group.append({"lowerbound":lowerbound,
+            upperbound = age_group.attrib["upperbound"]
+            age_group_list.append({"lowerbound":lowerbound,
                               "upperbound": upperbound})
             lowerbound = upperbound
         return age_group_list
