@@ -24,9 +24,9 @@ class Scenario:
     def __unicode__(self):
         return self.xml
 
-class ExperimentDescription:
+class ExperimentSpecification:
     """
-    OpenMalaria experiment description is a json file. This class is an SDK for working with that file format.
+    OpenMalaria experiment specification is a json file. This class is an SDK for working with that file format.
     """
     def __init__(self, experiment):
         # Accept both json string and dictionary as an input. string is converted to dict automatically

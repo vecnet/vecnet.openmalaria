@@ -13,12 +13,12 @@
 import sys
 import argparse
 
-from vecnet.openmalaria.experiment import ExperimentDescription
+from vecnet.openmalaria.experiment import ExperimentSpecification
 
 def main(filename, generate_seed=False):
 
     with open(filename) as fp:
-        exp = ExperimentDescription(fp)
+        exp = ExperimentSpecification(fp)
 
     i = 1
     keys = exp.experiment["sweeps"].keys()

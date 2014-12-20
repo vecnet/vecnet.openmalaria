@@ -14,7 +14,7 @@ import unittest
 import json
 import os
 
-from vecnet.openmalaria.experiment import ExperimentDescription
+from vecnet.openmalaria.experiment import ExperimentSpecification
 
 
 class TestExperimentDescription(unittest.TestCase):
@@ -25,7 +25,7 @@ class TestExperimentDescription(unittest.TestCase):
     def do_test(experiment, generate_seed=False):
         if isinstance(experiment, (str, unicode)):
             with open(experiment) as fp:
-                exp = ExperimentDescription(fp)
+                exp = ExperimentSpecification(fp)
         else:
             exp = experiment
 
@@ -34,7 +34,7 @@ class TestExperimentDescription(unittest.TestCase):
         return result
 
     def test_initialization(self):
-        self.assertRaises(TypeError, ExperimentDescription, 1)
+        self.assertRaises(TypeError, ExperimentSpecification, 1)
 
     def test_dict(self):
         """ Testing experiment creation from a python dictionary.
@@ -55,7 +55,7 @@ class TestExperimentDescription(unittest.TestCase):
         expected_result = ({u"<xml>80 66 </xml>",
                             u"<xml>80 90 </xml>",
                             u"<xml>90 66 </xml>", })
-        exp = ExperimentDescription(experiment)
+        exp = ExperimentSpecification(experiment)
         self.assertEqual(exp.name, "Unnamed Experiment", "Wrong name")
         self.assertEqual("%s" % exp, "Unnamed Experiment", "Wrong name")
 
@@ -96,7 +96,7 @@ class TestExperimentDescription(unittest.TestCase):
                 ["itn90", "irs66"]
             ]
         }"""
-        exp = ExperimentDescription(string)
+        exp = ExperimentSpecification(string)
         self.assertEqual(exp.name, "Experiment from a string", "Wrong name")
         expected_results = ({u"<xml> 80 66 </xml>",
                              u"<xml> 80 77 </xml>",
@@ -108,7 +108,7 @@ class TestExperimentDescription(unittest.TestCase):
         """ Testing add_sweeps and add_arms functions
         """
         fp = open("experiment1.json", "r")
-        exp = ExperimentDescription(json.load(fp))
+        exp = ExperimentSpecification(json.load(fp))
         exp.experiment["base"] = "<xml> @itn@ @irs@ @model@ @p1@ (@p2@) </xml>"
         exp.add_sweep("test")
         exp.add_arm("test", "1", {"@p1@": 2, "@p2@": "1"})
@@ -137,7 +137,7 @@ class TestExperimentDescription(unittest.TestCase):
 
     def test_1(self):
         with open("experiment1.json") as fp:
-            exp = ExperimentDescription(fp)
+            exp = ExperimentSpecification(fp)
         expected_result = ({u"<xml> 80 66 model1 </xml>",
                             u"<xml> 80 66 model3 </xml>",
                             u"<xml> 80 66 model2 </xml>",
@@ -427,7 +427,7 @@ class TestExperimentDescription(unittest.TestCase):
                           "irs": {"irs 66": {"@irs@": "66"}, "irs 90": {"@irs@": "90"}}
                       }
         }
-        exp = ExperimentDescription(experiment)
+        exp = ExperimentSpecification(experiment)
         exp.add_sweep("test")
         self.assertIn("test", exp.experiment["sweeps"])
 

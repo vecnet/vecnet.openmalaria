@@ -44,4 +44,4 @@ def get_schema_version_from_xml(xml):
     root = tree.getroot()
     return root.attrib.get('schemaVersion', None)
 
-from .experiment import ExperimentDescription
+from .experiment import ExperimentSpecification
