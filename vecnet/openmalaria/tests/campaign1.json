@@ -1,0 +1,31 @@
+{
+    "Events": [
+        {
+            "Event_Coordinator_Config": {
+                "Demographic_Coverage": 1.0,
+                "Intervention_Config": {
+                    "Bednet_Type": "Barrier",
+                    "Blocking_Rate": @blocking@,
+                    "Cost_To_Consumer": 3.75,
+                    "Durability_Time_Profile": "BOXDURABILITY",
+                    "Killing_Rate": @killing@,
+                    "Primary_Decay_Time_Constant": 3650,
+                    "Secondary_Decay_Time_Constant": 3650,
+                    "class": "SimpleBednet",
+                    "my_name": "Simple_Bednets_(predefined)"
+                },
+                "Number_Distributions": -1,
+                "Number_Repetitions": -1,
+                "Timesteps_Between_Repetitions": -1,
+                "Travel_Linked ": 0,
+                "class": "StandardInterventionDistributionEventCoordinator"
+            },
+            "Nodeset_Config": {
+                "class": "NodeSetAll"
+            },
+            "Start_Day": 0.0,
+            "class": "CampaignEvent"
+        }
+    ],
+    "Use_Defaults": 1
+}

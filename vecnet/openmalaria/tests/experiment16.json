@@ -1,0 +1,17 @@
+{
+    "name": "Experiment 16 - sweep name is the same as @placeholder@ name",
+    "base":"<xml> @seed@ @coverage@ </xml>",
+    "sweeps": {
+        "coverage": {
+            "80": {"@coverage@": "80"},
+            "90": {"@coverage@": "90"},
+            "100": {"@coverage@": "100"}
+        },
+        "seed": {
+             "11": {"@seed@": "11"},
+             "15": {"@seed@": "15"},
+             "31": {"@seed@": "31"}
+         }
+     },
+    "combinations":[]
+}

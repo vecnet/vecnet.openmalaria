@@ -1,7 +1,13 @@
 =========
 Changelog
 =========
+
+0.3.1 2014-12-22
+=====
+* [+] Added description for every continuous channel
+
 0.3.0
+=====
 * [+] Added XmlInputFile and OutputParser classes
 * [+] ExperimentDescription class renamed to ExperimentSpecification
 

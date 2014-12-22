@@ -1,0 +1,32 @@
+{
+    "name": "Experiment Specification for EMOD campaign.json",
+    "basefile":"campaign1.json",
+    "sweeps": {
+        "Killing rate": {
+            "10%": {"@killing@": "0.1"},
+            "20%": {"@killing@": "0.2"},
+            "30%": {"@killing@": "0.3"},
+            "40%": {"@killing@": "0.4"},
+            "50%": {"@killing@": "0.5"},
+            "60%": {"@killing@": "0.6"},
+            "70%": {"@killing@": "0.7"},
+            "80%": {"@killing@": "0.8"},
+            "90%": {"@killing@": "0.9"},
+            "100%": {"@killing@": "1.0"}
+        },
+        "Blocking rate": {
+            "10%": {"@blocking@": "0.1"},
+            "20%": {"@blocking@": "0.2"},
+            "30%": {"@blocking@": "0.3"},
+            "40%": {"@blocking@": "0.4"},
+            "50%": {"@blocking@": "0.5"},
+            "60%": {"@blocking@": "0.6"},
+            "70%": {"@blocking@": "0.7"},
+            "80%": {"@blocking@": "0.8"},
+            "90%": {"@blocking@": "0.9"},
+            "100%": {"@blocking@": "1.0"}
+         }
+     },
+    "combinations":
+    []
+}
