@@ -234,7 +234,8 @@ surveyFileMap = \
         ("nTransmit", "(unused)",
          "Infectiousness of human population to mosquitoes: sum(p(transmit_i)) across humans i"),
         ("totalPatentInf", "age group", "Total patent infections"),
-        None,
+        # Measure 9 name is taken from https://code.google.com/p/openmalaria/source/browse/util/plotResult.py
+        ("contrib", "(removed)", "(removed)"),
         ("sumPyrogenThresh", "age group", "Sum of the pyrogenic threshold"),
         ("nTreatments1", "age group", "number of treatments (1st line) (added to 1-day model in 24.1)"),
         ("nTreatments2", "age group", "number of treatments (2nd line) (added to 1-day model in 24.1)"),
@@ -256,8 +257,10 @@ surveyFileMap = \
          "Annual Average Kappa. Calculated once a year as sum of human infectiousness weighted by initial EIR for "
          "that time of year."),
         ("nNMFever", "age group", "Number of episodes of non-malaria fever"),
-        None,
-        None,
+        # Measure 28 name is taken from https://code.google.com/p/openmalaria/source/browse/util/plotResult.py
+        ('innoculationsPerDayOfYear',"(removed)","(removed"),
+        # Measure 29 name is taken from https://code.google.com/p/openmalaria/source/browse/util/plotResult.py
+        ('kappaPerDayOfYear',"(removed)","(removed"),
         ("innoculationsPerAgeGroup", "age group", "The total number of inoculations per age group"),
         ("Vector_Nv0", "vector species",
          "Number of emerging mosquitoes that survive to the first feeding search per day at this time-step "
@@ -307,4 +310,15 @@ surveyFileMap = \
         ("nPQTreatments", "age group", "Number of treatments given with primaquine (P. vivax model only)."),
         ("nTreatDiagnostics", "age group",
          "Number of diagnostic tests performed (if in the health system description, useDiagnosticUC='true').")
+
+    # https://code.google.com/p/openmalaria/source/browse/util/plotResult.py
+    # 65 : 'nMassRecruitOnly',
+    # 66 : 'nCtsRecruitOnly',
+    # 67 : 'nTreatDeployments',
+    # 68 : 'sumAge',
+    # 69 : 'nInfectByGenotype',
+    # 70 : 'nPatentByGenotype',
+    # 71 : 'logDensByGenotype',
+    # 72 : 'nHostDrugConcNonZero',
+    # 73 : 'sumLogDrugConcNonZero'
     ]
