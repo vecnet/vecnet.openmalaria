@@ -21,12 +21,13 @@ class TestXmlInputFile(unittest.TestCase):
     def test_survey_timesteps_property(self):
         xml_file = XmlInputFile(open("input\\scenario70k60c.xml"))
         self.assertEqual(xml_file.survey_timesteps, [730, 736, 742, 748])
+        self.assertEqual([vector.name for vector in xml_file.vectors], ["gambiae"])
         xml_file = XmlInputFile(open("input\\scenario70k60c_no_surveys.xml"))
         self.assertEqual(xml_file.survey_timesteps, [])
         xml_file = XmlInputFile("<xml></xml>")
         self.assertIsNone(xml_file.survey_timesteps)
-        xml_file = XmlInputFile("...")
-        self.assertIsNone(xml_file.survey_timesteps)
+        self.assertRaises(RuntimeError, XmlInputFile, "...")
+        #self.assertIsNone(xml_file.survey_timesteps)
 
 if __name__ == "__main__":
     unittest.main()
