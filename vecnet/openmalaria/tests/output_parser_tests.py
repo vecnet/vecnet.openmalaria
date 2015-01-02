@@ -38,6 +38,26 @@ class TestOutputParser(unittest.TestCase):
         self.assertEqual(output_parser.survey_output_data[(3, 2)],
                          [[730, 16.0], [803, 17.0], [876, 16.0], [949, 14.0], [1022, 12.0], [1095, 10.0]])
 
+
+    def test_vector_measures(self):
+        output_parser = OutputParser(open("output_parser\\test1.xml"),
+                                     survey_output_file=open("output_parser\\test1_output.txt"),
+                                     cts_output_file=open("output_parser\\test1_ctsout.txt"))
+        self.assertEqual(len(output_parser.cts_output_data["N_v0(arabiensis)"]), 1461)
+        self.assertEqual(output_parser.get_cts_measures(),
+                         ['alpha_i(arabiensis)', 'P_B(funestus)', 'IRS coverage', 'ITN coverage', 'alpha_i(minor)',
+                          'GVI coverage', 'P_B(gambiae)', 'N_v0(arabiensis)', 'P_B(arabiensis)', 'human infectiousness',
+                          'num transmitting humans', 'alpha_i(gambiae)', 'immunity Y', 'N_v0(gambiae)',
+                          'new infections', 'P_B(minor)', 'immunity h', 'P_C*P_D(arabiensis)', 'simulated EIR',
+                          'P_C*P_D(funestus)', 'N_v0(funestus)', 'alpha_i(funestus)', 'P_C*P_D(minor)',
+                          'P_C*P_D(gambiae)', 'input EIR', 'N_v0(minor)']
+                         )
+        self.assertEqual(len(output_parser.survey_time_list), 241)
+        self.assertEqual(len(output_parser.survey_output_data[(34, "funestus")]), 241)
+
+        # Measure 21, allCauseIMR is returned as a single number over whole intervention period
+        self.assertEqual(output_parser.survey_output_data[(21, 1)], [[0, 152.089]])
+
     def setUp(self):
         pass
 

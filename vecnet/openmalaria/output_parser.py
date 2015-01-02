@@ -102,13 +102,22 @@ class OutputParser:
                 # has one record from the end of the simulation and does not use the survey number or third dimension
                 # columns.)
                 survey_number = int(data[0])
-                # The "third dimension" (in the second column for historical reasons) specifies another dimension of the
-                # output. For many measures it identifies the human age group, for a few measures it is unused, and
-                # for some it holds a mosquito species, a drug identifier or a cohort number.
-                third_dimension = int(data[1])
                 # Output can be associated with several different measures; the code under the label "id" in the first
                 # column of the survey measures table appears in the third column of output.
                 measure_id = int(data[2])
+                # The "third dimension" (in the second column for historical reasons) specifies another dimension of the
+                # output. For many measures it identifies the human age group, for a few measures it is unused, and
+                # for some it holds a mosquito species, a drug identifier or a cohort number.
+                try:
+                    third_dimension = int(data[1])
+                except ValueError as e:
+                    # For vector measures (Vector_Nv0, Vector_Nv, Vector_Ov and Vector_Sv) third dimension is
+                    # a species' name, not a number
+                    if self.xml_input_file.measure_has_species_name(measure_id=measure_id):
+                        third_dimension = str(data[1])
+                    else:
+                        # If not a vector measure, pass re-raise the exception
+                        raise e
                 # Value of measure for specified survey number (can be translated to timestep number)
                 value = float(data[3])
                 if (measure_id, third_dimension) in survey_output_data:
@@ -135,6 +144,8 @@ class OutputParser:
             age_group = self.get_monitoring_age_group(third_dimension - 1)
             age_group_name = "%s - %s" % (age_group["lowerbound"], age_group["upperbound"])
             measure_name = "(%s)" % age_group_name
+        elif surveyFileMap[measure_id][1] == "vector species":
+            measure_name = "(%s)" % third_dimension
         measure_name = surveyFileMap[measure_id][0] + measure_name
         return measure_name
 
