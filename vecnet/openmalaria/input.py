@@ -117,6 +117,12 @@ class XmlInputFile(object):
     #         pass
 
     @classmethod
+    def measure_has_age_group(cls, measure_id):
+        if measure_id in ({7, 9, 21, 25, 26, 28, 29, 31, 32, 33, 34, 35, 36, 39, 40, 47, 48, 49, 50, 51, 54}):
+            return False
+        return True
+
+    @classmethod
     def _get_age_groups(cls, section):
         """
         AgeGroup structure is the same in monitoring and demographics section, so we can use one function to parse both
