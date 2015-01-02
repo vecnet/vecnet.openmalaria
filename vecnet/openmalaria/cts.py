@@ -25,7 +25,7 @@ continuousMeasuresDescription = \
             "The probability of a mosquito successfully escaping a human and resting after biting, "
             "averaged across humans",
         "input EIR":
-            "Requested entomological infection rate. This is a fixed periodic value, for comparison with simulated EIR. "
+            "Requested entomological infection rate. This is a fixed periodic value, for comparison with simulated EIR."
             "Units (from schema version 24): inoculations per adult per timestep.",
         "simulated EIR":
             "EIR acting on simulated humans. "

@@ -13,6 +13,7 @@ import json
 import re
 from .helpers import prime_numbers
 
+
 class Scenario:
     def __init__(self, xml, parameters=None):
         self.xml = xml
@@ -23,6 +24,7 @@ class Scenario:
 
     def __unicode__(self):
         return self.xml
+
 
 class ExperimentSpecification:
     """
@@ -55,7 +57,7 @@ class ExperimentSpecification:
         arm = self.experiment["sweeps"][sweep_name][arm_name]
         for param_change in arm:
             # arm substitution string should start and end with an @
-            if re.match("^@.*@$",param_change) is None:
+            if re.match("^@.*@$", param_change) is None:
                 raise TypeError("arm substitution string should start and end with an @, for example @param1@")
             # Each arm may contain more that one parameter
             # changes are applied in a random order currently
@@ -97,14 +99,13 @@ class ExperimentSpecification:
             # Support no combinations element:
             combinations_in_experiment = dict()    # empty dict 
 
-
         #1) calculate combinations_sweeps (depends on ALL combinations_ items)
         # Get the list of fully factorial sweeps
         all_combinations_sweeps = []
         all_combinations = []
         for key, combinations_ in combinations_in_experiment.items():
             # generate all permutations of all combinations
-            if combinations_ == []:
+            if not combinations_:
                 # Fully factorial experiment, shortcut for "combinations":[[],[]]
                 combinations_sweeps = []
                 combinations = [[]]
@@ -116,7 +117,7 @@ class ExperimentSpecification:
             for item in combinations_sweeps:
                 # TODO: error if sweep is already in this list?
                 all_combinations_sweeps.append(item)
-            all_combinations.append((combinations_sweeps,combinations))
+            all_combinations.append((combinations_sweeps, combinations))
         
         sweeps_fully_factorial = list(set(sweeps_all) - set(all_combinations_sweeps))
         #print "fully fact: %s" % sweeps_fully_factorial
@@ -124,8 +125,7 @@ class ExperimentSpecification:
         #2) produce a list of all combinations of fully factorial sweeps
         # First sets of "combinations": the fully-factorial sweeps
         for sweep in sweeps_fully_factorial:
-            all_combinations.append(([sweep],[[x] for x in self.experiment["sweeps"][sweep].keys()]))
-        
+            all_combinations.append(([sweep], [[x] for x in self.experiment["sweeps"][sweep].keys()]))
         
         #3) take the dot (inner) product of the list above (fully factorial arm combinations)
         #   with the first combinations list, that with the second combination list, ...
@@ -139,7 +139,7 @@ class ExperimentSpecification:
             comb2 = all_combinations[1]
             new_sweeps = comb1[0] + comb2[0]
             new_combinations = [x+y for x in comb1[1] for y in comb2[1]]
-            all_combinations = [(new_sweeps,new_combinations)] + all_combinations[2:]
+            all_combinations = [(new_sweeps, new_combinations)] + all_combinations[2:]
             red_iter += 1
             #print "all combinations:", red_iter, all_combinations
         
@@ -159,17 +159,8 @@ class ExperimentSpecification:
                     raise(RuntimeError("@seed@ placeholder is not found"))
             yield scenario
     
-
     def add_sweep(self, sweep_name):
-       self.experiment["sweeps"][sweep_name] = {}
+        self.experiment["sweeps"][sweep_name] = {}
 
     def add_arm(self, sweep, arm_name, parameters):
         self.experiment["sweeps"][sweep][arm_name] = parameters
-
- 
- 
- 
- 
- 
- 
- 

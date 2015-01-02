@@ -15,6 +15,7 @@ import argparse
 
 from vecnet.openmalaria.experiment import ExperimentSpecification
 
+
 def main(filename, generate_seed=False):
 
     with open(filename) as fp:
@@ -22,7 +23,7 @@ def main(filename, generate_seed=False):
 
     i = 1
     keys = exp.experiment["sweeps"].keys()
-    csvfile = open("scenarios.csv","w")
+    csvfile = open("scenarios.csv", "w")
     # Write "header" of csv file
     csvfile.write("filename")
     for key in keys:

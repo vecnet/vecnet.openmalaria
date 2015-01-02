@@ -230,9 +230,9 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'vecnetopenmalaria', u'vecnet.openmalaria Documentation',
-   u'Alex Vyushkov, Diggory Hardy, Jimm Domingo', 'vecnetopenmalaria', 'One line description of project.',
-   'Miscellaneous'),
+    ('index', 'vecnetopenmalaria', u'vecnet.openmalaria Documentation',
+    u'Alex Vyushkov, Diggory Hardy, Jimm Domingo', 'vecnetopenmalaria', 'One line description of project.',
+    'Miscellaneous'),
 ]
 
 # Documents to append as an appendix to all manuals.
