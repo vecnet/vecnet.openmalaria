@@ -12,6 +12,7 @@
 
 from vecnet.openmalaria.output_parser import OutputParser
 import unittest
+import math
 
 
 class TestOutputParser(unittest.TestCase):
@@ -57,6 +58,20 @@ class TestOutputParser(unittest.TestCase):
 
         # Measure 21, allCauseIMR is returned as a single number over whole intervention period
         self.assertEqual(output_parser.survey_output_data[(21, 1)], [[0, 152.089]])
+
+    def test_nan(self):
+        output_parser = OutputParser(open("output_parser\\scenario_nan.xml"),
+                                     survey_output_file=open("output_parser\\output_nan.txt"),
+                                     cts_output_file=open("output_parser\\ctsout_nan.txt"))
+        # allCauseIMR measure (#21) can produce NaN value on timestep 0
+        allCauseIMR = output_parser.survey_output_data[(21, 1)]
+        # Expected value [[0, float('NaN')]]
+        # Note you can't do self.assertEqual(output_parser.survey_output_data[(21, 1)], [[0, float('NaN')]])
+        # because float('NaN') != float('NaN')
+        self.assertEqual(len(allCauseIMR), 1)
+        self.assertEqual(len(allCauseIMR[0]), 2)
+        self.assertTrue(math.isnan(allCauseIMR[0][1]))
+
 
     def setUp(self):
         pass
