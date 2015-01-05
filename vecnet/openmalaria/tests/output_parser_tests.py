@@ -39,7 +39,6 @@ class TestOutputParser(unittest.TestCase):
         self.assertEqual(output_parser.survey_output_data[(3, 2)],
                          [[730, 16.0], [803, 17.0], [876, 16.0], [949, 14.0], [1022, 12.0], [1095, 10.0]])
 
-
     def test_vector_measures(self):
         output_parser = OutputParser(open("output_parser\\test1.xml"),
                                      survey_output_file=open("output_parser\\test1_output.txt"),
@@ -71,7 +70,6 @@ class TestOutputParser(unittest.TestCase):
         self.assertEqual(len(allCauseIMR), 1)
         self.assertEqual(len(allCauseIMR[0]), 2)
         self.assertTrue(math.isnan(allCauseIMR[0][1]))
-
 
     def setUp(self):
         pass

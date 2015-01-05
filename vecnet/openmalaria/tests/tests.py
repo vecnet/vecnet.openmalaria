@@ -166,7 +166,7 @@ class TestExperimentDescription(unittest.TestCase):
                                 u"<xml> 80 66 1 1</xml>",
                                 u"<xml> 80 77 2 2</xml>",
                                 u"<xml> 66 90 1 1</xml>",
-                            })
+                           })
         self.assertEqual(len(expected_results), len(results))
         self.assertEqual(set(results), expected_results)
 

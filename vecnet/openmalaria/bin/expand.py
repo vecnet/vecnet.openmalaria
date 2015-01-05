@@ -53,7 +53,7 @@ if __name__ == "__main__":
 
     try:
         status = main(filename=args.exp_spec_name,
-                  generate_seed=args.seed)
+                      generate_seed=args.seed)
     except (RuntimeError, IOError) as e:
         print "Error: %s" % e
         status = 1
