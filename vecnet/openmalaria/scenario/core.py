@@ -58,7 +58,7 @@ def tag_value_setter(tag, attrib):
     def outer(func):
         def inner(self, value):
             #attrib = func.__name__
-            self.et.find(tag).attrib[attrib] = value
+            self.et.find(tag).attrib[attrib] = str(value)
         return inner
     return outer
 

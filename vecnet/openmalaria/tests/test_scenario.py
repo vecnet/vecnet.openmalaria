@@ -76,6 +76,7 @@ class TestGetSchemaVersion(unittest.TestCase):
                          [0.0468, 0.0447, 0.0374, 0.0417, 0.0629, 0.0658, 0.0423, 0.0239, 0.0203, 0.0253, 0.0331, 0.0728])
         self.assertEqual(gambiae.mosq.minInfectedThreshold, 0.001)
         self.assertEqual(gambiae.mosq.mosqRestDuration, 2)
+        self.assertEqual(gambiae.mosq.mosqHumanBloodIndex, 0.85)
 
         # Writing attributes
         gambiae.seasonality.monthlyValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
@@ -83,6 +84,7 @@ class TestGetSchemaVersion(unittest.TestCase):
         gambiae.propInfected = 0.1
         scenario.entomology.scaledAnnualEIR = 10.0
         gambiae.seasonality.annualEIR = 6.1
+        gambiae.mosq.mosqHumanBloodIndex = 0.7
 
         scenario2 = Scenario(scenario.xml)
         self.assertEqual(scenario2.entomology.vectors["gambiae"].seasonality.monthlyValues,
@@ -90,6 +92,7 @@ class TestGetSchemaVersion(unittest.TestCase):
         self.assertEqual(scenario2.entomology.vectors["gambiae"].propInfected, 0.1)
         self.assertEqual(scenario2.entomology.vectors["gambiae"].seasonality.annualEIR, 6.1)
         self.assertEqual(scenario2.entomology.scaledAnnualEIR, 10.0)
+        self.assertEqual(scenario2.entomology.vectors["gambiae"].mosq.mosqHumanBloodIndex, 0.70)
 
         # Deleting a mosquito
         scenario2.entomology.vectors["gambiae"].mosquito = "farauti"

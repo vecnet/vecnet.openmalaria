@@ -10,7 +10,7 @@
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 from xml.etree.ElementTree import Element
 from xml.etree import ElementTree
-from vecnet.openmalaria.scenario.core import Section, attribute, tag_value, section, attribute_setter
+from vecnet.openmalaria.scenario.core import Section, attribute, tag_value, section, attribute_setter, tag_value_setter
 
 
 class Seasonality(Section):
@@ -109,6 +109,21 @@ class Mosq(Section):
         """
         return "mosqRestDuration", "value", int
 
+    @property
+    @tag_value
+    def mosqHumanBloodIndex(self):
+        """
+        Human blood index
+        The proportion of resting mosquitoes which fed on human blood during the last feed.
+
+        type: double
+        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#documentation-element-122
+        """
+        return "mosqHumanBloodIndex", "value", float
+    @mosqHumanBloodIndex.setter
+    @tag_value_setter(tag="mosqHumanBloodIndex", attrib="value")
+    def mosqHumanBloodIndex(self, value):
+        pass  # mosqHumanBloodIndex parameter will be set by tag_value_setter decorator
 
 class Vector(Section):
     """
