@@ -22,7 +22,27 @@ class Seasonality(Section):
     @property  # annualEIR
     @attribute
     def annualEIR(self):
+        """
+        Annual EIR
+        If this attribute is included, EIR for this species is scaled to this level. Note that if the scaledAnnualEIR
+        attribute of the entomology element is also used, EIR is scaled again, making this attribute the EIR relative
+        to other species.
+
+        With some seasonality inputs, this attribute is optional, in which case (if scaledAnnualEIR is also not
+        specified) transmission depends on all parameters of the vector. With some seasonality inputs, however, this
+        parameter must be specified.
+
+        Units: Inoculations (the number of bites by infectious mosquitoes) per adult per annum
+        Type: float
+        Min: 0
+
+        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#annual-eir
+        """
         return "annualEIR", float
+    @annualEIR.setter
+    @attribute_setter(attrib_type=float)
+    def annualEIR(self, value):
+        pass  # attribute_setter decorator will change annualEIR attribute
 
     @property  # smoothing
     @tag_value
