@@ -96,7 +96,7 @@ class Vector(Section):
     def mosquito(self):
         return "mosquito", str
     @mosquito.setter
-    @attribute_setter
+    @attribute_setter(attrib_type=(str, unicode))
     def mosquito(self, value):
         pass
 
@@ -140,9 +140,9 @@ class Vectors():
         et = ElementTree.fromstring(vector)
         # check if it is valid vector
         mosquito = Vector(et)
-        assert(isinstance(mosquito.mosquito, str))
-        assert(isinstance(mosquito.propInfected, float))
-        assert(len(mosquito.seasonality.monthlyValues), 12)
+        assert isinstance(mosquito.mosquito, str)
+        assert isinstance(mosquito.propInfected, float)
+        assert len(mosquito.seasonality.monthlyValues) == 12
         self.et.append(et)
 
     @property

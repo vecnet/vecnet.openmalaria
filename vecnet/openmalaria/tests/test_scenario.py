@@ -40,6 +40,15 @@ class TestGetSchemaVersion(unittest.TestCase):
         # Check if xml code is correct
         self.assertEqual(len(scenario.xml), 20612)
 
+        # Changing attributes
+        scenario.wuID = 1
+        self.assertEqual(scenario.wuID, 1)
+        self.assertRaises(AssertionError, setattr, scenario, "wuID", "string")
+
+        scenario.analysisNo = 1024
+        self.assertEqual(scenario.analysisNo, 1024)
+        self.assertRaises(AssertionError, setattr, scenario, "analysisNo", "string")
+
         # Checking sections
         self.assertEqual(hasattr(scenario, "monitoring"), True)
         self.assertIsInstance(scenario.monitoring, Monitoring)
@@ -82,8 +91,8 @@ class TestGetSchemaVersion(unittest.TestCase):
         del scenario.entomology.vectors["gambiae"]
         scenario3 = Scenario(scenario.xml)
         self.assertEqual(len(scenario3.entomology.vectors), 0)
-        scenario3.entomology.vectors.add("<anopheles/>")
-        for vector in scenario3.entomology.vectors():
+        self.assertRaises(AttributeError, scenario3.entomology.vectors.add, "<anopheles/>")
+        for vector in scenario3.entomology.vectors:
             print vector
 
 

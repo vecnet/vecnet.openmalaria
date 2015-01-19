@@ -12,7 +12,7 @@ from xml import etree
 
 from xml.etree import ElementTree
 
-from vecnet.openmalaria.scenario.core import attribute, Section, section
+from vecnet.openmalaria.scenario.core import attribute, Section, section, attribute_setter
 from vecnet.openmalaria.scenario.demography import Demography
 from vecnet.openmalaria.scenario.entomology import Entomology
 from vecnet.openmalaria.scenario.healthsystem import HealthSystem
@@ -84,6 +84,10 @@ class Scenario(Section):
         https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#version-of-the-xml-schema
         """
         return "analysisNo", int
+    @analysisNo.setter
+    @attribute_setter(attrib_type=int)
+    def analysisNo(self, value):
+        pass  # attribute_setter decorator will change analysisNo attribute
 
     @property
     @attribute
@@ -93,6 +97,10 @@ class Scenario(Section):
         https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#work-unit-identifier
         """
         return "wuID", int
+    @wuID.setter
+    @attribute_setter(attrib_type=int)
+    def wuID(self, value):
+        pass  # attribute_setter decorator will change wuID attribute
 
     @property
     def xml(self):

@@ -25,11 +25,14 @@ def attribute(func):
             raise AttributeError
     return inner
 
-def attribute_setter(func):
-    def inner(self, value):
-        attrib = func.__name__
-        self.et.attrib[attrib] = str(value)
-    return inner
+def attribute_setter(attrib_type):
+    def outer(func):
+        def inner(self, value):
+            assert isinstance(value, attrib_type)
+            attrib = func.__name__
+            self.et.attrib[attrib] = str(value)
+        return inner
+    return outer
 
 def section(func):
     """
