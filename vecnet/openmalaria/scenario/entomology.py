@@ -91,21 +91,46 @@ class Mosq(Section):
 
 
 class Vector(Section):
+    """
+    Class that represents /scenario/entomology/vector/anopheles section
+    https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#anopheles-n2
+    """
     @property  # mosquito
     @attribute
     def mosquito(self):
+        """
+        Identifier for this anopheles species
+        type: string
+
+        :rtype: str
+        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#identifier-for-this-anopheles-species
+        """
         return "mosquito", str
     @mosquito.setter
     @attribute_setter(attrib_type=(str, unicode))
     def mosquito(self, value):
-        pass
+        pass  # attribute_setter decorator will change mosquito attribute
 
-    @property
+    @property  # propInfected
     @attribute
     def propInfected(self):
-        return "propInfected", float
+        """
+        Initial estimate of proportion of mosquitoes infected (ρ_O)
+        Initial guess of the proportion of mosquitoes which are infected, o: O_v(t) = o*N_v(t).
+        Only used as a starting value.
 
-    @property
+        type: float
+        units: Proportion
+
+        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#anopheles-n2
+        """
+        return "propInfected", float
+    @propInfected.setter
+    @attribute_setter(attrib_type=float)
+    def propInfected(self, value):
+        pass  # attribute_setter decorator will change propInfected attribute
+
+    @property  # propInfectious
     @attribute
     def propInfectious(self):
         return "propInfectious", float
