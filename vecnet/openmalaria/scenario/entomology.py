@@ -251,7 +251,20 @@ class Entomology(Section):
     @property  # scaledAnnualEIR
     @attribute
     def scaledAnnualEIR(self):
+        """
+        Override annual EIR
+        If set, the annual EIR (for all species of vector) is scaled to this level; can be omitted if not needed.
+
+        Units: Infectious bits per adult per year
+        Type: double
+
+        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#override-annual-eir
+        """
         return "scaledAnnualEIR", float
+    @scaledAnnualEIR.setter
+    @attribute_setter(attrib_type=float)
+    def scaledAnnualEIR(self, value):
+        pass  # attribute_setter decorator will change scaledAnnualEIR attribute
 
     @property
     def vectors(self):

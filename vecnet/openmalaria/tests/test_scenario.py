@@ -81,6 +81,7 @@ class TestGetSchemaVersion(unittest.TestCase):
         gambiae.seasonality.monthlyValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         self.assertRaises(AssertionError, setattr, gambiae, "propInfected", "string")
         gambiae.propInfected = 0.1
+        scenario.entomology.scaledAnnualEIR = 10.0
         gambiae.seasonality.annualEIR = 6.1
 
         scenario2 = Scenario(scenario.xml)
@@ -88,6 +89,7 @@ class TestGetSchemaVersion(unittest.TestCase):
                              [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
         self.assertEqual(scenario2.entomology.vectors["gambiae"].propInfected, 0.1)
         self.assertEqual(scenario2.entomology.vectors["gambiae"].seasonality.annualEIR, 6.1)
+        self.assertEqual(scenario2.entomology.scaledAnnualEIR, 10.0)
 
         # Deleting a mosquito
         scenario2.entomology.vectors["gambiae"].mosquito = "farauti"
