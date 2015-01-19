@@ -14,6 +14,7 @@ def attribute(func):
     """
     Decorator used to declare that property is a tag attribute
     """
+
     def inner(self):
         name, attribute_type = func(self)
         if not name:
@@ -22,6 +23,12 @@ def attribute(func):
             return attribute_type(self.et.attrib[name])
         except KeyError:
             raise AttributeError
+    return inner
+
+def attribute_setter(func):
+    def inner(self, value):
+        attrib = func.__name__
+        self.et.attrib[attrib] = str(value)
     return inner
 
 def section(func):
