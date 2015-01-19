@@ -9,11 +9,13 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License (MPL), version 2.0.  If a copy of the MPL was not distributed
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+import copy
 
 import unittest
 import os
 
 from vecnet.openmalaria.scenario import Scenario
+from vecnet.openmalaria.scenario.entomology import Vector
 from vecnet.openmalaria.scenario.monitoring import Monitoring
 
 
@@ -43,8 +45,46 @@ class TestGetSchemaVersion(unittest.TestCase):
         self.assertIsInstance(scenario.monitoring, Monitoring)
 
 
-    def test_demography(self):
-        pass
+    def test_entomology(self):
+        scenario = Scenario(open("input\\scenario70k60c.xml").read())
+
+        # Reading attributes
+        self.assertEqual(scenario.entomology.name, "Kenya Lowlands from EMOD")
+        self.assertEqual(scenario.entomology.scaledAnnualEIR, 25.0)
+        self.assertEqual(len(scenario.entomology.vectors), 1)
+        for vector in scenario.entomology.vectors:
+            self.assertIsInstance(vector, Vector)
+            self.assertEqual(vector.mosquito, "gambiae")
+            self.assertEqual(vector.propInfected, 0.078)
+
+        gambiae = scenario.entomology.vectors["gambiae"]
+        self.assertIsInstance(gambiae, Vector)
+        self.assertEqual(gambiae.mosquito, "gambiae")
+        self.assertEqual(gambiae.seasonality.annualEIR, 1.0)
+        self.assertEqual(gambiae.seasonality.input, "EIR")
+        self.assertEqual(gambiae.seasonality.smoothing, "fourier")
+        self.assertEqual(gambiae.seasonality.monthlyValues,
+                         [0.0468, 0.0447, 0.0374, 0.0417, 0.0629, 0.0658, 0.0423, 0.0239, 0.0203, 0.0253, 0.0331, 0.0728])
+        self.assertEqual(gambiae.mosq.minInfectedThreshold, 0.001)
+        self.assertEqual(gambiae.mosq.mosqRestDuration, 2)
+
+        # Writing attributes
+        gambiae.seasonality.monthlyValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+
+        scenario2 = Scenario(scenario.xml)
+        self.assertEqual(scenario2.entomology.vectors["gambiae"].seasonality.monthlyValues,
+                             [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+
+        # Deleting a mosquito
+        scenario2.entomology.vectors["gambiae"].mosquito = "farauti"
+        for vector in scenario2.entomology.vectors:
+            self.assertEqual(vector.mosquito, "farauti")
+        del scenario.entomology.vectors["gambiae"]
+        scenario3 = Scenario(scenario.xml)
+        self.assertEqual(len(scenario3.entomology.vectors), 0)
+        scenario3.entomology.vectors.add("<anopheles/>")
+        for vector in scenario3.entomology.vectors():
+            print vector
 
 
     @classmethod

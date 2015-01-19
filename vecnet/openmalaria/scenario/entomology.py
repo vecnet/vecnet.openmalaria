@@ -9,7 +9,8 @@
 # License (MPL), version 2.0.  If a copy of the MPL was not distributed
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 from xml.etree.ElementTree import Element
-from vecnet.openmalaria.scenario.core import Section, attribute, tag_value, section
+from xml.etree import ElementTree
+from vecnet.openmalaria.scenario.core import Section, attribute, tag_value, section, attribute_setter
 
 
 class Seasonality(Section):
@@ -86,15 +87,18 @@ class Mosq(Section):
 
         https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#documentation-element-112
         """
-        return "mosqRestDuration", "value", float
+        return "mosqRestDuration", "value", int
 
 
 class Vector(Section):
     @property  # mosquito
     @attribute
-    # Note this attribute is read only by design
     def mosquito(self):
         return "mosquito", str
+    @mosquito.setter
+    @attribute_setter
+    def mosquito(self, value):
+        pass
 
     @property
     @attribute
@@ -124,10 +128,32 @@ class Vector(Section):
 
 class Vectors():
     def __init__(self, et):
+ #       assert isinstance(et, ElementTree)
         self.et = et
-        self.vectors = {}
-        for anopheles in et.findall("anopheles"):
-            self.vectors[anopheles.attrib["mosquito"]] = Vector(anopheles)
+
+    def add(self, vector):
+        """
+        Add a vector to entomology section.
+        vector is either ElementTree or xml snippet
+        """
+        assert isinstance(vector, (str, unicode))
+        et = ElementTree.fromstring(vector)
+        # check if it is valid vector
+        mosquito = Vector(et)
+        assert(isinstance(mosquito.mosquito, str))
+        assert(isinstance(mosquito.propInfected, float))
+        assert(len(mosquito.seasonality.monthlyValues), 12)
+        self.et.append(et)
+
+    @property
+    def vectors(self):
+        """
+        :rtype: list
+        """
+        vectors = {}
+        for anopheles in self.et.findall("anopheles"):
+            vectors[anopheles.attrib["mosquito"]] = Vector(anopheles)
+        return vectors
 
     def __getitem__(self, item):
         """
@@ -135,22 +161,36 @@ class Vectors():
         """
         return self.vectors[item]
 
-    def __setitem__(self, key, value):
-        if isinstance(key, Vector):
-            self.vectors[key] = value
-        else:
-            raise ValueError("only objects of Vector type are accepted")
-
     def __getattr__(self, item):
         """
         :rtype: Vector
         """
-        if item in self.vectors:
-            return self.vectors[item]
-        raise AttributeError
+        return self.vectors[item]
+
+    def __len__(self):
+        return len(self.vectors)
+
+    def __delitem__(self, key):
+        for anopheles in self.et.findall("anopheles"):
+            if anopheles.attrib['mosquito'] == key:
+                self.et.remove(anopheles)
+                return
+        raise KeyError(key)
 
     def __iter__(self):
-        pass
+        """
+        Interator function. Allows using scenario.entomology.vectors in for statement
+        i.e.
+        for vector in scenario.entomology.vectors:
+           print vector.mosquito
+
+        :rtype: Vector
+        """
+        for vector in self.vectors:
+            yield self.vectors[vector]
+
+    def __str__(self):
+        return self.mosquito
 
 class Entomology(Section):
     @property  # name
@@ -171,3 +211,6 @@ class Entomology(Section):
     @property
     def vectors(self):
         return Vectors(self.et.find("vector"))
+
+    def __str__(self):
+        return self.name

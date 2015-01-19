@@ -109,6 +109,9 @@ class Scenario(Section):
         self.root = ElementTree.fromstring(xml)
         super(self.__class__, self).__init__(self.root)
 
+    def __str__(self):
+        return self.name
+
     def load_xml(self, xml):
         #self.xml = xml
         # Parsed xml file (as ElementTree)
@@ -142,19 +145,43 @@ if __name__ == "__main__":
     #print ElementTree.dump(scenario.root)
     print scenario.entomology.scaledAnnualEIR
     print scenario.entomology.name
-    # for vector in scenario.entomology.vectors:
-    #     print vector.mosquito
+    print len(scenario.entomology.vectors)
+    for vector in scenario.entomology.vectors:
+        print "Mosquito: " + vector.mosquito
+    for vector in scenario.entomology.vectors:
+        print vector
     print scenario.entomology.vectors.gambiae.mosquito
     print scenario.entomology.vectors.gambiae.propInfected
     print scenario.entomology.vectors['gambiae'].seasonality.annualEIR
     print scenario.entomology.vectors.vectors['gambiae'].seasonality.annualEIR
     print scenario.entomology.vectors.vectors['gambiae'].seasonality.input
     print scenario.entomology.vectors.vectors['gambiae'].seasonality.monthlyValues
-    scenario.entomology.vectors.vectors['gambiae'].seasonality.monthlyValues = [1,2,3,4,5,6,7,8,9,10,11,12]
+    scenario.entomology.vectors.vectors['gambiae'].seasonality.monthlyValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     print scenario.entomology.vectors.vectors['gambiae'].seasonality.monthlyValues
+    try:
+        print scenario.entomology.vectors["funtestas"]
+    except KeyError as e:
+        print "Pass: %s" % e
+        pass
     try:
         scenario.entomology.vectors["funtestas"] = 123
     except ValueError as e:
         print "Pass: %s" % e
         pass
+
+    try:
+        scenario.entomology.vectors["funtestas"] = scenario.entomology.vectors.vectors['gambiae']
+    except ValueError as e:
+        print "Pass: %s" % e
+        pass
     print scenario.entomology.vectors["gambiae"].mosq.mosqRestDuration
+    try:
+        del scenario.entomology.vectors["funestas"]
+    except KeyError:
+        print "Pass"
+    else:
+        print "FAIL"
+    del scenario.entomology.vectors["gambiae"]
+    for vector in scenario.entomology.vectors:
+        print vector.mosquito
+    print len(scenario.entomology.vectors)
