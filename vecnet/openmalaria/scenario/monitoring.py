@@ -71,7 +71,7 @@ class Monitoring(Section):
         if self.et.find("continuous") is None:
             # Add continuous section
             self.et.append(Element("continuous"))
-        self._add_measures(self.et.find("continuous"), list_of_measures)
+        self._replace_measures(self.et.find("continuous"), list_of_measures)
 
     @property  # SurveyOptions
     def SurveyOptions(self):
@@ -116,7 +116,7 @@ class Monitoring(Section):
     # Internal functions
     def _get_measures(self, et):
         """
-        Get a list of measure in <continuous> or <SurveyOptions> section
+        Get a list of measures in <continuous> or <SurveyOptions> section
         """
         list_of_measures = []
         for tag in et.findall("option"):
@@ -124,7 +124,7 @@ class Monitoring(Section):
                 list_of_measures.append(tag.attrib["name"])
         return list_of_measures
 
-    def _add_measures(self, et, list_of_measures):
+    def _replace_measures(self, et, list_of_measures):
         """
         Build <continuous> or <SurveyOptions> section
         """
