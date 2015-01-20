@@ -84,6 +84,12 @@ class Monitoring(Section):
         if self.et.find("SurveyOptions") is None:
             return list_of_measures
         return self._get_measures(self.et.find("SurveyOptions"))
+    @SurveyOptions.setter
+    def SurveyOptions(self, list_of_measures):
+        if self.et.find("SurveyOptions") is None:
+            # Add SurveyOptions section
+            self.et.append(Element("SurveyOptions"))
+        self._replace_measures(self.et.find("SurveyOptions"), list_of_measures)
 
     @property  # dectionLimit
     def detectionLimit(self):
