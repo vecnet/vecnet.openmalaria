@@ -128,6 +128,9 @@ class Monitoring(Section):
         """
         Build <continuous> or <SurveyOptions> section
         """
+        for measure in et.findall("option"):
+            et.remove(measure)
+
         for measure_name in list_of_measures:
             tag = Element("option")
             tag.attrib["name"] = measure_name
