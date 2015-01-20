@@ -8,8 +8,6 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License (MPL), version 2.0.  If a copy of the MPL was not distributed
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
-from xml import etree
-
 from xml.etree import ElementTree
 
 from vecnet.openmalaria.scenario.core import attribute, Section, section, attribute_setter
@@ -125,14 +123,6 @@ class Scenario(Section):
         # Parsed xml file (as ElementTree)
         self.root = ElementTree.fromstring(xml)
         super(self.__class__, self).__init__(self.root)
-
-    #
-    # def __setitem__(self, key, value):
-    #     et = self._find_measure(key)
-    #     if et is None:
-    #         ElementTree.SubElement(self.et, "option", attrib={"name": key, value: str(value)})
-    #     else:
-    #         et.attrib["value"] = str(value)
 
 
 if __name__ == "__main__":

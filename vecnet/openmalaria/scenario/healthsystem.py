@@ -12,9 +12,8 @@ from vecnet.openmalaria.scenario.core import Section, tag_value, tag_value_sette
 
 __author__ = 'Alexander'
 
-class ImmediateOutcomes(Section):
-    attribs = ["useDiagnosticUC"]
 
+class ImmediateOutcomes(Section):
     @property
     @attribute
     def name(self):
@@ -76,6 +75,7 @@ class ImmediateOutcomes(Section):
     @inpatient.setter
     def inpatient(self, value):
         self.et.find("drugRegimen").attrib["inpatient"] = value
+
 
 class HealthSystem(Section):
     @property
