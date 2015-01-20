@@ -53,6 +53,13 @@ class TestGetSchemaVersion(unittest.TestCase):
         self.assertEqual(hasattr(scenario, "monitoring"), True)
         self.assertIsInstance(scenario.monitoring, Monitoring)
 
+    def test_monitoring(self):
+        scenario = Scenario(open("input\\scenario70k60c.xml").read())
+        measures = scenario.monitoring.continuous
+        measures.append("Input EIR")
+        scenario.monitoring.continuous = measures
+        print scenario.monitoring.continuous
+        print scenario.xml
 
     def test_entomology(self):
         scenario = Scenario(open("input\\scenario70k60c.xml").read())
@@ -124,6 +131,7 @@ class TestGetSchemaVersion(unittest.TestCase):
         scenario.monitoring.name = "Monthly Surveys"
         scenario.monitoring.detectionLimit = 100
         scenario.monitoring.continuous = ["simulated EIR", "GVI coverage"]
+        scenario.monitoring.continuous.append("input EIR")
         scenario.monitoring.surveyOptions = ["hHost", "nPatent", "nUncomp", "simulatedEIR", "nMassGVI"]
         scenario.monitoring.surveys = [730, 736, ]
         # We must preserve the order of the age groups, in monitoring section (for parsing survey output files)
