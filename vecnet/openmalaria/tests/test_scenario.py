@@ -59,7 +59,6 @@ class TestGetSchemaVersion(unittest.TestCase):
         measures.append("Input EIR")
         scenario.monitoring.continuous = measures
         print scenario.monitoring.continuous
-        print scenario.xml
 
     def test_entomology(self):
         scenario = Scenario(open("input\\scenario70k60c.xml").read())
