@@ -92,7 +92,7 @@ class Monitoring(Section):
         Limit above which a human's infection is reported as patent
         https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#detection-limit-for-parasitaemia
         """
-        return float(self.et.find("surveys").attribs["detectionLimit"])
+        return float(self.et.find("surveys").attrib["detectionLimit"])
 
     @property  # surveys
     def surveys(self):
@@ -120,8 +120,8 @@ class Monitoring(Section):
         """
         list_of_measures = []
         for tag in et.findall("option"):
-            if tag.attribs.get("value", "true") == "true":
-                list_of_measures.append(tag.attribs["name"])
+            if tag.attrib.get("value", "true") == "true":
+                list_of_measures.append(tag.attrib["name"])
         return list_of_measures
 
     def _add_measures(self, et, list_of_measures):
