@@ -8,6 +8,8 @@ Contributors:
   Alex Vyushkov, Center for Research Computing, University of Notre Dame
   Diggory Hardy, Swiss Tropical and Public Health Institute, Basel, Switzerland
   Jimm Domingo, Center for Research Computing, University of Notre Dame
+  Nic Reed, Center for Research Computing, University of Notre Dame
+
 
 This project is licensed under the Mozilla Public License, version 2.0 (the
 "License").  A copy of the License is in the project file "LICENSE.txt",
