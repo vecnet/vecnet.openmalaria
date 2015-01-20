@@ -25,6 +25,7 @@ def attribute(func):
             raise AttributeError
     return inner
 
+
 def attribute_setter(attrib_type):
     def outer(func):
         def inner(self, value):
@@ -34,6 +35,7 @@ def attribute_setter(attrib_type):
         return inner
     return outer
 
+
 def section(func):
     """
     Decorator used to declare that the property is xml section
@@ -41,6 +43,7 @@ def section(func):
     def inner(self):
         return func(self)(self.et.find(func.__name__))
     return inner
+
 
 def tag_value(func):
     """
@@ -51,41 +54,21 @@ def tag_value(func):
         return attrib_type(self.et.find(tag).attrib[attrib])
     return inner
 
+
 def tag_value_setter(tag, attrib):
     """
     Decorator used to declare that the setter function is an attribute of embedded tag
     """
     def outer(func):
         def inner(self, value):
-            #attrib = func.__name__
             self.et.find(tag).attrib[attrib] = str(value)
         return inner
     return outer
 
+
 class Section(object):
-    attribs = []
-    sections = {}
-    def __init__(self, et, schemaVersion=None):
+    """
+    Abstract class, representation of xml section in OpenMalaria input file
+    """
+    def __init__(self, et):
         self.et = et
-        self._schemaVersion = schemaVersion
-
-    def __getattr__(self, key):
-        """Called when an attribute lookup has not found the attribute in the usual places (i.e. it is not an instance
-        attribute nor is it found in the class tree for self). name is the attribute name. This method should return
-        the (computed) attribute value or raise an AttributeError exception
-        https://docs.python.org/2/reference/datamodel.html#object.__getattr__
-        """
-        # if key == "sections":
-        #     return self.sections
-
-        if key in self.attribs:
-            return self.et.attrib[key]
-        if key in self.sections:
-            # Ignore PyCharm warning below, it got confused by __getattr__ magic
-            return self.sections[key](self.et.find(key))
-        raise AttributeError()
-
-    # def __setattr__(self, key, value):
-    #     if key in self.attribs:
-    #         self.et.attrib[key] = value
-    #     raise AttributeError()
