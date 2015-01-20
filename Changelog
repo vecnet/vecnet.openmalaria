@@ -2,6 +2,9 @@
 Changelog
 =========
 
+0.5.1 2014-01-20
+* [*] typo-> attribs to attrib (https://github.com/vecnet/vecnet.openmalaria/pull/8.patch)
+
 0.5.0 2014-01-19
 =====
 * [+] Added initial version vecnet.openmalaria.scenario.Scenario class - programmer-friendly representation of XML file
