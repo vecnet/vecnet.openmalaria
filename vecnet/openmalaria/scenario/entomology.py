@@ -196,6 +196,14 @@ class Vectors():
         Add a vector to entomology section.
         vector is either ElementTree or xml snippet
         """
+        # TODO
+        # 1. If there are GVI interventions, for every GVI, add anophelesParams section.
+        # (gvi_anophelesParams field in AnophelesSnippets models)
+        # 2. If there are ITN interventions, for every ITN, add anophelesParams section
+        # (itn_anophelesParams field in AnophelesSnippets models)
+        # 3. If there are IRS interventions, for every IRS section add anophelesParams section
+        # (irs_anophelesParams field in AnophelesSnippets models)
+
         assert isinstance(vector, (str, unicode))
         et = ElementTree.fromstring(vector)
         # check if it is valid vector
@@ -231,6 +239,10 @@ class Vectors():
         return len(self.vectors)
 
     def __delitem__(self, key):
+        # TODO:
+        #  1. For every GVI intervention, remove respective anophelesParams section
+        #  2. For every ITN intervention, remove respective anophelesParams section
+        #  3. For every IRS intervention, remove respective anophelesParams section
         for anopheles in self.et.findall("anopheles"):
             if anopheles.attrib['mosquito'] == key:
                 self.et.remove(anopheles)
