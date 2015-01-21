@@ -91,7 +91,7 @@ class Monitoring(Section):
             self.et.append(Element("SurveyOptions"))
         self._replace_measures(self.et.find("SurveyOptions"), list_of_measures)
 
-    @property  # dectionLimit
+    @property  # detectionLimit
     def detectionLimit(self):
         """
         Detection limit for parasitaemia
