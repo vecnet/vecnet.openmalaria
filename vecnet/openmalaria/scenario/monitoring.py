@@ -98,7 +98,23 @@ class Monitoring(Section):
         Limit above which a human's infection is reported as patent
         https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#detection-limit-for-parasitaemia
         """
-        return float(self.et.find("surveys").attrib["detectionLimit"])
+        surveys_elem = self.et.find("surveys")
+        if surveys_elem is None:
+            return None
+
+        try:
+            detectionLimit = float(surveys_elem.attrib["detectionLimit"])
+        except KeyError:
+            detectionLimit = None
+        return detectionLimit
+    @detectionLimit.setter
+    def detectionLimit(self, value):
+        surveys_elem = self.et.find("surveys")
+        if surveys_elem is None:
+            self.et.append(Element("surveys"))
+            surveys_elem = self.et.find("surveys")
+
+        surveys_elem.attrib["detectionLimit"] = value
 
     @property  # surveys
     def surveys(self):
@@ -118,6 +134,22 @@ class Monitoring(Section):
         except AttributeError:
             return None
         return survey_time_list
+    @surveys.setter
+    def surveys(self, list_of_survey_times):
+        surveys_elem = self.et.find("surveys")
+        if surveys_elem is None:
+            # Add surveys section
+            self.et.append(Element("surveys"))
+            surveys_elem = self.et.find("surveys")
+
+        for time in surveys_elem.findall("surveyTime"):
+            surveys_elem.remove(time)
+
+        for time in list_of_survey_times:
+            tag = Element("surveyTime")
+            tag.text = str(time)
+            surveys_elem.append(tag)
+
 
     # Internal functions
     def _get_measures(self, et):
