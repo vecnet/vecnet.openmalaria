@@ -55,10 +55,16 @@ class TestGetSchemaVersion(unittest.TestCase):
 
     def test_monitoring(self):
         scenario = Scenario(open("input\\scenario70k60c.xml").read())
+        self.assertEqual(scenario.monitoring.name, "Monthly Surveys")
+        self.assertEqual(scenario.monitoring.detectionLimit, 100.0)
+        self.assertEqual(scenario.monitoring.surveys, [730, 736, 742, 748])
+        self.assertEqual(len(scenario.monitoring.surveys), 4)
+        self.assertEqual(scenario.monitoring.continuous, ['simulated EIR', 'GVI coverage'])
         measures = scenario.monitoring.continuous
         measures.append("Input EIR")
         scenario.monitoring.continuous = measures
-        print scenario.monitoring.continuous
+        self.assertEqual(scenario.monitoring.continuous, ['simulated EIR', 'GVI coverage', 'Input EIR'])
+        self.assertEqual(scenario.monitoring.SurveyOptions, ['nHost', 'nPatent', 'nUncomp', 'simulatedEIR', 'nMassGVI'])
 
     def test_entomology(self):
         scenario = Scenario(open("input\\scenario70k60c.xml").read())
