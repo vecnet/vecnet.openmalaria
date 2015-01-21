@@ -98,7 +98,15 @@ class Monitoring(Section):
         Limit above which a human's infection is reported as patent
         https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#detection-limit-for-parasitaemia
         """
-        return float(self.et.find("surveys").attrib["detectionLimit"])
+        surveys_elem = self.et.find("surveys")
+        if surveys_elem is None:
+            return None
+
+        try:
+            detectionLimit = float(surveys_elem.attrib["detectionLimit"])
+        except KeyError:
+            detectionLimit = None
+        return detectionLimit
 
     @property  # surveys
     def surveys(self):
