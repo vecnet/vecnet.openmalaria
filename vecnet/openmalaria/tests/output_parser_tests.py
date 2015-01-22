@@ -18,6 +18,7 @@ from vecnet.openmalaria.output_parser import OutputParser
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
+
 class TestOutputParser(unittest.TestCase):
     def test_output_parser(self):
         output_parser = OutputParser(open(os.path.join(base_dir, os.path.join("output_parser", "scenario.xml"))),
