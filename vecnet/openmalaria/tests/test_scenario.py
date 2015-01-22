@@ -20,6 +20,7 @@ from vecnet.openmalaria.scenario.monitoring import Monitoring
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
+
 class TestGetSchemaVersion(unittest.TestCase):
     def setUp(self):
         pass
