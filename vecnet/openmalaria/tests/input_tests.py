@@ -10,8 +10,10 @@
 # License (MPL), version 2.0.  If a copy of the MPL was not distributed
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from vecnet.openmalaria.input import XmlInputFile
 import unittest
+import os
+
+from vecnet.openmalaria.input import XmlInputFile
 
 
 class TestXmlInputFile(unittest.TestCase):
@@ -19,10 +21,12 @@ class TestXmlInputFile(unittest.TestCase):
         pass
 
     def test_survey_timesteps_property(self):
-        xml_file = XmlInputFile(open("input\\scenario70k60c.xml"))
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+
+        xml_file = XmlInputFile(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c.xml"))))
         self.assertEqual(xml_file.survey_timesteps, [730, 736, 742, 748])
         self.assertEqual([vector.name for vector in xml_file.vectors], ["gambiae"])
-        xml_file = XmlInputFile(open("input\\scenario70k60c_no_surveys.xml"))
+        xml_file = XmlInputFile(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c_no_surveys.xml"))))
         self.assertEqual(xml_file.survey_timesteps, [])
         xml_file = XmlInputFile("<xml></xml>")
         self.assertIsNone(xml_file.survey_timesteps)
