@@ -18,13 +18,15 @@ from vecnet.openmalaria.scenario import Scenario
 from vecnet.openmalaria.scenario.entomology import Vector
 from vecnet.openmalaria.scenario.monitoring import Monitoring
 
+base_dir = os.path.dirname(os.path.abspath(__file__))
+
 
 class TestGetSchemaVersion(unittest.TestCase):
     def setUp(self):
         pass
 
     def test_scenario(self):
-        scenario = Scenario(open("input\\scenario70k60c.xml").read())
+        scenario = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c.xml"))).read())
         # Reading attributes
         self.assertEqual(scenario.name, "Olyset Duo")
         self.assertEqual(scenario.schemaVersion, 32)
@@ -54,7 +56,7 @@ class TestGetSchemaVersion(unittest.TestCase):
         self.assertIsInstance(scenario.monitoring, Monitoring)
 
     def test_monitoring(self):
-        scenario = Scenario(open("input\\scenario70k60c.xml").read())
+        scenario = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c.xml"))).read())
         self.assertEqual(scenario.monitoring.name, "Monthly Surveys")
         self.assertEqual(scenario.monitoring.detectionLimit, 100.0)
         self.assertEqual(scenario.monitoring.surveys, [730, 736, 742, 748])
@@ -67,7 +69,7 @@ class TestGetSchemaVersion(unittest.TestCase):
         self.assertEqual(scenario.monitoring.SurveyOptions, ['nHost', 'nPatent', 'nUncomp', 'simulatedEIR', 'nMassGVI'])
 
     def test_entomology(self):
-        scenario = Scenario(open("input\\scenario70k60c.xml").read())
+        scenario = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c.xml"))).read())
 
         # Reading attributes
         self.assertEqual(scenario.entomology.name, "Kenya Lowlands from EMOD")
