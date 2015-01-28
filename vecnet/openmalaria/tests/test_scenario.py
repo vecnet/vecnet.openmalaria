@@ -119,6 +119,11 @@ class TestGetSchemaVersion(unittest.TestCase):
         for vector in scenario3.entomology.vectors:
             print vector
 
+    def test_interventions(self):
+        scenario = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c.xml"))).read())
+        self.assertEqual(scenario.interventions.changeHS, [])
+        self.assertIs(scenario.interventions.changeEIR, None)
+
 
     @classmethod
     def not_a__full_scenario(cls):
