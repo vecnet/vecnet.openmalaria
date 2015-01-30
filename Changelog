@@ -2,6 +2,10 @@
 Changelog
 =========
 
+0.5.2 2014-01-30
+=====
+* [*] Fixed missing setter for SurveyOptions on pypi
+
 0.5.1 2014-01-20
 =====
 * [*] typo-> attribs to attrib (https://github.com/vecnet/vecnet.openmalaria/pull/8.patch)
