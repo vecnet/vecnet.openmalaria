@@ -107,7 +107,7 @@ class Scenario(Section):
         else:
             ElementTree.register_namespace("om", "http://openmalaria.org/schema/scenario_32")
 
-        return '<?xml version="1.0" encoding="UTF-8" standalone="no"?>' + ElementTree.tostring(self.root)
+        return '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n' + ElementTree.tostring(self.root)
 
     def __init__(self, xml):
         #self.xml = xml
