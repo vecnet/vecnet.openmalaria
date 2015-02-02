@@ -8,6 +8,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License (MPL), version 2.0.  If a copy of the MPL was not distributed
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+from xml.etree import ElementTree
 from xml.etree.ElementTree import Element
 from vecnet.openmalaria.scenario.core import attribute, Section, section
 
@@ -36,6 +37,13 @@ class AgeGroup(Section):
                                    "poppercent": poppercent})
             lowerbound = upperbound
         return age_group_list
+
+    @property
+    def xml(self):
+        """
+        :rtype: str
+        """
+        return ElementTree.tostring(self.et)
 
 
 class Monitoring(Section):
