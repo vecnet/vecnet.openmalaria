@@ -40,7 +40,7 @@ class TestGetSchemaVersion(unittest.TestCase):
         self.assertRaises(AttributeError, setattr, scenario, "schemaVersion", 31)
 
         # Check if xml code is correct
-        self.assertEqual(len(scenario.xml), 20612)
+        self.assertEqual(len(scenario.xml), 20613)
 
         # Changing attributes
         scenario.wuID = 1
