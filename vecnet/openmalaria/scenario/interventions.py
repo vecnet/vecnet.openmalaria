@@ -13,6 +13,9 @@ from vecnet.openmalaria.scenario.core import Section, attribute, attribute_sette
 from vecnet.openmalaria.scenario.healthsystem import HealthSystem
 
 
+class HumanInterventions(Section):
+    pass
+
 class Interventions(Section):
     """
     Inverventions section in OpenMalaria xml input file
@@ -41,6 +44,9 @@ class Interventions(Section):
             eir_daily.append(float(value.text))
         return eir_daily
 
+    @property  # human
+    def human(self):
+        return HumanInterventions(self.et.find("human"))
 
     def __getattr__(self, item):
         raise KeyError
