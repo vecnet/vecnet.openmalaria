@@ -38,13 +38,6 @@ class AgeGroup(Section):
             lowerbound = upperbound
         return age_group_list
 
-    @property
-    def xml(self):
-        """
-        :rtype: str
-        """
-        return ElementTree.tostring(self.et)
-
 
 class Monitoring(Section):
     @property
