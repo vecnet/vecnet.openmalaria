@@ -14,6 +14,7 @@ from vecnet.openmalaria.scenario.core import attribute, Section, section, attrib
 from vecnet.openmalaria.scenario.demography import Demography
 from vecnet.openmalaria.scenario.entomology import Entomology
 from vecnet.openmalaria.scenario.healthsystem import HealthSystem
+from vecnet.openmalaria.scenario.interventions import Interventions
 from vecnet.openmalaria.scenario.monitoring import Monitoring
 
 
@@ -50,6 +51,14 @@ class Scenario(Section):
         :rtype: Entomology
         """
         return Entomology
+
+    @property
+    @section
+    def interventions(self):
+        """
+        :retype: Interventions
+        """
+        return Interventions
 
     @property
     @attribute
