@@ -191,10 +191,14 @@ class Vectors():
  #       assert isinstance(et, ElementTree)
         self.et = et
 
-    def add(self, vector):
+    def add(self, vector, InterventionAnophelesParams = None):
         """
         Add a vector to entomology section.
         vector is either ElementTree or xml snippet
+
+        InterventionAnophelesParams is an anophelesParams section for every GVI, ITN and IRS intervention
+        already defined in the scenario.xml
+
         """
         # TODO
         # 1. If there are GVI interventions, for every GVI, add anophelesParams section.
