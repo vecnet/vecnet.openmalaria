@@ -2,28 +2,28 @@
 Changelog
 =========
 
-0.6.0 2015-02-
+0.6.0 2015-02-06
 =====
 * [+] Added first version of Intervention section
 
-0.5.3 2014-02-04
+0.5.3 2015-02-04
 =====
 * [*] Scenario xml property now returns declaration with a newline char prior to root
 * [+] implemented xml property for every section in Scenario
 
-0.5.2 2014-01-30
+0.5.2 2015-01-30
 =====
 * [*] Fixed missing setter for SurveyOptions on pypi
 
-0.5.1 2014-01-20
+0.5.1 2015-01-20
 =====
 * [*] typo-> attribs to attrib (https://github.com/vecnet/vecnet.openmalaria/pull/8.patch)
 
-0.5.0 2014-01-19
+0.5.0 2015-01-19
 =====
 * [+] Added initial version vecnet.openmalaria.scenario.Scenario class - programmer-friendly representation of XML file
 
-0.4.0 2014-01-02
+0.4.0 2015-01-02
 =====
 * [+] Added support for vector measures (Vector_Nv0, Vector_Nv, Vector_Ov and Vector_Sv)
 * [+] Added vectors property in XmlInputFile (list of vectors in a scenario.xml)
