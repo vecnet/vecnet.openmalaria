@@ -2,6 +2,10 @@
 Changelog
 =========
 
+0.6.0 2015-02-
+=====
+* [+] Added first version of Intervention section
+
 0.5.3 2014-02-04
 =====
 * [*] Scenario xml property now returns declaration with a newline char prior to root
