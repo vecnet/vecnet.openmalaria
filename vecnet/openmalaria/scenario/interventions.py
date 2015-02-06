@@ -9,12 +9,9 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License (MPL), version 2.0.  If a copy of the MPL was not distributed
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
-from vecnet.openmalaria.scenario.core import Section, attribute, attribute_setter
+from vecnet.openmalaria.scenario.core import Section, attribute, attribute_setter, section
 from vecnet.openmalaria.scenario.healthsystem import HealthSystem
 
-
-class HumanInterventions(Section):
-    pass
 
 class Interventions(Section):
     """
@@ -52,8 +49,21 @@ class Interventions(Section):
         raise KeyError
 
 
-class Intervention(Section):
-    pass
+class Component(Section):
+    @property  # name
+    @attribute
+    def name(self):
+        """
+        An informal name/description of the intervention
+
+        :rtype: str
+        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#name-of-component
+        """
+        return "name", str
+    @name.setter
+    @attribute_setter(attrib_type=str)
+    def name(self, value):
+        pass   # value of name attribute will be set by attribute_setter decorator
 
 class AnophelesParams(Section):
     """
@@ -95,11 +105,10 @@ class AnophelesParams(Section):
         pass
 
 
-class ITN(Intervention):
+class ITN(Component):
     def __init__(self, et):
         super(self.__class__, self).__init__(et)
         self.id = self.et.attrib["id"]
-        self.name = self.et.attrib.get("name", None)
 
     @property  # usage
     def usage(self):
@@ -143,3 +152,80 @@ class ITN(Intervention):
     def set_attrition_in_years(self, years):
         self.et.find("ITN").find("attritionOfNets").attrib["function"] = "step"
         self.et.find("ITN").find("attritionOfNets").attrib["L"] = years
+
+class Decay(Section):
+    """
+    Description of decay of all intervention effects. Documentation:
+    see DecayFunction type or http://code.google.com/p/openmalaria/wiki/ModelDecayFunctions
+
+    https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#decay-n4
+    """
+    @property
+    @attribute
+    def function(self):
+        return "function", str
+
+    @property
+    @attribute
+    def L(self):
+        return "L", float
+
+    @property
+    @attribute
+    def k(self):
+        return "k", float
+
+    @property
+    @attribute
+    def mu(self):
+        return "mu", float
+
+    @property
+    @attribute
+    def sigma(self):
+        return "sigma", float
+
+class GVI(Component):
+    @property
+    @section
+    def decay(self):
+        """
+        :rtype: Decay
+        """
+        return Decay
+
+class HumanInterventions(Section):
+    """
+    List of human interventions
+    """
+
+    @property
+    def components(self):
+        human_interventions = {}
+        for component in self.et.findall("component"):
+            if component.find("ITN") is not None:
+                human_interventions[component.attrib["id"]] = ITN(component)
+            if component.find("GVI") is not None:
+                human_interventions[component.attrib["id"]] = GVI(component)
+        return human_interventions
+
+    def __getattr__(self, item):
+        """
+        rtype: Intervention
+        """
+        return self.components[item]
+
+    def __len__(self):
+        return len(self.components)
+
+    def __iter__(self):
+        """
+        Iterator function. Allows using scenario.interventions.human in for statement
+        i.e.
+        for intervention in scenario.interventions.human:
+           print intervention.name
+
+        :rtype: Vector
+        """
+        for intervention_name, intervention in self.components.iteritems():
+            yield intervention

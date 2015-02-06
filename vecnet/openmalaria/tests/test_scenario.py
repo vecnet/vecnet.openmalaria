@@ -123,7 +123,12 @@ class TestGetSchemaVersion(unittest.TestCase):
         scenario = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c.xml"))).read())
         self.assertEqual(scenario.interventions.changeHS, [])
         self.assertIs(scenario.interventions.changeEIR, None)
-
+        print len(scenario.interventions.human)
+        for intervention in scenario.interventions.human:
+            print intervention
+            print intervention.name
+            print intervention.decay
+            print intervention.decay.function
 
     @classmethod
     def not_a__full_scenario(cls):
