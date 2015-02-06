@@ -9,7 +9,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License (MPL), version 2.0.  If a copy of the MPL was not distributed
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
-from vecnet.openmalaria.scenario.core import Section, attribute, attribute_setter, section
+from vecnet.openmalaria.scenario.core import Section, attribute, attribute_setter, section, tag_value
 from vecnet.openmalaria.scenario.healthsystem import HealthSystem
 
 
@@ -104,6 +104,21 @@ class AnophelesParams(Section):
     def propActive(self, value):
         pass
 
+    @property
+    @tag_value
+    def deterrency(self):
+        return "deterrency", "value", float
+
+    @property
+    @tag_value
+    def preprandialKillingEffect(self):
+        return "preprandialKillingEffect", "value", float
+
+    @property
+    @tag_value
+    def postprandialKillingEffect(self):
+        return "postprandialKillingEffect", "value", float
+
 
 class ITN(Component):
     def __init__(self, et):
@@ -194,6 +209,18 @@ class GVI(Component):
         """
         return Decay
 
+    @property
+    # Same approach as with scenario.entomology.vectors may work here too
+    def anophelesParams(self):
+        """
+        :rtype: AnophelesParams
+        """
+        list_of_anopheles = []
+        for anophelesParams in self.et.find("GVI").findall("anophelesParams"):
+            list_of_anopheles.append(AnophelesParams(anophelesParams))
+        return list_of_anopheles
+
+
 class HumanInterventions(Section):
     """
     List of human interventions
@@ -209,9 +236,15 @@ class HumanInterventions(Section):
                 human_interventions[component.attrib["id"]] = GVI(component)
         return human_interventions
 
+    def __getitem__(self, item):
+        """
+        :rtype: Intervention
+        """
+        return self.components[item]
+
     def __getattr__(self, item):
         """
-        rtype: Intervention
+        :rtype: Intervention
         """
         return self.components[item]
 
