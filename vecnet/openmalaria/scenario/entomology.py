@@ -220,7 +220,7 @@ class Vectors():
     @property
     def vectors(self):
         """
-        :rtype: list
+        :rtype: dict
         """
         vectors = {}
         for anopheles in self.et.findall("anopheles"):
@@ -255,7 +255,7 @@ class Vectors():
 
     def __iter__(self):
         """
-        Interator function. Allows using scenario.entomology.vectors in for statement
+        Iterator function. Allows using scenario.entomology.vectors in for statement
         i.e.
         for vector in scenario.entomology.vectors:
            print vector.mosquito
