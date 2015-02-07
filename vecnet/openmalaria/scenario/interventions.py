@@ -122,7 +122,7 @@ class AnophelesParams(Section):
 
 class ITN(Component):
     def __init__(self, et):
-        super(self.__class__, self).__init__(et)
+        super(self.__class__, self).__init__(et.find("ITN"))
         self.id = self.et.attrib["id"]
 
     @property  # usage
@@ -137,11 +137,11 @@ class ITN(Component):
         https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#proportion-of-time-nets-are-used-by-humans
         :rtype: float
         """
-        return float(self.et.find("ITN").find("usage").attrib["value"])
+        return float(self.et.find("usage").attrib["value"])
     @usage.setter
     def usage(self, value):
         assert isinstance(value, float)
-        self.et.find("ITN").find("usage").attrib["value"] = value
+        self.et.find("usage").attrib["value"] = value
 
     @property
     # Same approach as with scenario.entomology.vectors may work here too
@@ -150,7 +150,7 @@ class ITN(Component):
         :rtype: AnophelesParams
         """
         list_of_anopheles = []
-        for anophelesParams in self.et.find("ITN").findall("anophelesParams"):
+        for anophelesParams in self.et.findall("anophelesParams"):
             list_of_anopheles.append(AnophelesParams(anophelesParams))
         return list_of_anopheles
 
@@ -158,14 +158,14 @@ class ITN(Component):
         """
         Function for the Basic UI
         """
-        function = self.et.find("ITN").find("attritionOfNets").attrib["function"]
+        function = self.et.find("attritionOfNets").attrib["function"]
         if function != "step":
             return None
-        L = self.et.find("ITN").find("attritionOfNets").attrib["L"]
+        L = self.et.find("attritionOfNets").attrib["L"]
         return L
 
     def set_attrition_in_years(self, years):
-        self.et.find("ITN").find("attritionOfNets").attrib["function"] = "step"
+        self.et.find("attritionOfNets").attrib["function"] = "step"
         self.et.find("ITN").find("attritionOfNets").attrib["L"] = years
 
 class Decay(Section):
@@ -201,6 +201,9 @@ class Decay(Section):
         return "sigma", float
 
 class GVI(Component):
+    def __init__(self, et):
+        super(self.__class__, self).__init__(et.find("GVI"))
+
     @property
     @section
     def decay(self):
@@ -216,7 +219,7 @@ class GVI(Component):
         :rtype: AnophelesParams
         """
         list_of_anopheles = []
-        for anophelesParams in self.et.find("GVI").findall("anophelesParams"):
+        for anophelesParams in self.et.findall("anophelesParams"):
             list_of_anopheles.append(AnophelesParams(anophelesParams))
         return list_of_anopheles
 
