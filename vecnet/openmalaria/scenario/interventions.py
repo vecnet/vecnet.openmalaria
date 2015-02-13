@@ -9,7 +9,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License (MPL), version 2.0.  If a copy of the MPL was not distributed
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
-from vecnet.openmalaria.scenario.core import Section, attribute, attribute_setter, section
+from vecnet.openmalaria.scenario.core import Section, attribute, attribute_setter, section, tag_value
 from vecnet.openmalaria.scenario.healthsystem import HealthSystem
 
 
@@ -26,18 +26,20 @@ class Interventions(Section):
         Returns: list of HealthSystems together with timestep when they are applied
         """
         health_systems = []
-        if self.et.find("changeHS") is None:
+        change_hs = self.et.find("changeHS")
+        if change_hs is None:
             return health_systems
-        for health_system in self.et.find("changeHS").findall("timedDeployment"):
+        for health_system in change_hs.findall("timedDeployment"):
             health_systems.append([int(health_system.attrib("time")), HealthSystem(self.et)])
         return health_systems
 
     @property  # changeEIR
     def changeEIR(self):
-        if self.et.find("changeEIR") is None:
+        change_eir = self.et.find("changeEIR")
+        if change_eir is None:
             return None
         eir_daily = []
-        for value in self.et.find("changeEIR").findall("EIRDaily"):
+        for value in change_eir.findall("EIRDaily"):
             eir_daily.append(float(value.text))
         return eir_daily
 
@@ -104,10 +106,26 @@ class AnophelesParams(Section):
     def propActive(self, value):
         pass
 
+    @property
+    @tag_value
+    def deterrency(self):
+        return "deterrency", "value", float
+
+    @property
+    @tag_value
+    def preprandialKillingEffect(self):
+        return "preprandialKillingEffect", "value", float
+
+    @property
+    @tag_value
+    def postprandialKillingEffect(self):
+        return "postprandialKillingEffect", "value", float
+
 
 class ITN(Component):
     def __init__(self, et):
         super(self.__class__, self).__init__(et)
+        self.itn = et.find("ITN")
         self.id = self.et.attrib["id"]
 
     @property  # usage
@@ -122,11 +140,11 @@ class ITN(Component):
         https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#proportion-of-time-nets-are-used-by-humans
         :rtype: float
         """
-        return float(self.et.find("ITN").find("usage").attrib["value"])
+        return float(self.itn.find("usage").attrib["value"])
     @usage.setter
     def usage(self, value):
         assert isinstance(value, float)
-        self.et.find("ITN").find("usage").attrib["value"] = value
+        self.itn.find("usage").attrib["value"] = value
 
     @property
     # Same approach as with scenario.entomology.vectors may work here too
@@ -135,7 +153,7 @@ class ITN(Component):
         :rtype: AnophelesParams
         """
         list_of_anopheles = []
-        for anophelesParams in self.et.find("ITN").findall("anophelesParams"):
+        for anophelesParams in self.itn.findall("anophelesParams"):
             list_of_anopheles.append(AnophelesParams(anophelesParams))
         return list_of_anopheles
 
@@ -143,15 +161,17 @@ class ITN(Component):
         """
         Function for the Basic UI
         """
-        function = self.et.find("ITN").find("attritionOfNets").attrib["function"]
+        attrition_of_nets = self.itn.find("attritionOfNets")
+        function = attrition_of_nets.attrib["function"]
         if function != "step":
             return None
-        L = self.et.find("ITN").find("attritionOfNets").attrib["L"]
+        L = attrition_of_nets.attrib["L"]
         return L
 
     def set_attrition_in_years(self, years):
-        self.et.find("ITN").find("attritionOfNets").attrib["function"] = "step"
-        self.et.find("ITN").find("attritionOfNets").attrib["L"] = years
+        attrition_of_nets = self.itn.find("attritionOfNets")
+        attrition_of_nets.attrib["function"] = "step"
+        attrition_of_nets.attrib["L"] = years
 
 class Decay(Section):
     """
@@ -186,13 +206,28 @@ class Decay(Section):
         return "sigma", float
 
 class GVI(Component):
+    def __init__(self, et):
+        super(self.__class__, self).__init__(et)
+        self.gvi = et.find("GVI")
+
     @property
-    @section
     def decay(self):
         """
         :rtype: Decay
         """
-        return Decay
+        return Decay(self.gvi.find("decay"))
+
+    @property
+    # Same approach as with scenario.entomology.vectors may work here too
+    def anophelesParams(self):
+        """
+        :rtype: AnophelesParams
+        """
+        list_of_anopheles = []
+        for anophelesParams in self.gvi.findall("anophelesParams"):
+            list_of_anopheles.append(AnophelesParams(anophelesParams))
+        return list_of_anopheles
+
 
 class HumanInterventions(Section):
     """
@@ -209,9 +244,15 @@ class HumanInterventions(Section):
                 human_interventions[component.attrib["id"]] = GVI(component)
         return human_interventions
 
+    def __getitem__(self, item):
+        """
+        :rtype: Intervention
+        """
+        return self.components[item]
+
     def __getattr__(self, item):
         """
-        rtype: Intervention
+        :rtype: Intervention
         """
         return self.components[item]
 
