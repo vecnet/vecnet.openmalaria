@@ -2,6 +2,10 @@
 Changelog
 =========
 
+0.6.1 2015-02-19
+=====
+* [*] Fix missing id attribute on GVI component.
+
 0.6.0 2015-02-06
 =====
 * [+] Added first version of Intervention section
