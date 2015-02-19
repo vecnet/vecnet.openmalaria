@@ -209,6 +209,7 @@ class GVI(Component):
     def __init__(self, et):
         super(self.__class__, self).__init__(et)
         self.gvi = et.find("GVI")
+        self.id = self.et.attrib["id"]
 
     @property
     def decay(self):
