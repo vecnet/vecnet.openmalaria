@@ -2,6 +2,11 @@
 Changelog
 =========
 
+0.6.2 2015-02-20
+=====
+* [*] Fix "RuntimeError: maximum recursion depth exceeded" while calling a Python object when iterating through empty section.
+* [+] Added deployment section in scenario.interventions
+
 0.6.1 2015-02-19
 =====
 * [*] Fix missing id attribute on GVI component.
