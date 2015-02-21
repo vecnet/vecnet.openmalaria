@@ -90,10 +90,6 @@ class Interventions(Section):
     def __getattr__(self, item):
         raise KeyError
 
-    @property  # deployment
-    def deployments(self):
-        return Deployments(self.et.find("human"))
-
 class Component(Section):
     @property  # name
     @attribute
@@ -290,6 +286,11 @@ class HumanInterventions(Section):
             if component.find("GVI") is not None:
                 human_interventions[component.attrib["id"]] = GVI(component)
         return human_interventions
+
+    @property  # deployment
+    def deployments(self):
+        return Deployments(self.et)
+
 
     def __getitem__(self, item):
         """

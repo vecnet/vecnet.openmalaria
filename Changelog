@@ -1,6 +1,9 @@
 =========
 Changelog
 =========
+0.7.0 2015-02-22
+=====
+* [!] moved deployments section to scenario.interventions.human (from scenario.interventions)
 
 0.6.2 2015-02-20
 =====

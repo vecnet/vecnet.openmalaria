@@ -131,8 +131,8 @@ class TestGetSchemaVersion(unittest.TestCase):
             print intervention.decay.function
 
         # Test deployment section
-        self.assertEqual(len(scenario.interventions.deployments), 1)
-        for deployment in scenario.interventions.deployments:
+        self.assertEqual(len(scenario.interventions.human.deployments), 1)
+        for deployment in scenario.interventions.human.deployments:
             self.assertEqual(deployment.name, "Nets")
             self.assertEqual(deployment.id, "GVI")
             print deployment.timesteps
@@ -140,9 +140,9 @@ class TestGetSchemaVersion(unittest.TestCase):
 
         # Scenario without interventions
         scenario1 = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c_no_interventions.xml"))).read())
-        self.assertEqual(len(scenario1.interventions.deployments), 0)
+        self.assertEqual(len(scenario1.interventions.human.deployments), 0)
         i = 0
-        for deployment in scenario1.interventions.deployments:
+        for deployment in scenario1.interventions.human.deployments:
             i += 1
         self.assertEqual(i, 0)
         self.assertRaises(KeyError, lambda x: scenario1.interventions.human["123"], 1)
@@ -154,9 +154,9 @@ class TestGetSchemaVersion(unittest.TestCase):
 
          # Scenario without deployments in intervention section
         scenario1 = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c_no_deployments.xml"))).read())
-        self.assertEqual(len(scenario1.interventions.deployments), 0)
+        self.assertEqual(len(scenario1.interventions.human.deployments), 0)
         i = 0
-        for deployment in scenario1.interventions.deployments:
+        for deployment in scenario1.interventions.human.deployments:
             i += 1
         self.assertEqual(i, 0)
         #self.assertRaises(KeyError, lambda x: scenario1.interventions.deployments["123"], 1)
