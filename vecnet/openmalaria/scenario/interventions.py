@@ -12,6 +12,46 @@
 from vecnet.openmalaria.scenario.core import Section, attribute, attribute_setter, section, tag_value
 from vecnet.openmalaria.scenario.healthsystem import HealthSystem
 
+class Deployment(Section):
+    @property
+    @attribute
+    def name(self):
+        return "name", str
+
+    @property
+    @tag_value
+    def id(self):
+        return "component", "id", str
+
+    @property
+    def timesteps(self):
+        deployments = []
+        for deploy in self.et.find("timed").findall("deploy"):
+            deployments.append(
+                {"time":    int(deploy.attrib["time"]),
+                 "coverage":float(deploy.attrib["coverage"])}
+            )
+        return deployments
+
+
+class Deployments(Section):
+    """
+    Deployments defined in /scenario/interventions/human section
+    """
+    def __iter__(self):
+        if self.et is None:
+            return
+        if self.et.find("deployment") is None:
+            return
+        for deployment in self.et.findall("deployment"):
+            yield Deployment(deployment)
+
+
+    def __len__(self):
+        i = 0
+        for deployment in self:
+            i += 1
+        return i
 
 class Interventions(Section):
     """
@@ -50,6 +90,9 @@ class Interventions(Section):
     def __getattr__(self, item):
         raise KeyError
 
+    @property  # deployment
+    def deployments(self):
+        return Deployments(self.et.find("human"))
 
 class Component(Section):
     @property  # name
@@ -238,6 +281,9 @@ class HumanInterventions(Section):
     @property
     def components(self):
         human_interventions = {}
+        if self.et is None:
+            # No /scenario/interventions/human section
+            return {}
         for component in self.et.findall("component"):
             if component.find("ITN") is not None:
                 human_interventions[component.attrib["id"]] = ITN(component)
@@ -269,5 +315,7 @@ class HumanInterventions(Section):
 
         :rtype: Vector
         """
+        if not self.components:
+            return
         for intervention_name, intervention in self.components.iteritems():
             yield intervention

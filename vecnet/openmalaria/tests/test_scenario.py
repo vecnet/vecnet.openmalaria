@@ -130,6 +130,38 @@ class TestGetSchemaVersion(unittest.TestCase):
             print intervention.decay
             print intervention.decay.function
 
+        # Test deployment section
+        self.assertEqual(len(scenario.interventions.deployments), 1)
+        for deployment in scenario.interventions.deployments:
+            self.assertEqual(deployment.name, "Nets")
+            self.assertEqual(deployment.id, "GVI")
+            print deployment.timesteps
+
+
+        # Scenario without interventions
+        scenario1 = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c_no_interventions.xml"))).read())
+        self.assertEqual(len(scenario1.interventions.deployments), 0)
+        i = 0
+        for deployment in scenario1.interventions.deployments:
+            i += 1
+        self.assertEqual(i, 0)
+        self.assertRaises(KeyError, lambda x: scenario1.interventions.human["123"], 1)
+        i = 0
+        self.assertEqual(len(scenario1.interventions.human), 0)
+        for intervention in scenario1.interventions.human:
+            i += 1
+        self.assertEqual(i, 0)
+
+         # Scenario without deployments in intervention section
+        scenario1 = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c_no_deployments.xml"))).read())
+        self.assertEqual(len(scenario1.interventions.deployments), 0)
+        i = 0
+        for deployment in scenario1.interventions.deployments:
+            i += 1
+        self.assertEqual(i, 0)
+        #self.assertRaises(KeyError, lambda x: scenario1.interventions.deployments["123"], 1)
+
+
     @classmethod
     def not_a__full_scenario(cls):
         scenario = Scenario() # scenario70k60c.xml
