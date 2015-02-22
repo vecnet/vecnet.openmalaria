@@ -125,17 +125,21 @@ class TestGetSchemaVersion(unittest.TestCase):
         self.assertIs(scenario.interventions.changeEIR, None)
         print len(scenario.interventions.human)
         for intervention in scenario.interventions.human:
-            print intervention
-            print intervention.name
-            print intervention.decay
-            print intervention.decay.function
+            self.assertEqual(intervention.name, "Nets")
+            self.assertEqual(intervention.decay.function, "step")
 
         # Test deployment section
         self.assertEqual(len(scenario.interventions.human.deployments), 1)
         for deployment in scenario.interventions.human.deployments:
             self.assertEqual(deployment.name, "Nets")
             self.assertEqual(deployment.id, "GVI")
-            print deployment.timesteps
+            self.assertEqual(len(deployment.timesteps), 185)
+            self.assertEqual(deployment.timesteps[0]["coverage"], 0.6)
+            self.assertEqual(deployment.timesteps[0]["time"], 730)
+
+            # print deployment.timesteps
+            # for timestep in deployment.timesteps:
+            #     print timestep["time"], timestep["coverage"]
 
 
         # Scenario without interventions
