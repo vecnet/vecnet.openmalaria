@@ -1,6 +1,6 @@
 {
     "name": "Experiment 12",
-    "basefile":"experiment12.xml",
+    "basefile":"files/test_experiment/experiment12.xml",
     "sweeps": {
         "itn": {
             "itn80": {
