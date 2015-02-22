@@ -8,6 +8,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License (MPL), version 2.0.  If a copy of the MPL was not distributed
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+import warnings
 
 from xml.etree import ElementTree
 from xml.etree.ElementTree import ParseError
@@ -120,6 +121,7 @@ class XmlInputFile(object):
         """
         xml - string, contents of xml file or open file handle
         """
+        warnings.warn("XmlInputFile API is being deprecated", DeprecationWarning)
         if hasattr(xml, "read"):
             self.xml = xml.read()
         else:
