@@ -17,13 +17,13 @@ import os
 from vecnet.openmalaria.output_parser import OutputParser
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
-
+base_dir = os.path.join(base_dir, "files", "test_output_parser")
 
 class TestOutputParser(unittest.TestCase):
     def test_output_parser(self):
-        output_parser = OutputParser(open(os.path.join(base_dir, os.path.join("output_parser", "scenario.xml"))),
-                                     survey_output_file=open(os.path.join(base_dir, os.path.join("output_parser", "output.txt"))),
-                                     cts_output_file=open(os.path.join(base_dir, os.path.join("output_parser", "ctsout.txt"))))
+        output_parser = OutputParser(open(os.path.join(base_dir, "scenario.xml")),
+                                     survey_output_file=open(os.path.join(base_dir, "output.txt")),
+                                     cts_output_file=open(os.path.join(base_dir, "ctsout.txt")))
         self.assertEqual(output_parser.survey_time_list, [730, 803, 876, 949, 1022, 1095])
         self.assertEqual(output_parser.get_cts_measures(), ["simulated EIR"])
         self.assertEqual(len(output_parser.cts_output_data["simulated EIR"]), 1096)
@@ -44,9 +44,9 @@ class TestOutputParser(unittest.TestCase):
                          [[730, 16.0], [803, 17.0], [876, 16.0], [949, 14.0], [1022, 12.0], [1095, 10.0]])
 
     def test_vector_measures(self):
-        output_parser = OutputParser(open(os.path.join(base_dir, os.path.join("output_parser", "test1.xml"))),
-                                     survey_output_file=open(os.path.join(base_dir, os.path.join("output_parser", "test1_output.txt"))),
-                                     cts_output_file=open(os.path.join(base_dir, os.path.join("output_parser", "test1_ctsout.txt"))))
+        output_parser = OutputParser(open(os.path.join(base_dir, "test1.xml")),
+                                     survey_output_file=open(os.path.join(base_dir, "test1_output.txt")),
+                                     cts_output_file=open(os.path.join(base_dir, "test1_ctsout.txt")))
         self.assertEqual(len(output_parser.cts_output_data["N_v0(arabiensis)"]), 1461)
         self.assertEqual(output_parser.get_cts_measures(),
                          ['alpha_i(arabiensis)', 'P_B(funestus)', 'IRS coverage', 'ITN coverage', 'alpha_i(minor)',
@@ -63,13 +63,13 @@ class TestOutputParser(unittest.TestCase):
         self.assertEqual(output_parser.survey_output_data[(21, 1)], [[0, 152.089]])
 
     def test_nan(self):
-        output_parser = OutputParser(open(os.path.join(base_dir, os.path.join("output_parser", "scenario_nan.xml"))),
-                                     survey_output_file=open(os.path.join(base_dir, os.path.join("output_parser", "output_nan.txt"))),
-                                     cts_output_file=open(os.path.join(base_dir, os.path.join("output_parser", "ctsout_nan.txt"))))
+        output_parser = OutputParser(open(os.path.join(base_dir, "scenario_nan.xml")),
+                                     survey_output_file=open(os.path.join(base_dir, "output_nan.txt")),
+                                     cts_output_file=open(os.path.join(base_dir, "ctsout_nan.txt")))
         # allCauseIMR measure (#21) can produce NaN value on timestep 0
         allCauseIMR = output_parser.survey_output_data[(21, 1)]
         # Expected value [[0, float('NaN')]]
-        # Note you can't do self.assertEqual(output_parser.survey_output_data[(21, 1)], [[0, float('NaN')]])
+        # Note you can't do self.assertEqual(test_output_parser.survey_output_data[(21, 1)], [[0, float('NaN')]])
         # because float('NaN') != float('NaN')
         self.assertEqual(len(allCauseIMR), 1)
         self.assertEqual(len(allCauseIMR[0]), 2)
