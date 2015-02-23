@@ -9,6 +9,8 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License (MPL), version 2.0.  If a copy of the MPL was not distributed
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+from xml.etree.ElementTree import Element
+
 from vecnet.openmalaria.scenario.core import Section, attribute, attribute_setter, section, tag_value
 from vecnet.openmalaria.scenario.healthsystem import HealthSystem
 
@@ -195,6 +197,28 @@ class ITN(Component):
         for anophelesParams in self.itn.findall("anophelesParams"):
             list_of_anopheles.append(AnophelesParams(anophelesParams))
         return list_of_anopheles
+    @anophelesParams.setter
+    def anophelesParams(self, anopheles_params):
+        for a_param in self.itn.findall("anophelesParams"):
+            self.itn.remove(a_param) 
+        for a_param in anopheles_params:
+            anopheles = Element("anophelesParams")
+            anopheles.attrib["mosquito"] = a_param["mosquito"]
+            anopheles.attrib["propActive"] = str(a_param["propActive"])
+
+            deterrency = Element("deterrency")
+            deterrency.attrib["value"] = str(a_param["deterrency"])
+            anopheles.append(deterrency)
+            
+            preprandial = Element("preprandialKillingEffect")
+            preprandial.attrib["value"] = str(a_param["preprandialKillingEffect"])
+            anopheles.append(preprandial)
+            
+            postprandial = Element("postprandialKillingEffect")
+            postprandial.attrib["value"] = str(a_param["postprandialKillingEffect"])
+            anopheles.append(postprandial)
+            
+            self.itn.append(anopheles)
 
     def get_attrition_in_years(self):
         """
@@ -267,6 +291,28 @@ class GVI(Component):
         for anophelesParams in self.gvi.findall("anophelesParams"):
             list_of_anopheles.append(AnophelesParams(anophelesParams))
         return list_of_anopheles
+    @anophelesParams.setter
+    def anophelesParams(self, anopheles_params):
+        for a_param in self.gvi.findall("anophelesParams"):
+            self.gvi.remove(a_param) 
+        for a_param in anopheles_params:
+            anopheles = Element("anophelesParams")
+            anopheles.attrib["mosquito"] = a_param["mosquito"]
+            anopheles.attrib["propActive"] = str(a_param["propActive"])
+
+            deterrency = Element("deterrency")
+            deterrency.attrib["value"] = str(a_param["deterrency"])
+            anopheles.append(deterrency)
+            
+            preprandial = Element("preprandialKillingEffect")
+            preprandial.attrib["value"] = str(a_param["preprandialKillingEffect"])
+            anopheles.append(preprandial)
+            
+            postprandial = Element("postprandialKillingEffect")
+            postprandial.attrib["value"] = str(a_param["postprandialKillingEffect"])
+            anopheles.append(postprandial)
+            
+            self.gvi.append(anopheles)
 
 
 class HumanInterventions(Section):
