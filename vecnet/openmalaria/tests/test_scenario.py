@@ -127,6 +127,27 @@ class TestGetSchemaVersion(unittest.TestCase):
         for intervention in scenario.interventions.human:
             self.assertEqual(intervention.name, "Nets")
             self.assertEqual(intervention.decay.function, "step")
+            self.assertEqual(len(intervention.anophelesParams), 1)
+            self.assertEqual(intervention.anophelesParams[0].mosquito, "gambiae")
+            self.assertEqual(intervention.anophelesParams[0].propActive, 0.7)
+            self.assertEqual(intervention.anophelesParams[0].deterrency, 0.23076923077)
+            self.assertEqual(intervention.anophelesParams[0].preprandialKillingEffect, 0.7)
+            self.assertEqual(intervention.anophelesParams[0].postprandialKillingEffect, 0)
+
+            # Overwrite anophelesParams.
+            anopheles_xml = """<anophelesParams mosquito="funestus" propActive="0.0">
+                                <deterrency value="0.0" />
+                                <preprandialKillingEffect value="0.0" />
+                                <postprandialKillingEffect value="0.0" />
+                               </anophelesParams>"""
+            intervention.anophelesParams = [anopheles_xml]
+
+            self.assertEqual(len(intervention.anophelesParams), 1)
+            self.assertEqual(intervention.anophelesParams[0].mosquito, "funestus")
+            self.assertEqual(intervention.anophelesParams[0].propActive, 0.0)
+            self.assertEqual(intervention.anophelesParams[0].deterrency, 0.0)
+            self.assertEqual(intervention.anophelesParams[0].preprandialKillingEffect, 0.0)
+            self.assertEqual(intervention.anophelesParams[0].postprandialKillingEffect, 0)
 
         # Test deployment section
         self.assertEqual(len(scenario.interventions.human.deployments), 1)
