@@ -4,6 +4,8 @@ Changelog
 0.7.1 2015-02-24
 =====
 * [*] Updated experiment baseline scenario loading to check current directory and experiment's directory.
+* [*] Updated unit test file handling to allow testing with pytest and travis.
+* [+] Added anophelesParams setter to ITN and GVI components, as well as relevant test code.
 
 0.7.0 2015-02-22
 =====

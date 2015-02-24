@@ -10,6 +10,7 @@
 # License (MPL), version 2.0.  If a copy of the MPL was not distributed
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 from xml.etree.ElementTree import Element
+from xml.etree import ElementTree
 
 from vecnet.openmalaria.scenario.core import Section, attribute, attribute_setter, section, tag_value
 from vecnet.openmalaria.scenario.healthsystem import HealthSystem
@@ -201,24 +202,17 @@ class ITN(Component):
     def anophelesParams(self, anopheles_params):
         for a_param in self.itn.findall("anophelesParams"):
             self.itn.remove(a_param) 
-        for a_param in anopheles_params:
-            anopheles = Element("anophelesParams")
-            anopheles.attrib["mosquito"] = a_param["mosquito"]
-            anopheles.attrib["propActive"] = str(a_param["propActive"])
 
-            deterrency = Element("deterrency")
-            deterrency.attrib["value"] = str(a_param["deterrency"])
-            anopheles.append(deterrency)
-            
-            preprandial = Element("preprandialKillingEffect")
-            preprandial.attrib["value"] = str(a_param["preprandialKillingEffect"])
-            anopheles.append(preprandial)
-            
-            postprandial = Element("postprandialKillingEffect")
-            postprandial.attrib["value"] = str(a_param["postprandialKillingEffect"])
-            anopheles.append(postprandial)
-            
-            self.itn.append(anopheles)
+        for a_param in anopheles_params:
+            assert isinstance(a_param, (str, unicode))
+            et = ElementTree.fromstring(a_param)
+            anopheles = AnophelesParams(et)
+            assert isinstance(anopheles.mosquito, (str, unicode))
+            assert isinstance(anopheles.propActive, float)
+            assert isinstance(anopheles.deterrency, float)
+            assert isinstance(anopheles.preprandialKillingEffect, float)
+            assert isinstance(anopheles.postprandialKillingEffect, float)
+            self.itn.append(et)
 
     def get_attrition_in_years(self):
         """
@@ -295,25 +289,17 @@ class GVI(Component):
     def anophelesParams(self, anopheles_params):
         for a_param in self.gvi.findall("anophelesParams"):
             self.gvi.remove(a_param) 
+
         for a_param in anopheles_params:
-            anopheles = Element("anophelesParams")
-            anopheles.attrib["mosquito"] = a_param["mosquito"]
-            anopheles.attrib["propActive"] = str(a_param["propActive"])
-
-            deterrency = Element("deterrency")
-            deterrency.attrib["value"] = str(a_param["deterrency"])
-            anopheles.append(deterrency)
-            
-            preprandial = Element("preprandialKillingEffect")
-            preprandial.attrib["value"] = str(a_param["preprandialKillingEffect"])
-            anopheles.append(preprandial)
-            
-            postprandial = Element("postprandialKillingEffect")
-            postprandial.attrib["value"] = str(a_param["postprandialKillingEffect"])
-            anopheles.append(postprandial)
-            
-            self.gvi.append(anopheles)
-
+            assert isinstance(a_param, (str, unicode))
+            et = ElementTree.fromstring(a_param)
+            anopheles = AnophelesParams(et)
+            assert isinstance(anopheles.mosquito, (str, unicode))
+            assert isinstance(anopheles.propActive, float)
+            assert isinstance(anopheles.deterrency, float)
+            assert isinstance(anopheles.preprandialKillingEffect, float)
+            assert isinstance(anopheles.postprandialKillingEffect, float)
+            self.gvi.append(et)
 
 class HumanInterventions(Section):
     """
