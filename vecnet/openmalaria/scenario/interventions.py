@@ -9,6 +9,9 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License (MPL), version 2.0.  If a copy of the MPL was not distributed
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+from xml.etree.ElementTree import Element
+from xml.etree import ElementTree
+
 from vecnet.openmalaria.scenario.core import Section, attribute, attribute_setter, section, tag_value
 from vecnet.openmalaria.scenario.healthsystem import HealthSystem
 
@@ -195,6 +198,21 @@ class ITN(Component):
         for anophelesParams in self.itn.findall("anophelesParams"):
             list_of_anopheles.append(AnophelesParams(anophelesParams))
         return list_of_anopheles
+    @anophelesParams.setter
+    def anophelesParams(self, anopheles_params):
+        for a_param in self.itn.findall("anophelesParams"):
+            self.itn.remove(a_param) 
+
+        for a_param in anopheles_params:
+            assert isinstance(a_param, (str, unicode))
+            et = ElementTree.fromstring(a_param)
+            anopheles = AnophelesParams(et)
+            assert isinstance(anopheles.mosquito, (str, unicode))
+            assert isinstance(anopheles.propActive, float)
+            assert isinstance(anopheles.deterrency, float)
+            assert isinstance(anopheles.preprandialKillingEffect, float)
+            assert isinstance(anopheles.postprandialKillingEffect, float)
+            self.itn.append(et)
 
     def get_attrition_in_years(self):
         """
@@ -267,7 +285,21 @@ class GVI(Component):
         for anophelesParams in self.gvi.findall("anophelesParams"):
             list_of_anopheles.append(AnophelesParams(anophelesParams))
         return list_of_anopheles
+    @anophelesParams.setter
+    def anophelesParams(self, anopheles_params):
+        for a_param in self.gvi.findall("anophelesParams"):
+            self.gvi.remove(a_param) 
 
+        for a_param in anopheles_params:
+            assert isinstance(a_param, (str, unicode))
+            et = ElementTree.fromstring(a_param)
+            anopheles = AnophelesParams(et)
+            assert isinstance(anopheles.mosquito, (str, unicode))
+            assert isinstance(anopheles.propActive, float)
+            assert isinstance(anopheles.deterrency, float)
+            assert isinstance(anopheles.preprandialKillingEffect, float)
+            assert isinstance(anopheles.postprandialKillingEffect, float)
+            self.gvi.append(et)
 
 class HumanInterventions(Section):
     """
