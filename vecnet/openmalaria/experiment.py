@@ -11,6 +11,7 @@
 
 import json
 import re
+import os
 from .helpers import prime_numbers
 
 
@@ -33,8 +34,10 @@ class ExperimentSpecification:
     def __init__(self, experiment):
         # Accept both json string and dictionary as an input. string is converted to dict automatically
         if isinstance(experiment, (str, unicode)):
+            experiment_directory = os.path.dirname(experiment) 
             experiment = json.loads(experiment)
         if isinstance(experiment, file):
+            experiment_directory = os.path.dirname(experiment.name) 
             experiment = json.load(experiment)
         if not isinstance(experiment, dict):
             raise TypeError("experiment should be either string or dict")
@@ -47,8 +50,14 @@ class ExperimentSpecification:
 
         if "basefile" in self.experiment:
             # Load baseline scenario from external file
-            with open(self.experiment["basefile"]) as fp:
-                self.experiment["base"] = fp.read()
+            basefile_dir = self.experiment["basefile"]
+            if not os.path.isfile(basefile_dir):
+                basefile_dir = os.path.join(experiment_directory, os.path.basename(basefile_dir)) 
+            try:
+                with open(basefile_dir) as fp:
+                    self.experiment["base"] = fp.read()
+            except IOError:
+                self.experiment["base"] = None
 
     def __str__(self):
         return self.name

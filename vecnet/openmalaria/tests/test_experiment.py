@@ -16,6 +16,8 @@ import os
 
 from vecnet.openmalaria.experiment import ExperimentSpecification
 
+base_dir = os.path.dirname(os.path.abspath(__file__))
+
 
 class TestExperimentDescription(unittest.TestCase):
     def setUp(self):
@@ -107,7 +109,7 @@ class TestExperimentDescription(unittest.TestCase):
     def test_add_sweep_and_arms(self):
         """ Testing add_sweeps and add_arms functions
         """
-        fp = open("files/test_experiment/experiment1.json", "r")
+        fp = open(os.path.join(base_dir, "files/test_experiment/experiment1.json"), "r")
         exp = ExperimentSpecification(json.load(fp))
         exp.experiment["base"] = "<xml> @itn@ @irs@ @model@ @p1@ (@p2@) </xml>"
         exp.add_sweep("test")
@@ -136,7 +138,7 @@ class TestExperimentDescription(unittest.TestCase):
         self.assertEqual(set(scenario.xml for scenario in exp.scenarios()), expected_result)
 
     def test_1(self):
-        with open("files/test_experiment/experiment1.json") as fp:
+        with open(os.path.join(base_dir, "files/test_experiment/experiment1.json")) as fp:
             exp = ExperimentSpecification(fp)
         expected_result = ({u"<xml> 80 66 model1 </xml>",
                             u"<xml> 80 66 model3 </xml>",
@@ -153,7 +155,7 @@ class TestExperimentDescription(unittest.TestCase):
         self.assertEqual(set(result), expected_result)  # Test if content of scenarios is correct
 
     def test_2(self):
-        results = self.do_test("files/test_experiment/experiment2.json")
+        results = self.do_test(os.path.join(base_dir, "files/test_experiment/experiment2.json"))
         expected_results = ({u"<xml> 80 66 </xml>",
                              u"<xml> 80 77 </xml>",
                              u"<xml> 66 90 </xml>", })
@@ -161,7 +163,7 @@ class TestExperimentDescription(unittest.TestCase):
         self.assertEqual(set(results), expected_results)
 
     def test_3(self):
-        results = self.do_test("files/test_experiment/experiment3.json")
+        results = self.do_test(os.path.join(base_dir, "files/test_experiment/experiment3.json"))
         expected_results = ({
                                 u"<xml> 80 66 1 1</xml>",
                                 u"<xml> 80 77 2 2</xml>",
@@ -172,7 +174,7 @@ class TestExperimentDescription(unittest.TestCase):
 
     def test_4(self):
         """ arm substitution string doesn't start and end with @ """
-        self.assertRaises(TypeError, self.do_test, "files/test_experiment/experiment4.json")
+        self.assertRaises(TypeError, self.do_test, os.path.join(base_dir, "files/test_experiment/experiment4.json"))
 
     def test_5(self):
         expected_results = ({
@@ -190,27 +192,27 @@ class TestExperimentDescription(unittest.TestCase):
                                 u"<xml> 80 77 3 2 dry</xml>"
                             })
 
-        results = self.do_test("files/test_experiment/experiment5.json")
+        results = self.do_test(os.path.join(base_dir, "files/test_experiment/experiment5.json"))
         self.assertEqual(len(expected_results), len(results))
         self.assertEqual(set(results), expected_results)
 
     def test_6(self):
         """Erin's experiment - first attempt to convert it to new JSON experiment description"""
-        results = self.do_test("files/test_experiment/experiment6.json")
+        results = self.do_test(os.path.join(base_dir, "files/test_experiment/experiment6.json"))
         self.assertEqual(len(results), 18)
 
     def test_7(self):
         """ Fully factorial experiment.
         Combinations defined as "[[],[]]"
         """
-        results = self.do_test("files/test_experiment/experiment7.json")
+        results = self.do_test(os.path.join(base_dir, "files/test_experiment/experiment7.json"))
         self.assertEqual(len(results), 27)
 
     def test_8(self):
         """ Fully factorial experiment.
         Combinations defined as "[]" shortcut
         """
-        results = self.do_test("files/test_experiment/experiment8.json")
+        results = self.do_test(os.path.join(base_dir, "files/test_experiment/experiment8.json"))
         self.assertEqual(len(results), 27)
 
     def test_9(self):
@@ -218,7 +220,7 @@ class TestExperimentDescription(unittest.TestCase):
         expected_result = ({u"<xml> 80 66 model1 </xml>",
                             u"<xml> 80 77 model2 </xml>",
                             u"<xml> 90 66 model2 </xml>"})
-        result = self.do_test("files/test_experiment/experiment9.json")
+        result = self.do_test(os.path.join(base_dir, "files/test_experiment/experiment9.json"))
         self.assertEqual(len(result), 3)  # Test for duplicates
         self.assertEqual(set(result), expected_result)  # Test if content of scenarios is correct
 
@@ -226,7 +228,7 @@ class TestExperimentDescription(unittest.TestCase):
         """ Fully factorial experiment.
         Combinations defined as "[]" shortcut
         """
-        results = self.do_test("files/test_experiment/experiment10.json")
+        results = self.do_test(os.path.join(base_dir, "files/test_experiment/experiment10.json"))
         self.assertEqual(len(results), 27)
 
     def test_11(self):
@@ -373,7 +375,7 @@ class TestExperimentDescription(unittest.TestCase):
                                 u"<xml>: 0.30 ; 0.60 , 0.50000000 ; 0.90 , 0.90 :</xml>",
                                 u"<xml>: 0.50 ; 0.60 , 0.50000000 ; 0.90 , 0.90 :</xml>"
                             })
-        results = self.do_test("files/test_experiment/experiment11.json")
+        results = self.do_test(os.path.join(base_dir, "files/test_experiment/experiment11.json"))
         self.assertEqual(len(expected_results), len(results))
         self.assertEqual(set(results), expected_results)
 
@@ -384,14 +386,14 @@ class TestExperimentDescription(unittest.TestCase):
         expected_result = ({u"<xml> 80\n66 model1 </xml>",
                             u"<xml> 80\n77 model2 </xml>",
                             u"<xml> 90\n66 model2 </xml>"})
-        result = self.do_test("files/test_experiment/experiment12.json")
+        result = self.do_test(os.path.join(base_dir, "files/test_experiment/experiment12.json"))
         self.assertEqual(len(result), 3)  # Test for duplicates
         self.assertEqual(set(result), expected_result)  # Test if content of scenarios is correct
 
     def test_13(self):
         """ Arm value is loaded from external file"""
         current_directory = os.getcwd()
-        os.chdir("files/test_experiment/experiment13")
+        os.chdir(os.path.join(base_dir, "files/test_experiment/experiment13"))
         expected_result = ({u"<xml> 80\n66 <model> model1 </model> </xml>",
                             u"<xml> 80\n77 <model> model2 </model> </xml>",
                             u"<xml> 90\n66 <model> model2 </model> </xml>"})
@@ -402,7 +404,7 @@ class TestExperimentDescription(unittest.TestCase):
 
     def test_14(self):
         """ Automatic seed replacement """
-        result = self.do_test("files/test_experiment/experiment14.json", generate_seed=True)
+        result = self.do_test(os.path.join(base_dir, "files/test_experiment/experiment14.json"), generate_seed=True)
         expected_result = ({u'<xml> 80 1009 </xml>',
                             u'<xml> 90 1013 </xml>',
                             u'<xml> 100 1019 </xml>'})
@@ -412,7 +414,7 @@ class TestExperimentDescription(unittest.TestCase):
 
     def test_15(self):
         """ No automatic seed replacement if sweep "seed" is defined"""
-        result = self.do_test("files/test_experiment/experiment15.json", generate_seed=False)
+        result = self.do_test(os.path.join(base_dir, "files/test_experiment/experiment15.json"), generate_seed=False)
         expected_result = ({u'<xml> 80 11 </xml>',
                             u'<xml> 90 15 </xml>',
                             u'<xml> 100 31 </xml>'})
