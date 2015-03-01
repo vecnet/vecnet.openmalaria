@@ -49,5 +49,5 @@ coverage.xml
 *.pot
 
 # Sphinx documentation
-doc/_build/
-
+docs/build/
+docs/modules/
