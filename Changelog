@@ -1,6 +1,10 @@
 =========
 Changelog
 =========
+0.8.0 2015-03-02
+=====
+* [+] Add scenario.interventions.vectorPop section
+
 0.7.1 2015-02-24
 =====
 * [*] Updated experiment baseline scenario loading to check current directory and experiment's directory.
