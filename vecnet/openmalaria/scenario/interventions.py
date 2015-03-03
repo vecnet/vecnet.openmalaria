@@ -387,8 +387,12 @@ class VectorPopIntervention(Section):
         rtype: list
         """
         timesteps = []
-        for deploy in self.et.findall("timed"):
-            timesteps.append(deploy.attrib["time"])
+        timed = self.et.find("timed")
+
+        if timed is not None:
+            for deploy in timed.findall("deploy"):
+                timesteps.append(deploy.attrib["time"])
+
         return timesteps
 
 class VectorPop(Section):
