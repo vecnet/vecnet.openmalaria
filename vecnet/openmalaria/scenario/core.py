@@ -51,7 +51,14 @@ def tag_value(func):
     """
     def inner(self):
         tag, attrib, attrib_type = func(self)
-        return attrib_type(self.et.find(tag).attrib[attrib])
+        tag_obj = self.et.find(tag)
+
+        if tag_obj is not None:
+            try:
+                return attrib_type(self.et.find(tag).attrib[attrib])
+            except KeyError:
+                raise AttributeError
+
     return inner
 
 
