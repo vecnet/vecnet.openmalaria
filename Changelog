@@ -1,6 +1,13 @@
 =========
 Changelog
 =========
+0.8.1 2015-03-03
+====
+* [*] Fix parsing of VectorPop timesteps.
+* [*] Check for existence of tag and attribute for tag_value.
+* [+] Add Anopheles section and relevant properties.
+* [+] Add anopheles property to VectorPopIntervention.
+
 0.8.0 2015-03-02
 =====
 * [+] Add scenario.interventions.vectorPop section
