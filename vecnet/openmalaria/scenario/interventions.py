@@ -360,6 +360,50 @@ class HumanInterventions(Section):
         for intervention_name, intervention in self.components.iteritems():
             yield intervention
 
+class Anopheles(Section):
+    """
+    Mosquitos affected by VectorPop intervention
+
+    https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#elt-anopheles
+    """
+    @property
+    @attribute
+    def mosquito(self):
+        """
+        Name of the affected anopheles-mosquito species.
+
+        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#elt-anopheles
+        """
+        return "mosquito", str
+    @mosquito.setter
+    @attribute_setter(attrib_type=str)
+    def mosquito(self, value):
+        pass
+
+    @property
+    @tag_value
+    def seekingDeathRateIncrease(self):
+        return "seekingDeathRateIncrease", "initial", float
+
+    @property
+    @tag_value
+    def probDeathOvipositing(self):
+        return "probDeathOvipositing", "initial", float
+
+    @property
+    @tag_value
+    def emergenceReduction(self):
+        return "emergenceReduction", "initial", float
+
+    @property
+    def decay(self, name):
+        section = self.et.find(name)
+
+        if section is not None:
+            return Decay(section.find("decay"))
+
+        return section
+
 class VectorPopIntervention(Section):
     """
     /scenario/intervention/vectorPop/intervention
@@ -380,6 +424,20 @@ class VectorPopIntervention(Section):
         pass  # attribute_setter decorator will change name attribute
 
     @property
+    def anopheles(self):
+        """
+        :rtype: Anopheles
+        """
+        list_of_anopheles = []
+        desc = self.et.find("description")
+
+        if desc is not None:
+            for anopheles in desc.findall("anopheles"):
+                list_of_anopheles.append(Anopheles(anopheles))
+
+        return list_of_anopheles
+
+    @property
     def timesteps(self):
         """
         Time-step at which this intervention occurs, starting from 0, the first intervention-period time-step.
@@ -387,8 +445,12 @@ class VectorPopIntervention(Section):
         rtype: list
         """
         timesteps = []
-        for deploy in self.et.findall("timed"):
-            timesteps.append(deploy.attrib["time"])
+        timed = self.et.find("timed")
+
+        if timed is not None:
+            for deploy in timed.findall("deploy"):
+                timesteps.append(deploy.attrib["time"])
+
         return timesteps
 
 class VectorPop(Section):
