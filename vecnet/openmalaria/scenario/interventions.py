@@ -436,6 +436,26 @@ class VectorPopIntervention(Section):
                 list_of_anopheles.append(Anopheles(anopheles))
 
         return list_of_anopheles
+    @anopheles.setter
+    def anopheles(self, anopheles):
+        desc = self.et.find("description")
+
+        if desc is not None:
+            for anoph in desc.findall("anopheles"):
+                desc.remove(anoph) 
+
+            for a in anopheles:
+                assert isinstance(a, (str, unicode))
+                et = ElementTree.fromstring(a)
+                anopheles = Anopheles(et)
+                assert isinstance(anopheles.mosquito, (str, unicode))
+                if anopheles.seekingDeathRateIncrease is not None:
+                    assert isinstance(anopheles.seekingDeathRateIncrease, float)
+                if anopheles.probDeathOvipositing is not None:
+                    assert isinstance(anopheles.probDeathOvipositing, float)
+                if anopheles.emergenceReduction is not None:
+                    assert isinstance(anopheles.emergenceReduction, float)
+                desc.append(et)
 
     @property
     def timesteps(self):
