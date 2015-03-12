@@ -14,8 +14,8 @@ from setuptools import setup, find_packages
 
 setup(
     name="vecnet.openmalaria",
-    version="0.7.1",
-    author="Alex Vyushkov, Diggory Hardy",
+    version="0.8.2",
+    author="Alex Vyushkov, Diggory Hardy, Nicolas Reed",
     author_email="vecnet@vecnet.org",
     description="Openmalaria library for VecNet-CI project",
     license="MPL 2.0",
