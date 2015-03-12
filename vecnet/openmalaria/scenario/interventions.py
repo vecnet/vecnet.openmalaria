@@ -37,6 +37,18 @@ class Deployment(Section):
             )
         return deployments
 
+    @property
+    def continuous(self):
+        deployments = []
+        for deploy in self.et.find("continuous").findall("deploy"):
+            deployments.append(
+                    {"targetAgeYrs": float(deploy.attrib["targetAgeYrs"]),
+                     "begin": int(deploy.attrib["begin"]) if 'begin' in deploy else 0,
+                     "end": int(deploy.attrib["end"] if 'end' in deploy else 2147483647)
+                    }
+            )
+        return deployments
+
 
 class Deployments(Section):
     """
@@ -314,6 +326,40 @@ class GVI(Component):
             self.gvi.append(et)
 
 
+class Vaccine(Component):
+    def __init__(self, et):
+        super(self.__class__, self).__init__(et)
+
+        self.vaccine_type = "TBV"
+        self.vaccine = et.find("TBV")
+        if (et.find("PEV") is not None):
+            self.vaccine_type = "PEV"
+            self.vaccine = et.find("PEV")
+        elif (et.find("BSV") is not None):
+            self.vaccine_type = "BSV"
+            self.vaccine = et.find("BSV")
+
+        self.id = self.et.attrib["id"]
+
+    @property
+    def decay(self):
+        """
+        :rtype: Decay
+        """
+        return Decay(self.vaccine.find("decay"))
+
+    @property
+    def efficacyB(self):
+        return float(self.vaccine.find("efficacyB").attrib["value"])
+
+    @property
+    def initialEfficacy(self):
+        values = []
+        for initial_efficacy in self.vaccine.findall("initialEfficacy"):
+            values.append(float(initial_efficacy.attrib["value"]))
+        return values
+
+
 class HumanInterventions(Section):
     """
     List of human interventions
@@ -330,6 +376,8 @@ class HumanInterventions(Section):
                 human_interventions[component.attrib["id"]] = ITN(component)
             if component.find("GVI") is not None:
                 human_interventions[component.attrib["id"]] = GVI(component)
+            if component.find("TBV") is not None or component.find("PEV") is not None or component.find("BSV") is not None:
+                human_interventions[component.attrib["id"]] = Vaccine(component)
         return human_interventions
 
     @property  # deployment
