@@ -90,6 +90,13 @@ class Interventions(Section):
     def human(self):
         return HumanInterventions(self.et.find("human"))
 
+    @property  # vectorPop
+    def vectorPop(self):
+        """
+        rtype: VectorPop
+        """
+        return VectorPop(self.et.find("vectorPop"))
+
     def __getattr__(self, item):
         raise KeyError
 
@@ -352,3 +359,152 @@ class HumanInterventions(Section):
             return
         for intervention_name, intervention in self.components.iteritems():
             yield intervention
+
+class Anopheles(Section):
+    """
+    Mosquitos affected by VectorPop intervention
+
+    https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#elt-anopheles
+    """
+    @property
+    @attribute
+    def mosquito(self):
+        """
+        Name of the affected anopheles-mosquito species.
+
+        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#elt-anopheles
+        """
+        return "mosquito", str
+    @mosquito.setter
+    @attribute_setter(attrib_type=str)
+    def mosquito(self, value):
+        pass
+
+    @property
+    @tag_value
+    def seekingDeathRateIncrease(self):
+        return "seekingDeathRateIncrease", "initial", float
+
+    @property
+    @tag_value
+    def probDeathOvipositing(self):
+        return "probDeathOvipositing", "initial", float
+
+    @property
+    @tag_value
+    def emergenceReduction(self):
+        return "emergenceReduction", "initial", float
+
+    @property
+    def decay(self, name):
+        section = self.et.find(name)
+
+        if section is not None:
+            return Decay(section.find("decay"))
+
+        return section
+
+class VectorPopIntervention(Section):
+    """
+    /scenario/intervention/vectorPop/intervention
+    An intervention which may have various effects on the vector populations as a whole
+    """
+    @property
+    @attribute
+    def name(self):  # name
+        """
+        Name of intervention (e.g. larviciding, sugar bait)
+        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#name-of-intervention-6
+        rtype: str
+        """
+        return "name", str
+    @name.setter
+    @attribute_setter(attrib_type=str)
+    def name(self, value):
+        pass  # attribute_setter decorator will change name attribute
+
+    @property
+    def anopheles(self):
+        """
+        :rtype: Anopheles
+        """
+        list_of_anopheles = []
+        desc = self.et.find("description")
+
+        if desc is not None:
+            for anopheles in desc.findall("anopheles"):
+                list_of_anopheles.append(Anopheles(anopheles))
+
+        return list_of_anopheles
+    @anopheles.setter
+    def anopheles(self, anopheles):
+        desc = self.et.find("description")
+
+        if desc is not None:
+            for anoph in desc.findall("anopheles"):
+                desc.remove(anoph) 
+
+            for a in anopheles:
+                assert isinstance(a, (str, unicode))
+                et = ElementTree.fromstring(a)
+                anopheles = Anopheles(et)
+                assert isinstance(anopheles.mosquito, (str, unicode))
+                if anopheles.seekingDeathRateIncrease is not None:
+                    assert isinstance(anopheles.seekingDeathRateIncrease, float)
+                if anopheles.probDeathOvipositing is not None:
+                    assert isinstance(anopheles.probDeathOvipositing, float)
+                if anopheles.emergenceReduction is not None:
+                    assert isinstance(anopheles.emergenceReduction, float)
+                desc.append(et)
+
+    @property
+    def timesteps(self):
+        """
+        Time-step at which this intervention occurs, starting from 0, the first intervention-period time-step.
+        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#-deploy-1
+        rtype: list
+        """
+        timesteps = []
+        timed = self.et.find("timed")
+
+        if timed is not None:
+            for deploy in timed.findall("deploy"):
+                timesteps.append(deploy.attrib["time"])
+
+        return timesteps
+
+class VectorPop(Section):
+    """
+    /scenario/interventions/vectorPop
+    Vector population intervention
+    A list of parameterisations of generic vector host-inspecific interventions.
+    https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#elt-vectorPop
+    """
+    @property
+    def interventions(self):
+        """ List of interventions in /scenario/interventions/vectorPop section """
+        array = []
+        if self.et is None:
+            return array
+        for intervention in self.et.findall("intervention"):
+            array.append(VectorPopIntervention(intervention))
+        return array
+
+    def __len__(self):
+        return len(self.interventions)
+
+    def __iter__(self):
+        """
+        Interator function. Allows using scenario.interventions.vectorPop in for statements
+        for example:
+        for interventions in scenario.interventions.vectorPop:
+            print intervention.name
+        :rtype: VectorPopIntervention
+        """
+        if len(self.interventions) == 0:
+            return
+        for intervention in self.interventions:
+            yield intervention
+
+    def __getitem__(self, item):
+        return self.interventions[item]
