@@ -233,6 +233,38 @@ class TestScenario(unittest.TestCase):
         scenario.interventions.vectorPop[0].name = "new name"
         self.assertEqual(scenario.interventions.vectorPop[0].name, "new name")
 
+    def test_vaccine_interventions(self):
+        scenario = Scenario(open(os.path.join(base_dir, os.path.join("files", "test_scenario", "vaccine_interventions.xml"))).read())
+
+        self.assertEqual(len(scenario.interventions.human), 2)
+
+        for i in scenario.interventions.human:
+            if i.vaccine_type == "TBV":
+                tbv = i
+            else:
+                pev = i
+
+        self.assertEqual(tbv.id, "my_TBV_effect")
+        self.assertEqual(pev.id, "some_PEV")
+        self.assertEqual(tbv.efficacyB, 10)
+        self.assertEqual(pev.efficacyB, 10)
+        self.assertEqual(tbv.initialEfficacy, [0.512, 0.64, 0.8])
+        self.assertEqual(pev.initialEfficacy, [0.512, 0.64, 0.8])
+
+        self.assertEqual(len(scenario.interventions.human.deployments), 1)
+
+        continuous = None
+        timed = None
+        for d in scenario.interventions.human.deployments:
+            continuous = d.continuous
+            timed = d.timesteps
+
+        self.assertEqual(len(continuous), 3)
+        self.assertEqual(len(timed), 6)
+
+        self.assertEqual(continuous[0]["targetAgeYrs"], 0.0833)
+        self.assertEqual(timed[0]["time"], 1)
+        self.assertEqual(timed[0]["coverage"], 0.95)
 
 if __name__ == "__main__":
     unittest.main()
