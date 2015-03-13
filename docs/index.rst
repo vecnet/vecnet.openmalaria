@@ -12,7 +12,7 @@ Contents:
    :maxdepth: 2
 
 
-   modules/vecnet.openmalaria
+   vecnet.openmalaria
 
 Indices and tables
 ==================
