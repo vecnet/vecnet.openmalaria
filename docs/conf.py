@@ -13,10 +13,9 @@
 
 import sys, os
 
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-#sys.path.insert(0, os.path.abspath('.'))
+# This project's modules are documented with autodoc), so the project's root
+# directory is added to sys.path here, so the modules can be imported by Sphinx.
+sys.path.insert(0, os.path.abspath('..'))
 
 # -- General configuration -----------------------------------------------------
 
