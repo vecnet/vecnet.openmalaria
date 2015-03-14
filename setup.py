@@ -8,13 +8,20 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License (MPL), version 2.0.  If a copy of the MPL was not distributed
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
-#
+
+import os
 
 from setuptools import setup, find_packages
 
+base_dir = os.path.dirname(__file__)
+
+about = {}
+with open(os.path.join(base_dir, "vecnet", "openmalaria", "__about__.py")) as f:
+    exec(f.read(), about)
+
 setup(
     name="vecnet.openmalaria",
-    version="0.8.2",
+    version=about["VERSION"],
     author="Alex Vyushkov, Diggory Hardy, Nicolas Reed",
     author_email="vecnet@vecnet.org",
     description="Openmalaria library for VecNet-CI project",
