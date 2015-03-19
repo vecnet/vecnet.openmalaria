@@ -10,7 +10,7 @@
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import StringIO
-from .input import XmlInputFile
+from scenario.scenario import Scenario
 
 
 class OutputParser:
@@ -20,10 +20,10 @@ class OutputParser:
         if isinstance(input_file, (str, unicode)):
             input_file = StringIO.StringIO(input_file)
         self.xml = input_file.read()
-        self.xml_input_file = XmlInputFile(self.xml)
+        self.scenario = Scenario(self.xml)
 
         # Survey timesteps from input file are required to parse Survey output
-        self.survey_time_list = self.xml_input_file.survey_timesteps
+        self.survey_time_list = self.scenario.monitoring.surveys
 
         # Parse continuous output file
         self._parse_continuous_output_file(cts_output_file)
@@ -113,7 +113,7 @@ class OutputParser:
                 except ValueError as e:
                     # For vector measures (Vector_Nv0, Vector_Nv, Vector_Ov and Vector_Sv) third dimension is
                     # a species' name, not a number
-                    if self.xml_input_file.measure_has_species_name(measure_id=measure_id):
+                    if measure_id in ({31, 32, 33, 34}): # self.xml_input_file.measure_has_species_name(measure_id=measure_id):
                         third_dimension = str(data[1])
                     else:
                         # If not a vector measure, pass re-raise the exception
@@ -136,7 +136,7 @@ class OutputParser:
         return self.survey_output_data.keys()
 
     def get_monitoring_age_group(self, third_dimension):
-        return self.xml_input_file.monitoring_age_groups[third_dimension]
+        return self.scenario.monitoring.ageGroup.group[third_dimension]
 
     def get_survey_measure_name(self, measure_id, third_dimension):
         measure_name = ""
