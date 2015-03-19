@@ -33,7 +33,7 @@ class TestOutputParser(unittest.TestCase):
             measure_names.add(output_parser.get_survey_measure_name(measure_id=measure[0],
                                                                     third_dimension=measure[1]))
         self.assertEqual(measure_names,
-                         ({"nPatent(18 - 90)", "nPatent(0 - 18)", "nUncomp(0 - 18)", "nUncomp(18 - 90)"}))
+                         ({"nPatent(18 - 90)", "nPatent(0.0 - 18)", "nUncomp(0.0 - 18)", "nUncomp(18 - 90)"}))
         self.assertEqual(output_parser.survey_output_data,
                          {(3, 2): [[730, 16.0], [803, 17.0], [876, 16.0], [949, 14.0], [1022, 12.0], [1095, 10.0]],
                           (3, 1): [[730, 27.0], [803, 16.0], [876, 15.0], [949, 23.0], [1022, 20.0], [1095, 13.0]],
