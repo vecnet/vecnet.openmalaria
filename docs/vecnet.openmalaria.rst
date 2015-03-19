@@ -36,14 +36,6 @@ vecnet.openmalaria.helpers module
     :undoc-members:
     :show-inheritance:
 
-vecnet.openmalaria.input module
--------------------------------
-
-.. automodule:: vecnet.openmalaria.input
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 vecnet.openmalaria.output_parser module
 ---------------------------------------
 
