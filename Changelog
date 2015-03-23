@@ -1,6 +1,10 @@
 =========
 Changelog
 =========
+0.8.4 2015-03-23
+====
+* [+] Added health system helper functions for converting pSeek probabilities to percentages and vice-versa.
+
 0.8.3 2015-03-19
 ====
 * [*] Update Sphinx support and project hierarchy.
