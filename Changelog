@@ -1,6 +1,11 @@
 =========
 Changelog
 =========
+0.8.5 2015-03-27
+====
+* [+] Added monitoring helper functions for getting/setting survey times based on start date, as well as years and months spanned.
+* [+] Added further health system helper functions for drug setting/creation.
+
 0.8.4 2015-03-23
 ====
 * [+] Added health system helper functions for converting pSeek probabilities to percentages and vice-versa.
