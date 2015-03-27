@@ -146,3 +146,47 @@ def get_percentage_from_prob(prob):
             return percentage - 1
     return 100
 
+
+def set_or_create_drug(first_line_drug, elem_list, attribute_name, value):
+    for el in elem_list:
+        if el.tag == first_line_drug:
+            el.attrib[attribute_name] = value
+            return
+
+    drug = ElementTree.Element(first_line_drug)
+    drug.attrib[attribute_name] = value
+
+    if attribute_name == 'name':
+        clear_infections = ElementTree.SubElement(drug, "clearInfections")
+        clear_infections.attrib['stage'] = 'blood'
+        clear_infections.attrib['timesteps'] = '1'
+
+    set_immediate_outcome_children(first_line_drug, elem_list, drug)
+
+
+"""
+    Initial ACR order for elements (drugs):
+    - CQ, SP, AQ, SPAQ, ACT, QN, selfTreatment.
+"""
+def set_immediate_outcome_children(first_line_drug, elem_list, drug):
+    index_prior = -1
+    drug_tag_dict = {
+        "CQ": "",
+        "SP": "CQ",
+        "AQ": "SP",
+        "SPAQ": "AQ",
+        "ACT": "SPAQ",
+        "QN": "ACT",
+        "selfTreatment": "QN"
+    }
+
+    if first_line_drug == "CQ":
+        elem_list.insert(0, drug)
+        return
+
+    tag = drug_tag_dict[first_line_drug]
+
+    for el in elem_list:
+        if el.tag == tag:
+            index_prior = elem_list.index(el)
+    elem_list.insert(index_prior + 1, drug)
