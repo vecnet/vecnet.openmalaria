@@ -2,7 +2,7 @@
 # docs/conf.py
 
 # Some segments of public version identifer (PEP 440)
-VERSION_RELEASE = "0.8.4"
+VERSION_RELEASE = "0.8.5"
 VERSION_PRE_RELEASE = ""    # e.g., "a4", "b1", "rc3" or "" (final release)
 VERSION_POST_RELEASE = ""   # e.g., ".post1"
 
