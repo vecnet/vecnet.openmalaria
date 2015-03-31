@@ -22,8 +22,8 @@ with open(os.path.join(base_dir, "vecnet", "openmalaria", "__about__.py")) as f:
 setup(
     name="vecnet.openmalaria",
     version=about["VERSION"],
-    author="Alex Vyushkov, Diggory Hardy, Jimm Domingo, Nicolas Reed",
-    author_email="vecnet@vecnet.org",
+    author="University of Notre Dame",
+    author_email="vecnet@nd.edu",
     description="Openmalaria library for VecNet-CI project",
     license="MPL 2.0",
     keywords="openmalaria malaria vecnet",
