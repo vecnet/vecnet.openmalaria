@@ -22,6 +22,7 @@ class ImmediateOutcomes(Section):
     @property  # pSeekOfficialCareUncomplicated1
     def pSeekOfficialCareUncomplicated1(self):
         return float(self.et.find("pSeekOfficialCareUncomplicated1").attrib["value"])
+
     @pSeekOfficialCareUncomplicated1.setter
     def pSeekOfficialCareUncomplicated1(self, value):
         assert isinstance(value, (int, float))
@@ -30,6 +31,7 @@ class ImmediateOutcomes(Section):
     @property  # pSeekOfficialCareUncomplicated2
     def pSeekOfficialCareUncomplicated2(self):
         return float(self.et.find("pSeekOfficialCareUncomplicated2").attrib["value"])
+
     @pSeekOfficialCareUncomplicated2.setter
     def pSeekOfficialCareUncomplicated2(self, value):
         assert isinstance(value, (int, float))
@@ -38,6 +40,7 @@ class ImmediateOutcomes(Section):
     @property  # pSelfTreatUncomplicated
     def pSelfTreatUncomplicated(self):
         return float(self.et.find("pSelfTreatUncomplicated").attrib["value"])
+
     @pSelfTreatUncomplicated.setter
     def pSelfTreatUncomplicated(self, value):
         assert isinstance(value, (int, float))
@@ -46,6 +49,7 @@ class ImmediateOutcomes(Section):
     @property  # pSeekOfficialCareSevere
     def pSeekOfficialCareSevere(self):
         return float(self.et.find("pSeekOfficialCareSevere").attrib["value"])
+
     @pSeekOfficialCareSevere.setter
     def pSeekOfficialCareSevere(self, value):
         assert isinstance(value, (int, float))
@@ -54,6 +58,7 @@ class ImmediateOutcomes(Section):
     @property  # firstLine
     def firstLine(self):
         return self.et.find("drugRegimen").attrib["firstLine"]
+
     @firstLine.setter
     def firstLine(self, value):
         assert isinstance(value, (str, unicode))
@@ -63,6 +68,7 @@ class ImmediateOutcomes(Section):
     @tag_value
     def secondLine(self):
         return "drugRegimen", "secondLine", str
+
     @secondLine.setter
     @tag_value_setter("drugRegimen", "secondLine")
     def secondLine(self, value):
@@ -72,6 +78,7 @@ class ImmediateOutcomes(Section):
     @tag_value
     def inpatient(self):
         return "drugRegimen", "inpatient", str
+
     @inpatient.setter
     def inpatient(self, value):
         self.et.find("drugRegimen").attrib["inpatient"] = value

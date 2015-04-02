@@ -119,7 +119,7 @@ class Scenario(Section):
         return '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n' + ElementTree.tostring(self.root)
 
     def __init__(self, xml):
-        #self.xml = xml
+        # self.xml = xml
         # Parsed xml file (as ElementTree)
         self.root = ElementTree.fromstring(xml)
         super(self.__class__, self).__init__(self.root)
@@ -128,7 +128,7 @@ class Scenario(Section):
         return self.name
 
     def load_xml(self, xml):
-        #self.xml = xml
+        # self.xml = xml
         # Parsed xml file (as ElementTree)
         self.root = ElementTree.fromstring(xml)
         super(self.__class__, self).__init__(self.root)
@@ -149,7 +149,7 @@ if __name__ == "__main__":
     assert scenario.demography.maximumAgeYrs == 10
     # Check if et attribute in child classes is a reference, not a separate object
     print scenario.root.find("demography").attrib["maximumAgeYrs"]
-    #print ElementTree.dump(scenario.root)
+    # print ElementTree.dump(scenario.root)
     print scenario.entomology.scaledAnnualEIR
     print scenario.entomology.name
     print len(scenario.entomology.vectors)
