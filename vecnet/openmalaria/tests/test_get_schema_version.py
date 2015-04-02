@@ -21,7 +21,7 @@ class TestGetSchemaVersion(unittest.TestCase):
         pass
 
     def test_get_schema_version_from_xml(self):
-        base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__ )), "files")
+        base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "files")
 
         # use file handle as input to test_get_schema_version
         with open(os.path.join(base_dir, os.path.join("test_get_schema_version", "scenario30.xml"))) as fp:

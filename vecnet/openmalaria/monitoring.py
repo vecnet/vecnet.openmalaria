@@ -49,7 +49,7 @@ def get_survey_times(monitoring, start_date):
                     break
 
             for i in range(mos_index, len(times) - 1):
-                monitor_mos = monitor_mos + 1
+                monitor_mos += 1
 
             monitor_start_date = start_date + (times[0] / TIMESTEPS_PER_YEAR)
 
@@ -80,7 +80,7 @@ def set_survey_times(sim_start_date, monitor_yrs, monitor_mos, monitor_start_dat
         for month in range(months_before_monitor_start, total_months + 1):
             timesteps_to_add_for_month = 0
 
-            if month_count % 12 == 0: # Begin next year.
+            if month_count % 12 == 0:  # Begin next year.
                 new_timestep = TIMESTEPS_PER_YEAR * (month / 12)
                 month_count = 0
             elif month_count == 2:

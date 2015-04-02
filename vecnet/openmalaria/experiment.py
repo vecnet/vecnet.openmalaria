@@ -82,7 +82,7 @@ class ExperimentSpecification:
 
     def _apply_combination(self, scenario, sweeps_applied, combination):
         for i in range(0, len(sweeps_applied)):
-        # Apply sweeps in order defined by user
+            # Apply sweeps in order defined by user
             sweep = sweeps_applied[i]
             arm = combination[i]
             scenario = self._apply_changes(scenario, sweep, arm)
@@ -98,7 +98,7 @@ class ExperimentSpecification:
             if isinstance(self.experiment["combinations"], list):
                 # For backward compatibility with experiments1-4s
                 combinations_in_experiment = {" ": self.experiment["combinations"]}
-                #if self.experiment["combinations"] == []:
+                # if self.experiment["combinations"] == []:
                 #    # Special notation for fully-factorial experiments
                 #    combinations_in_experiment = {" ":[[],[]]}
             else:
@@ -108,7 +108,7 @@ class ExperimentSpecification:
             # Support no combinations element:
             combinations_in_experiment = dict()    # empty dict 
 
-        #1) calculate combinations_sweeps (depends on ALL combinations_ items)
+        # 1) calculate combinations_sweeps (depends on ALL combinations_ items)
         # Get the list of fully factorial sweeps
         all_combinations_sweeps = []
         all_combinations = []
@@ -129,20 +129,20 @@ class ExperimentSpecification:
             all_combinations.append((combinations_sweeps, combinations))
         
         sweeps_fully_factorial = list(set(sweeps_all) - set(all_combinations_sweeps))
-        #print "fully fact: %s" % sweeps_fully_factorial
+        # print "fully fact: %s" % sweeps_fully_factorial
         
-        #2) produce a list of all combinations of fully factorial sweeps
+        # 2) produce a list of all combinations of fully factorial sweeps
         # First sets of "combinations": the fully-factorial sweeps
         for sweep in sweeps_fully_factorial:
             all_combinations.append(([sweep], [[x] for x in self.experiment["sweeps"][sweep].keys()]))
         
-        #3) take the dot (inner) product of the list above (fully factorial arm combinations)
+        # 3) take the dot (inner) product of the list above (fully factorial arm combinations)
         #   with the first combinations list, that with the second combination list, ...
         # step-by-step reduce the list of combinations to a single item
         # (dot-product of each list of combinations)
         # this could use a lot of memory...
         red_iter = 0
-        #print "all combinations:", red_iter, all_combinations
+        # print "all combinations:", red_iter, all_combinations
         while len(all_combinations) > 1:
             comb1 = all_combinations[0]
             comb2 = all_combinations[1]
@@ -150,9 +150,9 @@ class ExperimentSpecification:
             new_combinations = [x+y for x in comb1[1] for y in comb2[1]]
             all_combinations = [(new_sweeps, new_combinations)] + all_combinations[2:]
             red_iter += 1
-            #print "all combinations:", red_iter, all_combinations
+            # print "all combinations:", red_iter, all_combinations
         
-        #4) write out the document for each in (3), which should specify one arm for each
+        # 4) write out the document for each in (3), which should specify one arm for each
         #   sweep with no repetition of combinations
         sweep_names = all_combinations[0][0]
         combinations = all_combinations[0][1]
