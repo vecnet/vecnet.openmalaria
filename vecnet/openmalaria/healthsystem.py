@@ -15,7 +15,7 @@ Please refer to https://docs.google.com/document/d/1-R-0s0vELuUJ-xuQabjwe1BhKCLY
 
 # Using dictionary instead of list to simplify debugging.
 probability_list = {
-    #0: 7.934353e-05, # This number does not make a lot of sense
+    # 0: 7.934353e-05, # This number does not make a lot of sense
     #                   If 0% of people are treated, probability should be 0, isn't it?
     0: 0.0,
     1: 0.003655052,
@@ -120,6 +120,7 @@ probability_list = {
     100: 0.9984184
 }
 
+
 def get_prob_from_percentage(perc):
     """
     Converted percentage of people treated to probability of being treated on a timestep
@@ -130,11 +131,12 @@ def get_prob_from_percentage(perc):
 
     return probability_list[perc]
 
+
 def get_percentage_from_prob(prob):
     """
     Converted probability of being treated to total percentage of clinical cases treated
     """
-    assert isinstance(prob, (float,int))
+    assert isinstance(prob, (float, int))
     prob = float(prob)
     assert prob >= 0
     assert prob <= 1
@@ -164,10 +166,7 @@ def set_or_create_drug(first_line_drug, elem_list, attribute_name, value):
     set_immediate_outcome_children(first_line_drug, elem_list, drug)
 
 
-"""
-    Initial ACR order for elements (drugs):
-    - CQ, SP, AQ, SPAQ, ACT, QN, selfTreatment.
-"""
+# Initial ACR order for elements (drugs): CQ, SP, AQ, SPAQ, ACT, QN, selfTreatment.
 def set_immediate_outcome_children(first_line_drug, elem_list, drug):
     index_prior = -1
     drug_tag_dict = {

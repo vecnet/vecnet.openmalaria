@@ -113,7 +113,7 @@ class OutputParser:
                 except ValueError as e:
                     # For vector measures (Vector_Nv0, Vector_Nv, Vector_Ov and Vector_Sv) third dimension is
                     # a species' name, not a number
-                    if measure_id in ({31, 32, 33, 34}): # self.xml_input_file.measure_has_species_name(measure_id=measure_id):
+                    if measure_id in ({31, 32, 33, 34}):
                         third_dimension = str(data[1])
                     else:
                         # If not a vector measure, pass re-raise the exception

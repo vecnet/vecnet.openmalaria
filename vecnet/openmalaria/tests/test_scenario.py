@@ -87,7 +87,8 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(gambiae.seasonality.input, "EIR")
         self.assertEqual(gambiae.seasonality.smoothing, "fourier")
         self.assertEqual(gambiae.seasonality.monthlyValues,
-                         [0.0468, 0.0447, 0.0374, 0.0417, 0.0629, 0.0658, 0.0423, 0.0239, 0.0203, 0.0253, 0.0331, 0.0728])
+                         [0.0468, 0.0447, 0.0374, 0.0417, 0.0629, 0.0658, 0.0423, 0.0239, 0.0203, 0.0253, 0.0331,
+                          0.0728])
         self.assertEqual(gambiae.mosq.minInfectedThreshold, 0.001)
         self.assertEqual(gambiae.mosq.mosqRestDuration, 2)
         self.assertEqual(gambiae.mosq.mosqHumanBloodIndex, 0.85)
@@ -102,7 +103,7 @@ class TestScenario(unittest.TestCase):
 
         scenario2 = Scenario(scenario.xml)
         self.assertEqual(scenario2.entomology.vectors["gambiae"].seasonality.monthlyValues,
-                             [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+                         [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
         self.assertEqual(scenario2.entomology.vectors["gambiae"].propInfected, 0.1)
         self.assertEqual(scenario2.entomology.vectors["gambiae"].seasonality.annualEIR, 6.1)
         self.assertEqual(scenario2.entomology.scaledAnnualEIR, 10.0)
@@ -159,11 +160,11 @@ class TestScenario(unittest.TestCase):
 
             # print deployment.timesteps
             # for timestep in deployment.timesteps:
-            #     print timestep["time"], timestep["coverage"]
-
+            # print timestep["time"], timestep["coverage"]
 
         # Scenario without interventions
-        scenario1 = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c_no_interventions.xml"))).read())
+        scenario1 = Scenario(
+            open(os.path.join(base_dir, os.path.join("input", "scenario70k60c_no_interventions.xml"))).read())
         self.assertEqual(len(scenario1.interventions.human.deployments), 0)
         i = 0
         for deployment in scenario1.interventions.human.deployments:
@@ -176,48 +177,52 @@ class TestScenario(unittest.TestCase):
             i += 1
         self.assertEqual(i, 0)
 
-         # Scenario without deployments in intervention section
-        scenario1 = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c_no_deployments.xml"))).read())
+        # Scenario without deployments in intervention section
+        scenario1 = Scenario(
+            open(os.path.join(base_dir, os.path.join("input", "scenario70k60c_no_deployments.xml"))).read())
         self.assertEqual(len(scenario1.interventions.human.deployments), 0)
         i = 0
         for deployment in scenario1.interventions.human.deployments:
             i += 1
         self.assertEqual(i, 0)
-        #self.assertRaises(KeyError, lambda x: scenario1.interventions.deployments["123"], 1)
+        # self.assertRaises(KeyError, lambda x: scenario1.interventions.deployments["123"], 1)
 
     def test_vectorpop_intervention(self):
         # No vectorPop section
-        scenario = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c_no_interventions.xml"))).read())
+        scenario = Scenario(
+            open(os.path.join(base_dir, os.path.join("input", "scenario70k60c_no_interventions.xml"))).read())
         self.assertEqual(scenario.interventions.vectorPop.interventions, [])
         self.assertEqual(len(scenario.interventions.vectorPop), 0)
         i = None
         for i in scenario.interventions.vectorPop:
             print i.name
-        self.assertIsNone(i) # make sure iterator returns an empty set
+        self.assertIsNone(i)  # make sure iterator returns an empty set
 
         # Empty vectorPop section
-        scenario = Scenario(open(os.path.join(base_dir, os.path.join("files", "test_scenario", "empty_vectorpop_section.xml"))).read())
+        scenario = Scenario(
+            open(os.path.join(base_dir, os.path.join("files", "test_scenario", "empty_vectorpop_section.xml"))).read())
         self.assertEqual(scenario.interventions.vectorPop.interventions, [])
         self.assertEqual(len(scenario.interventions.vectorPop), 0)
         i = None
         for i in scenario.interventions.vectorPop:
             print i.name
-        self.assertIsNone(i) # make sure iterator returns an empty set
-
+        self.assertIsNone(i)  # make sure iterator returns an empty set
 
         # Test vectorPop section with exactly one intervention
-        scenario = Scenario(open(os.path.join(base_dir, os.path.join("files", "test_scenario", "larvacing.xml"))).read())
+        scenario = Scenario(
+            open(os.path.join(base_dir, os.path.join("files", "test_scenario", "larvacing.xml"))).read())
         self.assertEqual(len(scenario.interventions.vectorPop), 1)
         for i in scenario.interventions.vectorPop:
             self.assertEqual(i.name, "simple larviciding translated from schema 30")
 
         # Test vectorPop section with multiple interventions
-        scenario = Scenario(open(os.path.join(base_dir, os.path.join("files", "test_scenario", "triple_larvacing.xml"))).read())
+        scenario = Scenario(
+            open(os.path.join(base_dir, os.path.join("files", "test_scenario", "triple_larvacing.xml"))).read())
         self.assertEqual(len(scenario.interventions.vectorPop), 3)
         interventions = []
         for i in scenario.interventions.vectorPop:
             interventions.append(i.name)
-        self.assertEqual(interventions, ["int1","int2","int3"])
+        self.assertEqual(interventions, ["int1", "int2", "int3"])
         self.assertEqual(scenario.interventions.vectorPop[0].name, "int1")
         self.assertEqual(scenario.interventions.vectorPop[1].name, "int2")
         self.assertEqual(scenario.interventions.vectorPop[2].name, "int3")
@@ -228,9 +233,10 @@ class TestScenario(unittest.TestCase):
         scenario.interventions.vectorPop[0].name = "new name"
         self.assertEqual(scenario.interventions.vectorPop[0].name, "new name")
 
+    # TODO: Remove.
     @classmethod
     def not_a__full_scenario(cls):
-        scenario = Scenario() # scenario70k60c.xml
+        scenario = Scenario()  # scenario70k60c.xml
 
         scenario.schemaVersion = 32
 
@@ -241,7 +247,7 @@ class TestScenario(unittest.TestCase):
         scenario.demography.popSize = 1000
         scenario.demography.ageGroup.lowerbound = 0
         # It may be important to preserve the order of the age groups in demography section
-        scenario.demography.ageGroup.group = [{"poppercent":2.5,"lowerbound":0,"upperbound":5},]
+        scenario.demography.ageGroup.group = [{"poppercent": 2.5, "lowerbound": 0, "upperbound": 5}, ]
 
         scenario.monitoring.name = "Monthly Surveys"
         scenario.monitoring.detectionLimit = 100
@@ -264,7 +270,8 @@ class TestScenario(unittest.TestCase):
         gambiae.seasonality.annualEIR = 1
         gambiae.seasonality.input = "EIR"
         gambiae.seasonality.smoothing = "fourier"
-        gambiae.seasonality.monthlyValues = [0.0468, 0.0447, 0.0374, 0.0417, 0.0629, 0.0658, 0.0423, 0.0239, 0.0203, 0.0253, 0.0331, 0.0728]
+        gambiae.seasonality.monthlyValues = [0.0468, 0.0447, 0.0374, 0.0417, 0.0629, 0.0658, 0.0423, 0.0239, 0.0203,
+                                             0.0253, 0.0331, 0.0728]
         gambiae.mosq.minIfectedThreshold = 0.001
         gambiae.mosq.extrinsicIncubationPeriod = 12
         gambiae.mosq.mosqLaidEggsSameDayProportion = 0.313
@@ -300,7 +307,7 @@ class TestScenario(unittest.TestCase):
         scenario.healthSystem.ImmediateOutcomes.drugs.ACT.compliance = 0.96
         scenario.healthSystem.ImmediateOutcomes.drugs.ACT.nonCompliersEffective = 0.96
         scenario.healthSystem.ImmediateOutcomes.drugs.ACT.treatmentActions.name = "clear blood-stage infections"
-        scenario.healthSystem.ImmediateOutcomes.drugs.ACT.treatmentActions.clearInfections.stage = "blood" # blood, liver or both
+        scenario.healthSystem.ImmediateOutcomes.drugs.ACT.treatmentActions.clearInfections.stage = "blood"  # blood, liver or both
         scenario.healthSystem.ImmediateOutcomes.drugs.ACT.treatmentActions.clearInfections.timestep = 1
         # scenario.healthSystem.CFR - Case fatality rate for inpatients
         # scenario.healthSystem.CFR.interpolation = "none"
@@ -309,10 +316,9 @@ class TestScenario(unittest.TestCase):
                                            ]
         # Probabilities of sequelae (a condition that is the consequence of a previous disease or injury) in inpatients
         scenario.healthSystem.pSequelaeInpatient.interpolation = "none"
-        scenario.healthSystem.pSequelaeInpatient.group = [{"lowerbound":0.0, "value":0.0132},
-                                                          {"lowerbound":5.0, "value":"0.005"}
+        scenario.healthSystem.pSequelaeInpatient.group = [{"lowerbound": 0.0, "value": 0.0132},
+                                                          {"lowerbound": 5.0, "value": "0.005"}
                                                           ]
-
 
         scenario.interventions.name = "Olyset"
         # scenario.interventions.changeHS.name = "123"
@@ -335,11 +341,11 @@ class TestScenario(unittest.TestCase):
         scenario.interventions.human[0].GVI.anophelesParams.gambiae.propActive = 0.7
         scenario.interventions.human[0].GVI.anophelesParams.gambiae.deterrency = 0.23076923077
         scenario.interventions.human[0].GVI.anophelesParams.gambiae.preprandialKillingEffect = 0.7
-        scenario.interventions.human[0].GVI.anophelesParams.gambiae.postprandialKillingEffect  = 0
+        scenario.interventions.human[0].GVI.anophelesParams.gambiae.postprandialKillingEffect = 0
         scenario.interventions.human[0].deployment.timed = {730: {"coverage": 0.6},
                                                             736: {"coverage": 0.6}
                                                             # other keys may include maxAge, minAge, vaccMinPrevDoses etc
-        }
+                                                            }
         scenario.interventions.human[1].type = "ITN"
 
 
