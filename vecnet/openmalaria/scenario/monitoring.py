@@ -150,7 +150,6 @@ class Monitoring(Section):
             tag.text = str(time)
             surveys_elem.append(tag)
 
-
     # Internal functions
     def _get_measures(self, et):
         """

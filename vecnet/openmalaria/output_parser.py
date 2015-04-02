@@ -113,7 +113,7 @@ class OutputParser:
                 except ValueError as e:
                     # For vector measures (Vector_Nv0, Vector_Nv, Vector_Ov and Vector_Sv) third dimension is
                     # a species' name, not a number
-                    if measure_id in ({31, 32, 33, 34}): # self.xml_input_file.measure_has_species_name(measure_id=measure_id):
+                    if measure_id in ({31, 32, 33, 34}):
                         third_dimension = str(data[1])
                     else:
                         # If not a vector measure, pass re-raise the exception
@@ -269,9 +269,9 @@ surveyFileMap = \
          "that time of year."),
         ("nNMFever", "age group", "Number of episodes of non-malaria fever"),
         # Measure 28 name is taken from https://code.google.com/p/openmalaria/source/browse/util/plotResult.py
-        ('innoculationsPerDayOfYear',"(removed)","(removed"),
+        ('innoculationsPerDayOfYear', "(removed)", "(removed"),
         # Measure 29 name is taken from https://code.google.com/p/openmalaria/source/browse/util/plotResult.py
-        ('kappaPerDayOfYear',"(removed)","(removed"),
+        ('kappaPerDayOfYear', "(removed)", "(removed"),
         ("innoculationsPerAgeGroup", "age group", "The total number of inoculations per age group"),
         ("Vector_Nv0", "vector species",
          "Number of emerging mosquitoes that survive to the first feeding search per day at this time-step "
@@ -322,14 +322,14 @@ surveyFileMap = \
         ("nTreatDiagnostics", "age group",
          "Number of diagnostic tests performed (if in the health system description, useDiagnosticUC='true').")
 
-    # https://code.google.com/p/openmalaria/source/browse/util/plotResult.py
-    # 65 : 'nMassRecruitOnly',
-    # 66 : 'nCtsRecruitOnly',
-    # 67 : 'nTreatDeployments',
-    # 68 : 'sumAge',
-    # 69 : 'nInfectByGenotype',
-    # 70 : 'nPatentByGenotype',
-    # 71 : 'logDensByGenotype',
-    # 72 : 'nHostDrugConcNonZero',
-    # 73 : 'sumLogDrugConcNonZero'
+        # https://code.google.com/p/openmalaria/source/browse/util/plotResult.py
+        # 65 : 'nMassRecruitOnly',
+        # 66 : 'nCtsRecruitOnly',
+        # 67 : 'nTreatDeployments',
+        # 68 : 'sumAge',
+        # 69 : 'nInfectByGenotype',
+        # 70 : 'nPatentByGenotype',
+        # 71 : 'logDensByGenotype',
+        # 72 : 'nHostDrugConcNonZero',
+        # 73 : 'sumLogDrugConcNonZero'
     ]

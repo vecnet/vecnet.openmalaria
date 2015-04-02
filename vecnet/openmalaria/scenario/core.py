@@ -10,6 +10,7 @@
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 from xml.etree import ElementTree
 
+
 def attribute(func):
     """
     Decorator used to declare that property is a tag attribute
