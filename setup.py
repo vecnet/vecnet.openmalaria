@@ -32,7 +32,7 @@ setup(
     # If omitted, the source directory defaults to the same directory as the setup script.
     packages=find_packages(),  # https://pythonhosted.org/setuptools/setuptools.html#using-find-packages
     namespace_packages=['vecnet', ],
-    scripts=['bin/om_expand.cmd', 'bin/om_expand'],
+    scripts=['scripts/om_expand.cmd', 'scripts/om_expand'],
     install_requires=[],
     classifiers=[
         "Development Status :: 3 - Alpha",
