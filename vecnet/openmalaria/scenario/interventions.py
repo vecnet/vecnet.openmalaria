@@ -15,6 +15,7 @@ from xml.etree import ElementTree
 from vecnet.openmalaria.scenario.core import Section, attribute, attribute_setter, section, tag_value
 from vecnet.openmalaria.scenario.healthsystem import HealthSystem
 
+
 class Deployment(Section):
     @property
     @attribute
@@ -32,7 +33,7 @@ class Deployment(Section):
         for deploy in self.et.find("timed").findall("deploy"):
             deployments.append(
                 {"time":    int(deploy.attrib["time"]),
-                 "coverage":float(deploy.attrib["coverage"])}
+                 "coverage": float(deploy.attrib["coverage"])}
             )
         return deployments
 
@@ -49,12 +50,12 @@ class Deployments(Section):
         for deployment in self.et.findall("deployment"):
             yield Deployment(deployment)
 
-
     def __len__(self):
         i = 0
         for deployment in self:
             i += 1
         return i
+
 
 class Interventions(Section):
     """
@@ -100,6 +101,7 @@ class Interventions(Section):
     def __getattr__(self, item):
         raise KeyError
 
+
 class Component(Section):
     @property  # name
     @attribute
@@ -115,6 +117,7 @@ class Component(Section):
     @attribute_setter(attrib_type=str)
     def name(self, value):
         pass   # value of name attribute will be set by attribute_setter decorator
+
 
 class AnophelesParams(Section):
     """
@@ -237,6 +240,7 @@ class ITN(Component):
         attrition_of_nets.attrib["function"] = "step"
         attrition_of_nets.attrib["L"] = years
 
+
 class Decay(Section):
     """
     Description of decay of all intervention effects. Documentation:
@@ -268,6 +272,7 @@ class Decay(Section):
     @attribute
     def sigma(self):
         return "sigma", float
+
 
 class GVI(Component):
     def __init__(self, et):
@@ -308,6 +313,7 @@ class GVI(Component):
             assert isinstance(anopheles.postprandialKillingEffect, float)
             self.gvi.append(et)
 
+
 class HumanInterventions(Section):
     """
     List of human interventions
@@ -329,7 +335,6 @@ class HumanInterventions(Section):
     @property  # deployment
     def deployments(self):
         return Deployments(self.et)
-
 
     def __getitem__(self, item):
         """
@@ -359,6 +364,7 @@ class HumanInterventions(Section):
             return
         for intervention_name, intervention in self.components.iteritems():
             yield intervention
+
 
 class Anopheles(Section):
     """
@@ -403,6 +409,7 @@ class Anopheles(Section):
             return Decay(section.find("decay"))
 
         return section
+
 
 class VectorPopIntervention(Section):
     """
@@ -472,6 +479,7 @@ class VectorPopIntervention(Section):
                 timesteps.append(deploy.attrib["time"])
 
         return timesteps
+
 
 class VectorPop(Section):
     """

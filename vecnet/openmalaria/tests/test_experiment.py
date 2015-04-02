@@ -41,17 +41,18 @@ class TestExperimentDescription(unittest.TestCase):
     def test_dict(self):
         """ Testing experiment creation from a python dictionary.
         Simple case - all sweeps are already defined, no fully factorial product is required. """
-        experiment = {"base": "<xml>@itn@ @irs@ </xml>",
-                      "sweeps": {
-                          "itn": {"itn 80": {"@itn@": "80"}, "itn 90": {"@itn@": "90"}},
-                          "irs": {"irs 66": {"@irs@": "66"}, "irs 90": {"@irs@": "90"}}
-                      },
-                      "combinations": [
-                          ["itn", "irs"],
-                          ["itn 80", "irs 66"],
-                          ["itn 80", "irs 90"],
-                          ["itn 90", "irs 66"]
-                      ]
+        experiment = {
+            "base": "<xml>@itn@ @irs@ </xml>",
+            "sweeps": {
+                "itn": {"itn 80": {"@itn@": "80"}, "itn 90": {"@itn@": "90"}},
+                "irs": {"irs 66": {"@irs@": "66"}, "irs 90": {"@irs@": "90"}}
+            },
+            "combinations": [
+                ["itn", "irs"],
+                ["itn 80", "irs 66"],
+                ["itn 80", "irs 90"],
+                ["itn 90", "irs 66"]
+            ]
         }
 
         expected_result = ({u"<xml>80 66 </xml>",
@@ -168,7 +169,7 @@ class TestExperimentDescription(unittest.TestCase):
                                 u"<xml> 80 66 1 1</xml>",
                                 u"<xml> 80 77 2 2</xml>",
                                 u"<xml> 66 90 1 1</xml>",
-                           })
+                            })
         self.assertEqual(len(expected_results), len(results))
         self.assertEqual(set(results), expected_results)
 
@@ -428,7 +429,7 @@ class TestExperimentDescription(unittest.TestCase):
                           "itn": {"itn 80": {"@itn@": "80"}, "itn 90": {"@itn@": "90"}},
                           "irs": {"irs 66": {"@irs@": "66"}, "irs 90": {"@irs@": "90"}}
                       }
-        }
+                      }
         exp = ExperimentSpecification(experiment)
         exp.add_sweep("test")
         self.assertIn("test", exp.experiment["sweeps"])

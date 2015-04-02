@@ -85,6 +85,7 @@ class Seasonality(Section):
             element.text = str(value)
             self.et.find("monthlyValues").append(element)
 
+
 class Mosq(Section):
     @property  # minInfectedThreshold, double
     @attribute
@@ -124,6 +125,7 @@ class Mosq(Section):
     @tag_value_setter(tag="mosqHumanBloodIndex", attrib="value")
     def mosqHumanBloodIndex(self, value):
         pass  # mosqHumanBloodIndex parameter will be set by tag_value_setter decorator
+
 
 class Vector(Section):
     """
@@ -186,12 +188,13 @@ class Vector(Section):
         """
         return Mosq
 
+
 class Vectors():
     def __init__(self, et):
- #       assert isinstance(et, ElementTree)
+        # assert isinstance(et, ElementTree)
         self.et = et
 
-    def add(self, vector, InterventionAnophelesParams = None):
+    def add(self, vector, InterventionAnophelesParams=None):
         """
         Add a vector to entomology section.
         vector is either ElementTree or xml snippet
@@ -267,6 +270,7 @@ class Vectors():
 
     def __str__(self):
         return self.mosquito
+
 
 class Entomology(Section):
     @property  # name
