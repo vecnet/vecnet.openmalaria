@@ -68,6 +68,20 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(scenario.monitoring.continuous, ['simulated EIR', 'GVI coverage', 'Input EIR'])
         self.assertEqual(scenario.monitoring.SurveyOptions, ['nHost', 'nPatent', 'nUncomp', 'simulatedEIR', 'nMassGVI'])
 
+    def test_healthsystem(self):
+        scenario = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c.xml"))).read())
+
+        self.assertEqual(scenario.healthSystem.ImmediateOutcomes.name, "Kenya ACT")
+        self.assertEqual(scenario.healthSystem.ImmediateOutcomes.pSeekOfficialCareUncomplicated1, 0.04)
+        self.assertEqual(scenario.healthSystem.ImmediateOutcomes.pSeekOfficialCareUncomplicated2, 0.04)
+        self.assertEqual(scenario.healthSystem.ImmediateOutcomes.pSelfTreatUncomplicated, 0.0212)
+        self.assertEqual(scenario.healthSystem.ImmediateOutcomes.pSeekOfficialCareSevere, 0.48)
+        self.assertEqual(scenario.healthSystem.ImmediateOutcomes.firstLine, "ACT")
+
+        scenario.healthSystem.ImmediateOutcomes.firstLine = "QN"
+
+        self.assertEqual(scenario.healthSystem.ImmediateOutcomes.firstLine, "QN")
+
     def test_entomology(self):
         scenario = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c.xml"))).read())
 
