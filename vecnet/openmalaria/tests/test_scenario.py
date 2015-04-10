@@ -82,6 +82,19 @@ class TestScenario(unittest.TestCase):
 
         self.assertEqual(scenario.healthSystem.ImmediateOutcomes.firstLine, "QN")
 
+        self.assertEqual(len(scenario.healthSystem.ImmediateOutcomes.drugs), 3)
+
+        for drug in scenario.healthSystem.ImmediateOutcomes.drugs:
+            if drug.name == "ACT":
+                self.assertEqual(drug.initialACR, 0.96)
+                self.assertEqual(drug.compliance, 0.892)
+                self.assertEqual(drug.nonCompliersEffective, 0.8544)
+
+        scenario.healthSystem.ImmediateOutcomes.drugs.add("CQ", 0.5, ["initialACR", "compliance"])
+        self.assertEqual(len(scenario.healthSystem.ImmediateOutcomes.drugs), 4)
+        self.assertEqual(scenario.healthSystem.ImmediateOutcomes.drugs["CQ"].initialACR, 0.5)
+        self.assertEqual(scenario.healthSystem.ImmediateOutcomes.drugs["CQ"].compliance, 0.5)
+
     def test_entomology(self):
         scenario = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c.xml"))).read())
 
