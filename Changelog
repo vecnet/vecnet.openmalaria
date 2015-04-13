@@ -1,6 +1,11 @@
 =========
 Changelog
 =========
+0.8.8 2015-04-13
+====
+* [+] Added Drug(s) support to ImmediateOutcomes.
+* [-] Removed deprecated (unused) drug helper functions.
+
 0.8.7 2015-04-02
 ====
 * [+] Support for Vaccine components (TBV, PEV, BSV).
