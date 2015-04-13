@@ -14,8 +14,154 @@ from vecnet.openmalaria.scenario.core import Section, tag_value, tag_value_sette
 
 __author__ = 'Alexander'
 
+drug_tag_order = {
+    "CQ": "",
+    "SP": "CQ",
+    "AQ": "SP",
+    "SPAQ": "AQ",
+    "ACT": "SPAQ",
+    "QN": "ACT",
+    "selfTreatment": "QN"
+}
 
-class Drug():
+
+class Deploy():
+    def __init__(self, et):
+        self.et = et
+
+    @property
+    @attribute
+    def maxAge(self):
+        return "maxAge", float
+
+    @property
+    @attribute
+    def minAge(self):
+        return "minAge", float
+
+    @property
+    @attribute
+    def p(self):
+        return "p", float
+
+    @property
+    def components(self):
+        components = []
+
+        for component in self.et.findall("component"):
+            components.append(component.attrib["id"])
+
+        return components
+
+
+class Deploys():
+    def __init__(self, et):
+        self.et = et
+
+    @property
+    def deploys(self):
+        deploys = []
+
+        for deploy in self.et.findall("deploy"):
+            deploys.append(Deploy(deploy))
+
+        return deploys
+
+    def __getitem__(self, item):
+        """
+        :rtype: Deploy
+        """
+        return self.deploys[item]
+
+    def __getattr__(self, item):
+        """
+        :rtype: Deploy
+        """
+        return self.deploys[item]
+
+    def __len__(self):
+        return len(self.deploys)
+
+    # def __delitem__(self, key):
+    #     # TODO:
+    #     pass
+
+    def __iter__(self):
+        """
+        Iterator function. Allows using *.deploys in for statement
+        i.e.
+        for deploy in *.deploys:
+           print deploy
+
+        :rtype: Deploy
+        """
+        for deploy in self.deploys:
+            yield self.deploys[deploy]
+
+    # def __str__(self):
+    #     return self.name
+
+class TreatmentAction(object):
+    def __init__(self, et):
+        self.et = et
+
+    @classmethod
+    def create(cls, et, name, value):
+        tag = drug_tag_order[name]
+
+        index = 0
+        treatment_actions = et.find("treatmentActions")
+        for treatment in treatment_actions:
+            if treatment.tag == name:
+                return False
+            if treatment.tag == tag:
+                index = list(treatment_actions).index(treatment) + 1
+
+        treatment_action = ElementTree.Element(name)
+        treatment_action.attrib["name"] = value
+        treatment_actions.insert(index, treatment_action)
+
+        return True
+
+    @property
+    @attribute
+    def name(self):
+        return "name", str
+
+    @property
+    def timesteps(self):
+        return int(self.et.find("clearInfections").attrib["timesteps"])
+    @timesteps.setter
+    def timesteps(self, value):
+        assert isinstance(value, (int))
+        clear_infections = self.et.find("clearInfections")
+
+        if clear_infections is None:
+            self.et.append(ElementTree.Element("clearInfections"))
+            clear_infections = self.et.find("clearInfections")
+
+        clear_infections.attrib["timesteps"] = str(value)
+
+    @property
+    def stage(self):
+        return self.et.find("clearInfections").attrib["stage"]
+    @stage.setter
+    def stage(self, value):
+        assert isinstance(value, (str))
+        clear_infections = self.et.find("clearInfections")
+
+        if clear_infections is None:
+            self.et.append(ElementTree.Element("clearInfections"))
+            clear_infections = self.et.find("clearInfections")
+
+        clear_infections.attrib["stage"] = value
+
+    @property
+    def deploys(self):
+        return Deploys(self.et)
+
+
+class Drug(object):
     def __init__(self, et, name):
         self.et = et
         self.name = name
@@ -44,18 +190,20 @@ class Drug():
         assert isinstance(value, (int, float))
         self.et.find("nonCompliersEffective").find(self.name).attrib["value"] = str(value)
 
+    @property
+    def treatmentAction(self):
+        treatment_action = self.et.find("treatmentActions").find(self.name)
+
+        if treatment_action is None:
+            return None
+
+        return TreatmentAction(treatment_action)
+    @treatmentAction.setter
+    def treatmentAction(self, value):
+        TreatmentAction.create(self.et, self.name, value)
+
 
 class Drugs():
-    drug_tag_dict = {
-        "CQ": "",
-        "SP": "CQ",
-        "AQ": "SP",
-        "SPAQ": "AQ",
-        "ACT": "SPAQ",
-        "QN": "ACT",
-        "selfTreatment": "QN"
-    }
-
     def __init__(self, et):
         self.et = et
 
@@ -64,18 +212,20 @@ class Drugs():
         drug = ElementTree.Element(name)
         drug.attrib["value"] = str(value)
 
-        tag = self.drug_tag_dict[name]
+        tag = drug_tag_order[name]
 
-        index_prior = -1
         for section in sections:
+            index = 0
             elem_list = self.et.find(section)
-
             for el in elem_list:
+                if el.tag == name:
+                    index = -1
+                    break
                 if el.tag == tag:
-                    index_prior = elem_list.index(el)
-                    if elem_list[index_prior + 1].tag == name:
-                        break
-                    elem_list.insert(index_prior + 1, drug)
+                    index = list(elem_list).index(el) + 1
+
+            if index > -1:
+                elem_list.insert(index, drug)
 
     @property
     def drugs(self):
