@@ -82,6 +82,34 @@ class TestScenario(unittest.TestCase):
 
         self.assertEqual(scenario.healthSystem.ImmediateOutcomes.firstLine, "QN")
 
+        self.assertEqual(len(scenario.healthSystem.ImmediateOutcomes.drugs), 3)
+
+        for drug in scenario.healthSystem.ImmediateOutcomes.drugs:
+            if drug.name == "ACT":
+                self.assertEqual(drug.initialACR, 0.96)
+                self.assertEqual(drug.compliance, 0.892)
+                self.assertEqual(drug.nonCompliersEffective, 0.8544)
+                self.assertEqual(drug.treatmentAction.name, 'clear blood-stage infections')
+                self.assertEqual(drug.treatmentAction.timesteps, 1)
+                self.assertEqual(drug.treatmentAction.stage, 'blood')
+
+        scenario.healthSystem.ImmediateOutcomes.drugs.add("CQ", 0.5, ["initialACR", "compliance"])
+        self.assertEqual(len(scenario.healthSystem.ImmediateOutcomes.drugs), 4)
+
+        drug = scenario.healthSystem.ImmediateOutcomes.drugs["CQ"]
+        self.assertEqual(drug.initialACR, 0.5)
+        self.assertEqual(drug.compliance, 0.5)
+        self.assertEqual(drug.treatmentAction, None)
+
+        drug.treatmentAction = 'test'
+        drug.treatmentAction.timesteps = 1
+        drug.treatmentAction.stage = 'blood'
+
+        self.assertEqual(drug.treatmentAction.name, 'test')
+        self.assertEqual(drug.treatmentAction.timesteps, 1)
+        self.assertEqual(drug.treatmentAction.stage, 'blood')
+
+
     def test_entomology(self):
         scenario = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c.xml"))).read())
 
