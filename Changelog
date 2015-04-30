@@ -1,6 +1,10 @@
 =========
 Changelog
 =========
+0.8.9 2015-04-30
+====
+* [*] Correctly append new anopheles snippets to entomology vector section.
+
 0.8.8 2015-04-13
 ====
 * [+] Added Drug(s) support to ImmediateOutcomes.
