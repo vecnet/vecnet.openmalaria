@@ -218,7 +218,8 @@ class Vectors():
         assert isinstance(mosquito.mosquito, str)
         assert isinstance(mosquito.propInfected, float)
         assert len(mosquito.seasonality.monthlyValues) == 12
-        self.et.append(et)
+        index = len(self.et.findall("anopheles"))
+        self.et.insert(index, et)
 
     @property
     def vectors(self):
