@@ -113,6 +113,10 @@ class Interventions(Section):
     def __getattr__(self, item):
         raise KeyError
 
+    def add_section(self, name):
+        elem = Element(name)
+        self.et.append(elem)
+
 
 class Component(Section):
     @property  # name
