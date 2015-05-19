@@ -204,6 +204,37 @@ class TestScenario(unittest.TestCase):
             # for timestep in deployment.timesteps:
             # print timestep["time"], timestep["coverage"]
 
+        vector_pop_xml = """<intervention name="Larviciding">
+                              <description>
+                                <anopheles mosquito="gambiae">
+                                  <emergenceReduction initial="0.8">
+                                    <decay L="0.2465753424657534" function="step" />
+                                  </emergenceReduction>
+                                </anopheles>
+                              </description>
+                            </intervention>"""
+
+        if len(scenario.interventions.vectorPop) == 0:
+            scenario.interventions.add_section("vectorPop")
+
+        scenario.interventions.vectorPop.add(vector_pop_xml)
+        self.assertEqual(len(scenario.interventions.vectorPop), 1)
+
+        for intervention in scenario.interventions.vectorPop:
+            self.assertEqual(intervention.name, "Larviciding")
+
+            self.assertEqual(len(intervention.anopheles), 1)
+            for anopheles in intervention.anopheles:
+                self.assertEqual(anopheles.mosquito, "gambiae")
+                self.assertEqual(anopheles.emergenceReduction, 0.8)
+
+                decay = anopheles.decays["emergenceReduction"]
+                self.assertEqual(decay.L, 0.2465753424657534)
+                self.assertEqual(decay.function, "step")
+
+                anopheles.mosquito = "test"
+                self.assertEqual(anopheles.mosquito, "test")
+
         # Scenario without interventions
         scenario1 = Scenario(
             open(os.path.join(base_dir, os.path.join("input", "scenario70k60c_no_interventions.xml"))).read())

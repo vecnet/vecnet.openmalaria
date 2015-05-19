@@ -544,6 +544,22 @@ class VectorPop(Section):
     A list of parameterisations of generic vector host-inspecific interventions.
     https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#elt-vectorPop
     """
+    def add(self, intervention):
+        """
+        Add an intervention to vectorPop section.
+        intervention is either ElementTree or xml snippet
+        """
+        if self.et is None:
+            return
+
+        assert isinstance(intervention, (str, unicode))
+        et = ElementTree.fromstring(intervention)
+        vector_pop = VectorPopIntervention(et)
+
+        assert isinstance(vector_pop.name, (str, unicode))
+        index = len(self.et.findall("intervention"))
+        self.et.insert(index, et)
+
     @property
     def interventions(self):
         """ List of interventions in /scenario/interventions/vectorPop section """
