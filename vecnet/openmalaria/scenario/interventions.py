@@ -450,13 +450,17 @@ class Anopheles(Section):
         return "emergenceReduction", "initial", float
 
     @property
-    def decay(self, name):
-        section = self.et.find(name)
+    def decays(self):
+        section_names = ["seekingDeathRateIncrease", "probDeathOvipositing", "emergenceReduction"]
+        decays = {}
 
-        if section is not None:
-            return Decay(section.find("decay"))
+        for section_name in section_names:
+            section = self.et.find(section_name)
 
-        return section
+            if section is not None:
+                decays[section_name] = Decay(section.find("decay"))
+
+        return decays
 
 
 class VectorPopIntervention(Section):
