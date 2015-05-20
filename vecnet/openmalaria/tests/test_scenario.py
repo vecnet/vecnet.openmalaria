@@ -191,6 +191,22 @@ class TestScenario(unittest.TestCase):
             self.assertEqual(intervention.anophelesParams[0].preprandialKillingEffect, 0.0)
             self.assertEqual(intervention.anophelesParams[0].postprandialKillingEffect, 0)
 
+        component_xml = """<component id="DDT" name="DDT">
+                             <GVI>
+                               <decay L="0.5" function="exponential"/>
+                             </GVI>
+                           </component>"""
+
+        self.assertEqual(len(scenario.interventions.human), 1)
+        scenario.interventions.human.add(component_xml)
+        self.assertEqual(len(scenario.interventions.human), 2)
+
+        ddt = scenario.interventions.human["DDT"]
+        self.assertEqual(ddt.id, "DDT")
+        self.assertEqual(ddt.name, "DDT")
+        self.assertEqual(ddt.decay.L, 0.5)
+        self.assertEqual(ddt.decay.function, "exponential")
+
         # Test deployment section
         self.assertEqual(len(scenario.interventions.human.deployments), 1)
         for deployment in scenario.interventions.human.deployments:

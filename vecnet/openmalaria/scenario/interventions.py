@@ -368,6 +368,30 @@ class HumanInterventions(Section):
     """
     List of human interventions
     """
+    def add(self, intervention):
+        """
+        Add an intervention to vectorPop section.
+        intervention is either ElementTree or xml snippet
+        """
+        if self.et is None:
+            return
+
+        assert isinstance(intervention, (str, unicode))
+        et = ElementTree.fromstring(intervention)
+        component = None
+
+        if et.find("ITN") is not None:
+            component = ITN(et)
+        elif et.find("GVI") is not None:
+            component = GVI(et)
+        elif et.find("TBV") is not None or et.find("PEV") is not None or et.find("BSV") is not None:
+            component = Vaccine(et)
+        else:
+            return
+
+        assert isinstance(component.name, (str, unicode))
+        index = len(self.et.findall("component"))
+        self.et.insert(index, et)
 
     @property
     def components(self):
