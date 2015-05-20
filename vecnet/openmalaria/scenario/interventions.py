@@ -113,6 +113,10 @@ class Interventions(Section):
     def __getattr__(self, item):
         raise KeyError
 
+    def add_section(self, name):
+        elem = Element(name)
+        self.et.append(elem)
+
 
 class Component(Section):
     @property  # name
@@ -364,6 +368,30 @@ class HumanInterventions(Section):
     """
     List of human interventions
     """
+    def add(self, intervention):
+        """
+        Add an intervention to vectorPop section.
+        intervention is either ElementTree or xml snippet
+        """
+        if self.et is None:
+            return
+
+        assert isinstance(intervention, (str, unicode))
+        et = ElementTree.fromstring(intervention)
+        component = None
+
+        if et.find("ITN") is not None:
+            component = ITN(et)
+        elif et.find("GVI") is not None:
+            component = GVI(et)
+        elif et.find("TBV") is not None or et.find("PEV") is not None or et.find("BSV") is not None:
+            component = Vaccine(et)
+        else:
+            return
+
+        assert isinstance(component.name, (str, unicode))
+        index = len(self.et.findall("component"))
+        self.et.insert(index, et)
 
     @property
     def components(self):
@@ -450,13 +478,17 @@ class Anopheles(Section):
         return "emergenceReduction", "initial", float
 
     @property
-    def decay(self, name):
-        section = self.et.find(name)
+    def decays(self):
+        section_names = ["seekingDeathRateIncrease", "probDeathOvipositing", "emergenceReduction"]
+        decays = {}
 
-        if section is not None:
-            return Decay(section.find("decay"))
+        for section_name in section_names:
+            section = self.et.find(section_name)
 
-        return section
+            if section is not None:
+                decays[section_name] = Decay(section.find("decay"))
+
+        return decays
 
 
 class VectorPopIntervention(Section):
@@ -536,6 +568,22 @@ class VectorPop(Section):
     A list of parameterisations of generic vector host-inspecific interventions.
     https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#elt-vectorPop
     """
+    def add(self, intervention):
+        """
+        Add an intervention to vectorPop section.
+        intervention is either ElementTree or xml snippet
+        """
+        if self.et is None:
+            return
+
+        assert isinstance(intervention, (str, unicode))
+        et = ElementTree.fromstring(intervention)
+        vector_pop = VectorPopIntervention(et)
+
+        assert isinstance(vector_pop.name, (str, unicode))
+        index = len(self.et.findall("intervention"))
+        self.et.insert(index, et)
+
     @property
     def interventions(self):
         """ List of interventions in /scenario/interventions/vectorPop section """
