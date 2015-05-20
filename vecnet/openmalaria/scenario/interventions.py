@@ -16,6 +16,32 @@ from vecnet.openmalaria.scenario.core import Section, attribute, attribute_sette
 from vecnet.openmalaria.scenario.healthsystem import HealthSystem
 
 
+class Deploy(Section):
+    @property
+    @attribute
+    def maxAge(self):
+        return "maxAge", float
+
+    @property
+    @attribute
+    def minAge(self):
+        return "minAge", float
+
+    @property
+    @attribute
+    def p(self):
+        return "p", float
+
+    @property
+    def components(self):
+        component_ids = []
+
+        for component in self.et.findall("component"):
+            component_ids.append(component.attrib["id"])
+
+        return component_ids
+
+
 class Deployment(Section):
     @property
     @attribute
@@ -412,6 +438,38 @@ class GVI(Component):
             self.gvi.append(et)
 
 
+class MDA(Component):
+    def __init__(self, et):
+        super(self.__class__, self).__init__(et)
+        self.mda = et.find("MDA")
+        self.id = self.et.attrib["id"]
+
+    @property
+    def treatment_options(self):
+        treatment_options = []
+
+        for option in self.mda.find("effects").findall("option"):
+            option_info = {
+                "pSelection": float(option.attrib["pSelection"]),
+                "deploys": [],
+                "clearInfections": []
+            }
+
+            for deploy_section in option.findall("deploy"):
+                option_info["deploys"].append(Deploy(deploy_section))
+
+            for clear_infection in option.findall("clearInfections"):
+                clear_infection_info = {
+                    "stage": clear_infection.attrib["stage"],
+                    "timesteps": int(clear_infection.attrib["timesteps"])
+                }
+                option_info["clearInfections"].append(clear_infection_info)
+
+            treatment_options.append(option_info)
+
+        return treatment_options
+
+
 class Vaccine(Component):
     def __init__(self, et):
         super(self.__class__, self).__init__(et)
@@ -466,6 +524,8 @@ class HumanInterventions(Section):
             component = ITN(et)
         elif et.find("GVI") is not None:
             component = GVI(et)
+        elif et.find("MDA") is not None:
+            component = MDA(et)
         elif et.find("TBV") is not None or et.find("PEV") is not None or et.find("BSV") is not None:
             component = Vaccine(et)
         else:
@@ -491,6 +551,8 @@ class HumanInterventions(Section):
                 human_interventions[component.attrib["id"]] = ITN(component)
             if component.find("GVI") is not None:
                 human_interventions[component.attrib["id"]] = GVI(component)
+            if component.find("MDA") is not None:
+                human_interventions[component.attrib["id"]] = MDA(component)
             if component.find("TBV") is not None or component.find("PEV") is not None or component.find("BSV") is not None:
                 human_interventions[component.attrib["id"]] = Vaccine(component)
         return human_interventions
