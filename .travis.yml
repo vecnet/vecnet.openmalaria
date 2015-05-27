@@ -5,3 +5,10 @@ notifications:
   email:
     on_success: never
     on_failure: always
+deploy:
+  provider: pypi
+  user: vecnet
+  password:
+    secure: NB+nQHu243MM6wML4N195pU/7/rZFS48ZG6rWajFA6F5WrhB0oo2vtgUbHJZnjBk10todLsGFn8xWK+Ipq7PVmP0+VCWx59iyccQP/G/3yOqrxnsWaNWzvVIYc9MvdTWJYLRIeXcuRmLY4EaCVdmsmG9o9IHIq1E4uRgE2/XrLM=
+  on:
+    tags: true
