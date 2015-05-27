@@ -268,26 +268,46 @@ class Decay(Section):
     @attribute
     def function(self):
         return "function", str
+    @function.setter
+    @attribute_setter(attrib_type=str)
+    def function(self, value):
+        pass
 
     @property
     @attribute
     def L(self):
         return "L", float
+    @L.setter
+    @attribute_setter(attrib_type=float)
+    def L(self, value):
+        pass
 
     @property
     @attribute
     def k(self):
         return "k", float
+    @k.setter
+    @attribute_setter(attrib_type=float)
+    def k(self, value):
+        pass
 
     @property
     @attribute
     def mu(self):
         return "mu", float
+    @mu.setter
+    @attribute_setter(attrib_type=float)
+    def mu(self, value):
+        pass
 
     @property
     @attribute
     def sigma(self):
         return "sigma", float
+    @sigma.setter
+    @attribute_setter(attrib_type=float)
+    def sigma(self, value):
+        pass
 
 
 class GVI(Component):
