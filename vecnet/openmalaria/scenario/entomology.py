@@ -36,7 +36,7 @@ class Seasonality(Section):
         Type: float
         Min: 0
 
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#annual-eir
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#annual-eir
         """
         return "annualEIR", float
     @annualEIR.setter
@@ -56,7 +56,7 @@ class Seasonality(Section):
         type: string
         values: ("none" or "fourier")
 
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#smoothing-function
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#smoothing-function
         """
         return "monthlyValues", "smoothing", str
 
@@ -68,7 +68,7 @@ class Seasonality(Section):
         List should contain twelve entries: January to December.
         :rtype: list
 
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#list-of-monthly-values
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#list-of-monthly-values
         """
         monthly_values = []
         for value in self.et.find("monthlyValues").findall("value"):
@@ -95,7 +95,7 @@ class Mosq(Section):
         If less than this many mosquitoes remain infected, transmission is interrupted.
         Type: double
 
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#mininum-infected-threshold-for-mosquitos
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#mininum-infected-threshold-for-mosquitos
         """
         return "minInfectedThreshold", float
 
@@ -106,7 +106,7 @@ class Mosq(Section):
         Duration of the resting period of the vector (days)
         type: int
 
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#documentation-element-112
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#documentation-element-112
         """
         return "mosqRestDuration", "value", int
 
@@ -118,7 +118,7 @@ class Mosq(Section):
         The proportion of resting mosquitoes which fed on human blood during the last feed.
 
         type: double
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#documentation-element-122
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#documentation-element-122
         """
         return "mosqHumanBloodIndex", "value", float
     @mosqHumanBloodIndex.setter
@@ -130,7 +130,7 @@ class Mosq(Section):
 class Vector(Section):
     """
     Class that represents /scenario/entomology/vector/anopheles section
-    https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#anopheles-n2
+    https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#anopheles-n2
     """
     @property  # mosquito
     @attribute
@@ -140,7 +140,7 @@ class Vector(Section):
         type: string
 
         :rtype: str
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#identifier-for-this-anopheles-species
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#identifier-for-this-anopheles-species
         """
         return "mosquito", str
     @mosquito.setter
@@ -159,7 +159,7 @@ class Vector(Section):
         type: float
         units: Proportion
 
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#anopheles-n2
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#anopheles-n2
         """
         return "propInfected", float
     @propInfected.setter
@@ -294,7 +294,7 @@ class Entomology(Section):
         Units: Infectious bits per adult per year
         Type: double
 
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#override-annual-eir
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#override-annual-eir
         """
         return "scaledAnnualEIR", float
     @scaledAnnualEIR.setter

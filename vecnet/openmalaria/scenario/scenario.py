@@ -66,7 +66,7 @@ class Scenario(Section):
         """
         Name of the scenario
         :rtype: str
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#name-of-intervention
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#name-of-intervention
         """
         return "name", str
     @name.setter
@@ -79,7 +79,7 @@ class Scenario(Section):
     def schemaVersion(self):
         """
         Version of xml schema.
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#version-of-the-xml-schema
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#version-of-the-xml-schema
         """
         return "schemaVersion", int
 
@@ -88,7 +88,7 @@ class Scenario(Section):
     def analysisNo(self):
         """
         :returns: Reference number of the analysis
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#version-of-the-xml-schema
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#version-of-the-xml-schema
         """
         return "analysisNo", int
     @analysisNo.setter
@@ -101,7 +101,7 @@ class Scenario(Section):
     def wuID(self):
         """
         Work unit identifier
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#work-unit-identifier
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#work-unit-identifier
         """
         return "wuID", int
     @wuID.setter
