@@ -96,7 +96,7 @@ class Monitoring(Section):
         """
         Detection limit for parasitaemia
         Limit above which a human's infection is reported as patent
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#detection-limit-for-parasitaemia
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#detection-limit-for-parasitaemia
         """
         surveys_elem = self.et.find("surveys")
         if surveys_elem is None:
@@ -122,7 +122,7 @@ class Monitoring(Section):
         Returns the list of timesteps when survey measures has been captured
         None if xml document is mailformed
         xpath: /scenario/monitoring/survey
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#survey-times-time-steps
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#survey-times-time-steps
         """
         survey_time_list = list()
         # Extract surveyTimes from /scenario/monitoring/surveys section

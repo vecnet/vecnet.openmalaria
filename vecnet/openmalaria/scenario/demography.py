@@ -20,7 +20,7 @@ class Demography(Section):
         Maximum age of simulated humans
         Units: Years Min: 0 Max: 100
 
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#maximum-age-of-simulated-humans
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#maximum-age-of-simulated-humans
         """
         return "maximumAgeYrs", float
     @maximumAgeYrs.setter
@@ -34,7 +34,7 @@ class Demography(Section):
         """
         Name of the demography data
 
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#attributes-1
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#attributes-1
         """
         return "name", str
     @name.setter
@@ -48,7 +48,7 @@ class Demography(Section):
         Population size
         Units: Count Min: 1 Max: 100000
 
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#population-size
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#population-size
         """
         return "popSize", int
     @popSize.setter
@@ -62,7 +62,7 @@ class Demography(Section):
         Growth rate of human population. (we should be able to implement this with non-zero values)
         Units: Number Min: 0 Max: 0
 
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#growth-rate-of-human-population
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#growth-rate-of-human-population
         """
         return "growthRate", float
 
@@ -72,6 +72,6 @@ class Demography(Section):
         """
         List of age groups included in demography
         :rtype: AgeGroup
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#age-groups
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#age-groups
         """
         return AgeGroup

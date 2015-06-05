@@ -72,13 +72,13 @@ class Deployments(Section):
 class Interventions(Section):
     """
     Inverventions section in OpenMalaria xml input file
-    https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#preventative-interventions
+    https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#preventative-interventions
     """
     @property  # changeHS
     def changeHS(self):
         """
         Change health system interventions
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#change-health-system
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#change-health-system
         Returns: list of HealthSystems together with timestep when they are applied
         """
         health_systems = []
@@ -126,7 +126,7 @@ class Component(Section):
         An informal name/description of the intervention
 
         :rtype: str
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#name-of-component
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#name-of-component
         """
         return "name", str
     @name.setter
@@ -139,7 +139,7 @@ class AnophelesParams(Section):
     """
     Parameters of mosquitos affected by this ITN intervention
 
-    https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#anophelesparams
+    https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#anophelesparams
     """
     @property
     @attribute
@@ -147,7 +147,7 @@ class AnophelesParams(Section):
         """
         Name of the affected anopheles-mosquito species.
 
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#anophelesparams
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#anophelesparams
         """
         return "mosquito", str
     @mosquito.setter
@@ -166,7 +166,7 @@ class AnophelesParams(Section):
         are base(1-usagepropActing) + intervention_factorusagepropActing.
         See also "usage" (proportion of time nets are used by humans).
 
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#proportion-of-bites-for-which-net-acts
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#proportion-of-bites-for-which-net-acts
         """
         return "propActive", float
     @propActive.setter
@@ -205,7 +205,7 @@ class ITN(Component):
         are base(1-usagepropActing) + intervention_factorusagepropActing.
         See also "propActing" (proportion of bits for which net acts).
 
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#proportion-of-time-nets-are-used-by-humans
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#proportion-of-time-nets-are-used-by-humans
         :rtype: float
         """
         return float(self.itn.find("usage").attrib["value"])
@@ -262,7 +262,7 @@ class Decay(Section):
     Description of decay of all intervention effects. Documentation:
     see DecayFunction type or http://code.google.com/p/openmalaria/wiki/ModelDecayFunctions
 
-    https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#decay-n4
+    https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#decay-n4
     """
     @property
     @attribute
@@ -446,7 +446,7 @@ class Anopheles(Section):
     """
     Mosquitos affected by VectorPop intervention
 
-    https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#elt-anopheles
+    https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#elt-anopheles
     """
     @property
     @attribute
@@ -454,7 +454,7 @@ class Anopheles(Section):
         """
         Name of the affected anopheles-mosquito species.
 
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#elt-anopheles
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#elt-anopheles
         """
         return "mosquito", str
     @mosquito.setter
@@ -501,7 +501,7 @@ class VectorPopIntervention(Section):
     def name(self):  # name
         """
         Name of intervention (e.g. larviciding, sugar bait)
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#name-of-intervention-6
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#name-of-intervention-6
         rtype: str
         """
         return "name", str
@@ -548,7 +548,7 @@ class VectorPopIntervention(Section):
     def timesteps(self):
         """
         Time-step at which this intervention occurs, starting from 0, the first intervention-period time-step.
-        https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#-deploy-1
+        https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#-deploy-1
         rtype: list
         """
         timesteps = []
@@ -566,7 +566,7 @@ class VectorPop(Section):
     /scenario/interventions/vectorPop
     Vector population intervention
     A list of parameterisations of generic vector host-inspecific interventions.
-    https://github.com/vecnet/om_schema_docs/wiki/GeneratedSchema32Doc#elt-vectorPop
+    https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#elt-vectorPop
     """
     def add(self, intervention):
         """
