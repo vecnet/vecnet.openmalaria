@@ -606,13 +606,13 @@ class VectorPop(Section):
 
     @property
     def interventions(self):
-        """ List of interventions in /scenario/interventions/vectorPop section """
-        array = []
+        """ Dictionary of interventions in /scenario/interventions/vectorPop section """
+        interventions = {}
         if self.et is None:
-            return array
+            return interventions
         for intervention in self.et.findall("intervention"):
-            array.append(VectorPopIntervention(intervention))
-        return array
+            interventions[intervention.attrib['name']] = VectorPopIntervention(intervention)
+        return interventions
 
     def __len__(self):
         return len(self.interventions)
@@ -627,8 +627,17 @@ class VectorPop(Section):
         """
         if len(self.interventions) == 0:
             return
-        for intervention in self.interventions:
+        for intervention_name, intervention in self.interventions.iteritems():
             yield intervention
 
     def __getitem__(self, item):
+        """
+        :rtype: VectorPopIntervention
+        """
+        return self.interventions[item]
+
+    def __getattr__(self, item):
+        """
+        :rtype: VectorPopIntervention
+        """
         return self.interventions[item]

@@ -280,7 +280,7 @@ class TestScenario(unittest.TestCase):
         # No vectorPop section
         scenario = Scenario(
             open(os.path.join(base_dir, os.path.join("input", "scenario70k60c_no_interventions.xml"))).read())
-        self.assertEqual(scenario.interventions.vectorPop.interventions, [])
+        self.assertEqual(scenario.interventions.vectorPop.interventions, {})
         self.assertEqual(len(scenario.interventions.vectorPop), 0)
         i = None
         for i in scenario.interventions.vectorPop:
@@ -290,7 +290,7 @@ class TestScenario(unittest.TestCase):
         # Empty vectorPop section
         scenario = Scenario(
             open(os.path.join(base_dir, os.path.join("files", "test_scenario", "empty_vectorpop_section.xml"))).read())
-        self.assertEqual(scenario.interventions.vectorPop.interventions, [])
+        self.assertEqual(scenario.interventions.vectorPop.interventions, {})
         self.assertEqual(len(scenario.interventions.vectorPop), 0)
         i = None
         for i in scenario.interventions.vectorPop:
@@ -308,19 +308,14 @@ class TestScenario(unittest.TestCase):
         scenario = Scenario(
             open(os.path.join(base_dir, os.path.join("files", "test_scenario", "triple_larvacing.xml"))).read())
         self.assertEqual(len(scenario.interventions.vectorPop), 3)
-        interventions = []
-        for i in scenario.interventions.vectorPop:
-            interventions.append(i.name)
-        self.assertEqual(interventions, ["int1", "int2", "int3"])
-        self.assertEqual(scenario.interventions.vectorPop[0].name, "int1")
-        self.assertEqual(scenario.interventions.vectorPop[1].name, "int2")
-        self.assertEqual(scenario.interventions.vectorPop[2].name, "int3")
-        self.assertRaises(IndexError, lambda: scenario.interventions.vectorPop[3])
-        self.assertRaises(TypeError, lambda: scenario.interventions.vectorPop["string"])
+        self.assertEqual(scenario.interventions.vectorPop["int1"].name, "int1")
+        self.assertEqual(scenario.interventions.vectorPop["int2"].name, "int2")
+        self.assertEqual(scenario.interventions.vectorPop["int3"].name, "int3")
+        self.assertRaises(KeyError, lambda: scenario.interventions.vectorPop["int4"])
 
         # test name setter
-        scenario.interventions.vectorPop[0].name = "new name"
-        self.assertEqual(scenario.interventions.vectorPop[0].name, "new name")
+        scenario.interventions.vectorPop["int1"].name = "new name"
+        self.assertEqual(scenario.interventions.vectorPop["new name"].name, "new name")
 
     def test_vaccine_interventions(self):
         scenario = Scenario(open(os.path.join(base_dir, os.path.join("files", "test_scenario", "vaccine_interventions.xml"))).read())
