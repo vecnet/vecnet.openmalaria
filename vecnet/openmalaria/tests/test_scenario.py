@@ -204,11 +204,18 @@ class TestScenario(unittest.TestCase):
         scenario.interventions.human.add(component_xml)
         self.assertEqual(len(scenario.interventions.human), 2)
 
+        scenario.interventions.human.add(component_xml, "testing")
+        self.assertEqual(len(scenario.interventions.human), 3)
+        self.assertTrue(scenario.interventions.human["testing"] is not None)
+        self.assertEqual(scenario.interventions.human["testing"].id, "testing")
+
         ddt = scenario.interventions.human["DDT"]
         self.assertEqual(ddt.id, "DDT")
         self.assertEqual(ddt.name, "DDT")
         self.assertEqual(ddt.decay.L, 0.5)
         self.assertEqual(ddt.decay.function, "exponential")
+
+        self.assertEqual(len(scenario.interventions.human), 3)
 
         # Test deployment section
         self.assertEqual(len(scenario.interventions.human.deployments), 1)
@@ -253,6 +260,11 @@ class TestScenario(unittest.TestCase):
 
                 anopheles.mosquito = "test"
                 self.assertEqual(anopheles.mosquito, "test")
+
+        scenario.interventions.vectorPop.add(vector_pop_xml, "test")
+        self.assertEqual(len(scenario.interventions.vectorPop), 2)
+        self.assertTrue(scenario.interventions.vectorPop["test"] is not None)
+        self.assertEqual(scenario.interventions.vectorPop["test"].name, "test")
 
         # Scenario without interventions
         scenario1 = Scenario(

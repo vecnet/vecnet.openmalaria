@@ -400,7 +400,7 @@ class HumanInterventions(Section):
     """
     List of human interventions
     """
-    def add(self, intervention):
+    def add(self, intervention, id=None):
         """
         Add an intervention to vectorPop section.
         intervention is either ElementTree or xml snippet
@@ -422,6 +422,11 @@ class HumanInterventions(Section):
             return
 
         assert isinstance(component.name, (str, unicode))
+
+        if id is not None:
+            assert isinstance(id, (str, unicode))
+            et.attrib["id"] = id
+
         index = len(self.et.findall("component"))
         self.et.insert(index, et)
 
@@ -600,7 +605,7 @@ class VectorPop(Section):
     A list of parameterisations of generic vector host-inspecific interventions.
     https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#elt-vectorPop
     """
-    def add(self, intervention):
+    def add(self, intervention, name=None):
         """
         Add an intervention to vectorPop section.
         intervention is either ElementTree or xml snippet
@@ -613,6 +618,11 @@ class VectorPop(Section):
         vector_pop = VectorPopIntervention(et)
 
         assert isinstance(vector_pop.name, (str, unicode))
+
+        if name is not None:
+            assert isinstance(name, (str, unicode))
+            et.attrib["name"] = name
+
         index = len(self.et.findall("intervention"))
         self.et.insert(index, et)
 
