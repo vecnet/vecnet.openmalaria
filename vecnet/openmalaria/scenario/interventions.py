@@ -329,6 +329,56 @@ class GVI(Component):
         self.id = self.et.attrib["id"]
 
     @property
+    def anopheles_xml_snippet(self):
+        xml = """<anophelesParams mosquito="gambiae" propActive="0">
+                    <deterrency value="0.0" />
+                    <preprandialKillingEffect value="0" />
+                    <postprandialKillingEffect value="0" />
+                  </anophelesParams>"""
+
+        return xml
+
+    def add_or_update_anophelesParams(self, params):
+        et = None
+        is_update = False
+
+        for a_param in self.gvi.findall("anophelesParams"):
+            if a_param.attrib["mosquito"] == params["mosquito"]:
+                et = a_param
+                is_update = True
+                break
+
+        if et is None:
+            et = ElementTree.fromstring(self.anopheles_xml_snippet)
+
+        anopheles = AnophelesParams(et)
+
+        anopheles.mosquito = str(params["mosquito"])
+        if params["propActive"] is not None:
+            try:
+                anopheles.propActive = float(params["propActive"])
+            except ValueError:
+                pass
+        if params["deterrency"] is not None:
+            try:
+                anopheles.deterrency = float(params["deterrency"])
+            except ValueError:
+                pass
+        if params["preprandialKillingEffect"] is not None:
+            try:
+                anopheles.preprandialKillingEffect = float(params["preprandialKillingEffect"])
+            except ValueError:
+                pass
+        if params["postprandialKillingEffect"] is not None:
+            try:
+                anopheles.postprandialKillingEffect = float(params["postprandialKillingEffect"])
+            except ValueError:
+                pass
+
+        if not is_update:
+            self.gvi.append(anopheles.et)
+
+    @property
     def decay(self):
         """
         :rtype: Decay
