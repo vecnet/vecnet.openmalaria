@@ -176,6 +176,9 @@ class TestScenario(unittest.TestCase):
             self.assertEqual(intervention.anophelesParams[0].preprandialKillingEffect, 0.7)
             self.assertEqual(intervention.anophelesParams[0].postprandialKillingEffect, 0)
 
+            intervention.anophelesParams[0].postprandialKillingEffect = 0.2
+            self.assertEqual(intervention.anophelesParams[0].postprandialKillingEffect, 0.2)
+
             # Overwrite anophelesParams.
             anopheles_xml = """<anophelesParams mosquito="funestus" propActive="0.0">
                                 <deterrency value="0.0" />

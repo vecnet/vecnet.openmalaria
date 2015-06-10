@@ -12,7 +12,7 @@
 from xml.etree.ElementTree import Element
 from xml.etree import ElementTree
 
-from vecnet.openmalaria.scenario.core import Section, attribute, attribute_setter, section, tag_value
+from vecnet.openmalaria.scenario.core import Section, attribute, attribute_setter, section, tag_value, tag_value_setter
 from vecnet.openmalaria.scenario.healthsystem import HealthSystem
 
 
@@ -178,16 +178,28 @@ class AnophelesParams(Section):
     @tag_value
     def deterrency(self):
         return "deterrency", "value", float
+    @deterrency.setter
+    @tag_value_setter(tag="deterrency", attrib="value")
+    def deterrency(self, value):
+        pass
 
     @property
     @tag_value
     def preprandialKillingEffect(self):
         return "preprandialKillingEffect", "value", float
+    @preprandialKillingEffect.setter
+    @tag_value_setter(tag="preprandialKillingEffect", attrib="value")
+    def preprandialKillingEffect(self, value):
+        pass
 
     @property
     @tag_value
     def postprandialKillingEffect(self):
         return "postprandialKillingEffect", "value", float
+    @postprandialKillingEffect.setter
+    @tag_value_setter(tag="postprandialKillingEffect", attrib="value")
+    def postprandialKillingEffect(self, value):
+        pass
 
 
 class ITN(Component):
