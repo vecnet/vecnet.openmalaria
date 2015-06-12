@@ -553,16 +553,28 @@ class Anopheles(Section):
     @tag_value
     def seekingDeathRateIncrease(self):
         return "seekingDeathRateIncrease", "initial", float
+    @seekingDeathRateIncrease.setter
+    @tag_value_setter(tag="seekingDeathRateIncrease", attrib="initial")
+    def seekingDeathRateIncrease(self, value):
+        pass
 
     @property
     @tag_value
     def probDeathOvipositing(self):
         return "probDeathOvipositing", "initial", float
+    @probDeathOvipositing.setter
+    @tag_value_setter(tag="probDeathOvipositing", attrib="initial")
+    def probDeathOvipositing(self, value):
+        pass
 
     @property
     @tag_value
     def emergenceReduction(self):
         return "emergenceReduction", "initial", float
+    @emergenceReduction.setter
+    @tag_value_setter(tag="emergenceReduction", attrib="initial")
+    def emergenceReduction(self, value):
+        pass
 
     @property
     def decays(self):
