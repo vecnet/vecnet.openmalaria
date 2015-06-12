@@ -596,6 +596,60 @@ class VectorPopIntervention(Section):
     An intervention which may have various effects on the vector populations as a whole
     """
     @property
+    def anopheles_xml_snippet(self):
+        xml = """<anopheles mosquito="gambiae">
+                    <emergenceReduction initial=".8">
+                        <decay L="0.2465753424657534" function="step"/>
+                    </emergenceReduction>
+                 </anopheles>"""
+
+        return xml
+
+    def add_or_update_anopheles(self, params):
+        et = None
+        is_update = False
+        desc = self.et.find("description")
+
+        if desc is not None:
+            for anopheles in desc.findall("anopheles"):
+                if anopheles.attrib["mosquito"] == params["mosquito"]:
+                    et = anopheles
+                    is_update = True
+                    break
+
+        if et is None:
+            et = ElementTree.fromstring(self.anopheles_xml_snippet)
+
+        anopheles = Anopheles(et)
+
+        if not is_update:
+            anopheles.mosquito = str(params["mosquito"])
+
+        if "seekingDeathRateIncrease" in params and params["seekingDeathRateIncrease"] is not None:
+            try:
+                anopheles.seekingDeathRateIncrease = float(params["seekingDeathRateIncrease"])
+            except ValueError:
+                pass
+        if "probDeathOvipositing" in params and params["probDeathOvipositing"] is not None:
+            try:
+                anopheles.probDeathOvipositing = float(params["probDeathOvipositing"])
+            except ValueError:
+                pass
+        if "emergenceReduction" in params and params["emergenceReduction"] is not None:
+            try:
+                anopheles.emergenceReduction = float(params["emergenceReduction"])
+            except ValueError:
+                pass
+
+        if not is_update:
+            if desc is None:
+                new_description_element = ElementTree.Element("description")
+                self.et.insert(0, new_description_element)
+                desc = self.et.find("description")
+
+            desc.append(anopheles.et)
+
+    @property
     @attribute
     def name(self):  # name
         """

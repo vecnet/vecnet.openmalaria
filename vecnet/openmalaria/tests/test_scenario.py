@@ -278,6 +278,15 @@ class TestScenario(unittest.TestCase):
                 anopheles.emergenceReduction = 0.3
                 self.assertEqual(anopheles.emergenceReduction, 0.3)
 
+            new_anopheles = {
+                "mosquito": "test",
+                "emergenceReduction": 0.9
+            }
+            intervention.add_or_update_anopheles(new_anopheles)
+
+            self.assertEqual(intervention.anopheles[0].mosquito, "test")
+            self.assertEqual(intervention.anopheles[0].emergenceReduction, 0.9)
+
         scenario.interventions.vectorPop.add(vector_pop_xml, "test")
         self.assertEqual(len(scenario.interventions.vectorPop), 2)
         self.assertTrue(scenario.interventions.vectorPop["test"] is not None)
