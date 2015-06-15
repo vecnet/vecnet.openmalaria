@@ -258,6 +258,7 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(mda.id, "Coartem")
         self.assertEqual(mda.name, "Coartem")
         self.assertEqual(len(mda.treatment_options), 3)
+        self.assertEqual(mda.treatment_options[0]["name"], "0.5")
 
         # Test deployment section
         self.assertEqual(len(scenario.interventions.human.deployments), 1)

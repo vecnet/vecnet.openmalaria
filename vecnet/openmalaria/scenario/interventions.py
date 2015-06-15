@@ -450,10 +450,14 @@ class MDA(Component):
 
         for option in self.mda.find("effects").findall("option"):
             option_info = {
+                "name": "",
                 "pSelection": float(option.attrib["pSelection"]),
                 "deploys": [],
                 "clearInfections": []
             }
+
+            if "name" in option.attrib:
+                option_info["name"] = option.attrib["name"]
 
             for deploy_section in option.findall("deploy"):
                 option_info["deploys"].append(Deploy(deploy_section))
