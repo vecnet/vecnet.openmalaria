@@ -260,6 +260,28 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(len(mda.treatment_options), 3)
         self.assertEqual(mda.treatment_options[0]["name"], "0.5")
 
+        mda_params = {
+                "name": "0.5",
+                "pSelection": "0.5",
+                "deploys": [{
+                    "maxAge": "10",
+                    "minAge": "0",
+                    "p": "1",
+                    "components": ["Coartem"]
+                }],
+                "clearInfections": [{
+                    "timesteps": "2",
+                    "stage": "liver"
+                }, {
+                    "timesteps": "3",
+                    "stage": "blood"
+                }]
+        }
+        mda.add_or_update_treatment_option(mda_params)
+        self.assertEqual(len(mda.treatment_options), 3)
+        self.assertEqual(mda.treatment_options[0]["name"], "0.5")
+        self.assertEqual(mda.treatment_options[0]["deploys"][0].p, 1)
+
         # Test deployment section
         self.assertEqual(len(scenario.interventions.human.deployments), 1)
         for deployment in scenario.interventions.human.deployments:

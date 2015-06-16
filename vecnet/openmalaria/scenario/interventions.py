@@ -445,6 +445,69 @@ class MDA(Component):
         self.id = self.et.attrib["id"]
 
     @property
+    def treatment_option_xml_snippet(self):
+        xml = """<option name="0.5" pSelection="0.5">
+                </option>"""
+
+        return xml
+
+    def add_or_update_treatment_option(self, params):
+        et = None
+        is_update = False
+
+        effects = self.mda.find("effects")
+
+        if effects is None:
+            new_effects = Element("effects")
+            self.mda.append(new_effects)
+            effects = self.mda.find("effects")
+
+        for option in effects.findall("option"):
+            if option.attrib["name"] == params["name"]:
+                et = option
+                is_update = True
+                break
+
+        if et is None:
+            et = ElementTree.fromstring(self.treatment_option_xml_snippet)
+
+        treatment_option = et
+
+        treatment_option.attrib["name"] = str(params["name"])
+        if "pSelection" in params and params["pSelection"] is not None:
+            treatment_option.attrib["pSelection"] = params["pSelection"]
+
+        for deploy in treatment_option.findall("deploy"):
+            treatment_option.remove(deploy)
+        for clear_infection in treatment_option.findall("clearInfections"):
+            treatment_option.remove(clear_infection)
+
+        if "deploys" in params and params["deploys"] is not None:
+            for deploy in params["deploys"]:
+                deploy_element = Element("deploy")
+                deploy_element.attrib["maxAge"] = deploy["maxAge"]
+                deploy_element.attrib["minAge"] = deploy["minAge"]
+                deploy_element.attrib["p"] = deploy["p"]
+
+                for component_id in deploy["components"]:
+                    component = Element("component")
+                    component.attrib["id"] = component_id
+                    deploy_element.append(component)
+
+                treatment_option.append(deploy_element)
+
+        if "clearInfections" in params and params["clearInfections"] is not None:
+            for clear_infection in params["clearInfections"]:
+                clear_infection_element = Element("clearInfections")
+                clear_infection_element.attrib["stage"] = clear_infection["stage"]
+                clear_infection_element.attrib["timesteps"] = clear_infection["timesteps"]
+
+                treatment_option.append(clear_infection_element)
+
+        if not is_update:
+            effects.append(treatment_option)
+
+    @property
     def treatment_options(self):
         treatment_options = []
 
