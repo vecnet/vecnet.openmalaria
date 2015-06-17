@@ -562,6 +562,10 @@ class Vaccine(Component):
     @property
     def efficacyB(self):
         return float(self.vaccine.find("efficacyB").attrib["value"])
+    @efficacyB.setter
+    def efficacyB(self, value):
+        assert isinstance(value, float)
+        self.vaccine.find("efficacyB").attrib["value"] = str(value)
 
     @property
     def initialEfficacy(self):
@@ -569,6 +573,14 @@ class Vaccine(Component):
         for initial_efficacy in self.vaccine.findall("initialEfficacy"):
             values.append(float(initial_efficacy.attrib["value"]))
         return values
+    @initialEfficacy.setter
+    def initialEfficacy(self, value):
+        for initial_efficacy in self.vaccine.findall("initialEfficacy"):
+            self.vaccine.remove(initial_efficacy)
+        for new_value in value:
+            initial_efficacy = Element("initialEfficacy")
+            initial_efficacy.attrib["value"] = str(new_value)
+            self.vaccine.append(initial_efficacy)
 
 
 class HumanInterventions(Section):

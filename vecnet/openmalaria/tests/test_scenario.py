@@ -426,6 +426,14 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(tbv.initialEfficacy, [0.512, 0.64, 0.8])
         self.assertEqual(pev.initialEfficacy, [0.512, 0.64, 0.8])
 
+        tbv.decay.L = 2.0
+        tbv.efficacyB = float("8.2")
+        tbv.initialEfficacy = [0.5, 0.6, 0.9, 0.2]
+
+        self.assertEqual(tbv.decay.L, 2.0)
+        self.assertEqual(tbv.efficacyB, 8.2)
+        self.assertEqual(tbv.initialEfficacy[3], 0.2)
+
         self.assertEqual(len(scenario.interventions.human.deployments), 1)
 
         continuous = None
