@@ -62,6 +62,23 @@ class Deployment(Section):
                  "coverage": float(deploy.attrib["coverage"])}
             )
         return deployments
+    @timesteps.setter
+    def timesteps(self, value):
+        timed = self.et.find("timed")
+
+        if timed is not None:
+            for deploy in timed.findall("deploy"):
+                timed.remove(deploy)
+        else:
+            timed = Element("timed")
+            self.et.append(timed)
+            timed = self.et.find("timed")
+
+        for deploy in value:
+            deploy_element = Element("deploy")
+            deploy_element.attrib["time"] = deploy["time"]
+            deploy_element.attrib["coverage"] = deploy["coverage"]
+            timed.append(deploy_element)
 
     @property
     def continuous(self):
@@ -74,6 +91,28 @@ class Deployment(Section):
                     }
             )
         return deployments
+    @continuous.setter
+    def continuous(self, value):
+        continuous = self.et.find("continuous")
+
+        if continuous is not None:
+            for deploy in continuous:
+                continuous.remove(deploy)
+        else:
+            continuous = Element("continuous")
+            index = len(self.et.findall("component"))
+            self.et.insert(index, continuous)
+            continuous = self.et.find("continuous")
+
+        for deploy in value:
+            deploy_element = Element("deploy")
+            deploy_element.attrib["targetAgeYrs"] = deploy["targetAgeYrs"]
+            if "begin" in deploy:
+                deploy_element.attrib["begin"] = deploy["begin"]
+            if "end" in deploy:
+                deploy_element.attrib["end"] = deploy["end"]
+
+            continuous.append(deploy_element)
 
 
 class Deployments(Section):

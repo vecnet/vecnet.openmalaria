@@ -291,9 +291,14 @@ class TestScenario(unittest.TestCase):
             self.assertEqual(deployment.timesteps[0]["coverage"], 0.6)
             self.assertEqual(deployment.timesteps[0]["time"], 730)
 
-            # print deployment.timesteps
-            # for timestep in deployment.timesteps:
-            # print timestep["time"], timestep["coverage"]
+            deployment.timesteps = [{"time": 73, "coverage": 0.7}, {"time": 730, "coverage": 0.7}]
+            deployment.continuous = [{"targetAgeYrs": 5}, {"targetAgeYrs": 10}]
+
+            self.assertEqual(len(deployment.timesteps), 2)
+            self.assertEqual(len(deployment.continuous), 2)
+            self.assertEqual(deployment.timesteps[0]["coverage"], 0.7)
+            self.assertEqual(deployment.timesteps[0]["time"], 73)
+            self.assertEqual(deployment.continuous[1]["targetAgeYrs"], 10)
 
         vector_pop_xml = """<intervention name="Larviciding">
                               <description>
