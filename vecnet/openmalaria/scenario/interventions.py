@@ -49,11 +49,6 @@ class Deployment(Section):
         return "name", str
 
     @property
-    @tag_value
-    def id(self):
-        return "component", "id", str
-
-    @property
     def timesteps(self):
         deployments = []
         for deploy in self.et.find("timed").findall("deploy"):
