@@ -49,6 +49,15 @@ class Deployment(Section):
         return "name", str
 
     @property
+    def components(self):
+        component_ids = []
+
+        for component in self.et.findall("component"):
+            component_ids.append(component.attrib["id"])
+
+        return component_ids
+
+    @property
     def timesteps(self):
         deployments = []
         for deploy in self.et.find("timed").findall("deploy"):
