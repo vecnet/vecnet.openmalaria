@@ -56,6 +56,18 @@ class Deployment(Section):
             component_ids.append(component.attrib["id"])
 
         return component_ids
+    @components.setter
+    def components(self, value):
+        if value is None or len(value) == 0:
+            return
+
+        for component in self.et.findall("component"):
+            self.et.remove(component)
+
+        for index, component_id in enumerate(value):
+            component = Element("component")
+            component.attrib["id"] = component_id
+            self.et.insert(index, component)
 
     @property
     def timesteps(self):

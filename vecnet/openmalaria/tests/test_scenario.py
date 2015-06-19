@@ -300,6 +300,9 @@ class TestScenario(unittest.TestCase):
             self.assertEqual(deployment.timesteps[0]["time"], 73)
             self.assertEqual(deployment.continuous[1]["targetAgeYrs"], 10)
 
+            deployment.components = ["GVI"]
+            self.assertEqual(deployment.components[0], "GVI")
+
         vector_pop_xml = """<intervention name="Larviciding">
                               <description>
                                 <anopheles mosquito="gambiae">
