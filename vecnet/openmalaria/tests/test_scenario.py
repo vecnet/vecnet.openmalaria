@@ -303,6 +303,16 @@ class TestScenario(unittest.TestCase):
             deployment.components = ["GVI"]
             self.assertEqual(deployment.components[0], "GVI")
 
+        scenario.interventions.human.deployments = [{'name': 'Test', 'components': ['Coartem', 'Invalid'],
+            'timesteps': [{'time': 730, 'coverage': 0.8}]}]
+
+        for deployment in scenario.interventions.human.deployments:
+            self.assertEqual(deployment.name, "Test")
+            self.assertEqual(len(deployment.components), 1)
+            self.assertEqual(deployment.components[0], "Coartem")
+            self.assertEqual(deployment.timesteps[0]["time"], 730)
+            self.assertEqual(deployment.timesteps[0]["coverage"], 0.8)
+
         vector_pop_xml = """<intervention name="Larviciding">
                               <description>
                                 <anopheles mosquito="gambiae">

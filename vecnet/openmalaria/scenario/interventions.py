@@ -694,6 +694,32 @@ class HumanInterventions(Section):
     @property  # deployment
     def deployments(self):
         return Deployments(self.et)
+    @deployments.setter
+    def deployments(self, value):
+        if self.et is None or value is None:
+            return
+
+        for deployment in self.et.findall("deployment"):
+            self.et.remove(deployment)
+
+        for deploy in value:
+            if "components" not in deploy or len(deploy["components"]) == 0:
+                continue
+
+            component_ids = [id for id in deploy["components"] if id in self.components]
+
+            deployment_element = Element("deployment")
+            deployment_element.attrib["name"] = deploy["name"]
+
+            deployment = Deployment(deployment_element)
+            deployment.components = component_ids
+
+            if "timesteps" in deploy:
+                deployment.timesteps = deploy["timesteps"]
+            if "continuous" in deploy:
+                deployment.timesteps = deploy["continuous"]
+
+            self.et.append(deployment.et)
 
     def __getitem__(self, item):
         """
