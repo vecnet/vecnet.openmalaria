@@ -1,6 +1,10 @@
 =========
 Changelog
 =========
+0.9.1.dev1 2015-06-25
+====
+* [+] Setters for vaccine intervention attributes.
+
 0.9.0 2015-06-17
 ====
 * [+] Ability to add/update intervention sections (vectorPop, human).
