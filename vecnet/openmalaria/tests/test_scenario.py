@@ -282,6 +282,10 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(mda.treatment_options[0]["name"], "0.5")
         self.assertEqual(mda.treatment_options[0]["deploys"][0].p, 1)
 
+        # Test removal of a human intervention.
+        del scenario.interventions.human["testing"]
+        self.assertEqual(len(scenario.interventions.human), 3)
+
         # Test deployment section
         self.assertEqual(len(scenario.interventions.human.deployments), 1)
         for deployment in scenario.interventions.human.deployments:
@@ -306,12 +310,19 @@ class TestScenario(unittest.TestCase):
         scenario.interventions.human.deployments = [{'name': 'Test', 'components': ['Coartem', 'Invalid'],
             'timesteps': [{'time': 730, 'coverage': 0.8}]}]
 
+        deployment_to_delete = None
         for deployment in scenario.interventions.human.deployments:
             self.assertEqual(deployment.name, "Test")
             self.assertEqual(len(deployment.components), 1)
             self.assertEqual(deployment.components[0], "Coartem")
             self.assertEqual(deployment.timesteps[0]["time"], 730)
             self.assertEqual(deployment.timesteps[0]["coverage"], 0.8)
+
+            if deployment.delete_component("Coartem") == 0:
+                deployment_to_delete = deployment.et
+
+        if deployment_to_delete is not None:
+            scenario.interventions.human.et.remove(deployment_to_delete)
 
         vector_pop_xml = """<intervention name="Larviciding">
                               <description>
@@ -359,6 +370,10 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(len(scenario.interventions.vectorPop), 2)
         self.assertTrue(scenario.interventions.vectorPop["test"] is not None)
         self.assertEqual(scenario.interventions.vectorPop["test"].name, "test")
+
+        # Test removal of a vectorPop intervention.
+        del scenario.interventions.vectorPop["test"]
+        self.assertEqual(len(scenario.interventions.vectorPop), 1)
 
         # Scenario without interventions
         scenario1 = Scenario(
