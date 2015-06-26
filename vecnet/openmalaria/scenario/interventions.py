@@ -130,6 +130,13 @@ class Deployment(Section):
 
             continuous.append(deploy_element)
 
+    def delete_component(self, id):
+        for component in self.et.findall("component"):
+            if component.attrib["id"] == id:
+                self.et.remove(component)
+
+        return len(self.components)
+
 
 class Deployments(Section):
     """

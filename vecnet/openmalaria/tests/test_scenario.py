@@ -306,12 +306,19 @@ class TestScenario(unittest.TestCase):
         scenario.interventions.human.deployments = [{'name': 'Test', 'components': ['Coartem', 'Invalid'],
             'timesteps': [{'time': 730, 'coverage': 0.8}]}]
 
+        deployment_to_delete = None
         for deployment in scenario.interventions.human.deployments:
             self.assertEqual(deployment.name, "Test")
             self.assertEqual(len(deployment.components), 1)
             self.assertEqual(deployment.components[0], "Coartem")
             self.assertEqual(deployment.timesteps[0]["time"], 730)
             self.assertEqual(deployment.timesteps[0]["coverage"], 0.8)
+
+            if deployment.delete_component("Coartem") == 0:
+                deployment_to_delete = deployment.et
+
+        if deployment_to_delete is not None:
+            scenario.interventions.human.et.remove(deployment_to_delete)
 
         vector_pop_xml = """<intervention name="Larviciding">
                               <description>
