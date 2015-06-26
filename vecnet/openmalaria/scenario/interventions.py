@@ -743,6 +743,25 @@ class HumanInterventions(Section):
     def __len__(self):
         return len(self.components)
 
+    def __delitem__(self, key):
+        for component in self.et.findall("component"):
+            component_id = component.attrib["id"]
+            if component_id == key:
+                deployments_to_delete = []
+
+                for deployment in self.deployments:
+                    if deployment.delete_component(component_id) == 0:
+                        # Prepare deployment for removal.
+                        deployments_to_delete.append(deployment.et)
+
+                for deployment_to_delete in deployments_to_delete:
+                    self.et.remove(deployment_to_delete)
+
+                self.et.remove(component)
+
+                return
+        raise KeyError(key)
+
     def __iter__(self):
         """
         Iterator function. Allows using scenario.interventions.human in for statement
@@ -983,6 +1002,13 @@ class VectorPop(Section):
 
     def __len__(self):
         return len(self.interventions)
+
+    def __delitem__(self, key):
+        for intervention in self.et.findall("intervention"):
+            if intervention.attrib["name"] == key:
+                self.et.remove(intervention)
+                return
+        raise KeyError(key)
 
     def __iter__(self):
         """

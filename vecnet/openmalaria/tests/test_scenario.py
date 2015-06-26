@@ -282,6 +282,10 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(mda.treatment_options[0]["name"], "0.5")
         self.assertEqual(mda.treatment_options[0]["deploys"][0].p, 1)
 
+        # Test removal of a human intervention.
+        del scenario.interventions.human["testing"]
+        self.assertEqual(len(scenario.interventions.human), 3)
+
         # Test deployment section
         self.assertEqual(len(scenario.interventions.human.deployments), 1)
         for deployment in scenario.interventions.human.deployments:
@@ -366,6 +370,10 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(len(scenario.interventions.vectorPop), 2)
         self.assertTrue(scenario.interventions.vectorPop["test"] is not None)
         self.assertEqual(scenario.interventions.vectorPop["test"].name, "test")
+
+        # Test removal of a vectorPop intervention.
+        del scenario.interventions.vectorPop["test"]
+        self.assertEqual(len(scenario.interventions.vectorPop), 1)
 
         # Scenario without interventions
         scenario1 = Scenario(
