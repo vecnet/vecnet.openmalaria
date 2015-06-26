@@ -375,6 +375,13 @@ class TestScenario(unittest.TestCase):
         del scenario.interventions.vectorPop["test"]
         self.assertEqual(len(scenario.interventions.vectorPop), 1)
 
+        del scenario.interventions.vectorPop["Larviciding"]
+
+        if len(scenario.interventions.vectorPop) == 0:
+            scenario.interventions.remove_section("vectorPop")
+
+        self.assertEqual(scenario.interventions.vectorPop.et, None)
+
         # Scenario without interventions
         scenario1 = Scenario(
             open(os.path.join(base_dir, os.path.join("input", "scenario70k60c_no_interventions.xml"))).read())

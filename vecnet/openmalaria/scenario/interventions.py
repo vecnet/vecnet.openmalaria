@@ -205,6 +205,11 @@ class Interventions(Section):
         elem = Element(name)
         self.et.append(elem)
 
+    def remove_section(self, name):
+        element = self.et.find(name)
+
+        if element is not None:
+            self.et.remove(element)
 
 class Component(Section):
     @property  # name
@@ -759,6 +764,8 @@ class HumanInterventions(Section):
 
                 self.et.remove(component)
 
+                # TODO: Remove entire <human> section if this is the only component.
+
                 return
         raise KeyError(key)
 
@@ -1007,7 +1014,9 @@ class VectorPop(Section):
         for intervention in self.et.findall("intervention"):
             if intervention.attrib["name"] == key:
                 self.et.remove(intervention)
+                # TODO: Remove entire <vectorPop> section if this is the only intervention.
                 return
+
         raise KeyError(key)
 
     def __iter__(self):
