@@ -198,6 +198,15 @@ class Interventions(Section):
         """
         return VectorPop(self.et.find("vectorPop"))
 
+    @property
+    def importedInfections(self):
+        imported_infections_element = self.et.find("importedInfections")
+
+        if imported_infections_element is None:
+            return None
+
+        return ImportedInfections(imported_infections_element)
+
     def __getattr__(self, item):
         raise KeyError
 
@@ -210,6 +219,7 @@ class Interventions(Section):
 
         if element is not None:
             self.et.remove(element)
+
 
 class Component(Section):
     @property  # name
@@ -1043,3 +1053,74 @@ class VectorPop(Section):
         :rtype: VectorPopIntervention
         """
         return self.interventions[item]
+
+
+class ImportedInfections(Section):
+    @property
+    @attribute
+    def name(self):  # name
+        """
+        Name of imported infection.
+        rtype: str
+        """
+        return "name", str
+    @name.setter
+    @attribute_setter(attrib_type=str)
+    def name(self, value):
+        pass  # attribute_setter decorator will change name attribute
+
+    @property
+    def period(self):
+        timed = self.et.find("timed")
+
+        try:
+            return int(timed.attrib["period"])
+        except AttributeError:
+            return 0
+    @period.setter
+    def period(self, value):
+        timed = self.et.find("timed")
+
+        if timed is None:
+            timed_element = Element("timed")
+            self.et.append(timed_element)
+            timed = self.et.find("timed")
+
+        timed.attrib["period"] = str(value)
+
+    @property
+    def rates(self):
+        timed = self.et.find("timed")
+
+        if timed is None:
+            return
+
+        rates = []
+
+        for rate in timed.findall("rate"):
+            rates.append({
+                "time": int(rate.attrib["time"]),
+                "value": int(rate.attrib["value"])
+            })
+
+        return rates
+    @rates.setter
+    def rates(self, value):
+        if value is None or self.et is None:
+            return
+
+        timed = self.et.find("timed")
+
+        if timed is None:
+            timed_element = Element("timed")
+            self.et.append(timed_element)
+            timed = self.et.find("timed")
+
+        for rate in timed.findall("rate"):
+            timed.remove(rate)
+
+        for rate in value:
+            rate_element = Element("rate")
+            rate_element.attrib["time"] = str(rate["time"])
+            rate_element.attrib["value"] = str(rate["value"])
+            timed.append(rate_element)

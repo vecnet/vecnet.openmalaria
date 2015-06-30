@@ -382,6 +382,16 @@ class TestScenario(unittest.TestCase):
 
         self.assertEqual(scenario.interventions.vectorPop.et, None)
 
+        # Imported Infection.
+        imported_infections = scenario.interventions.importedInfections
+        first_rate = imported_infections.rates[0]
+
+        self.assertEqual(first_rate["time"], 0)
+        self.assertEqual(first_rate["value"], 24)
+
+        imported_infections.period = 1
+        self.assertEqual(imported_infections.period, 1)
+
         # Scenario without interventions
         scenario1 = Scenario(
             open(os.path.join(base_dir, os.path.join("input", "scenario70k60c_no_interventions.xml"))).read())
