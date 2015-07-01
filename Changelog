@@ -1,7 +1,7 @@
 =========
 Changelog
 =========
-0.9.1.dev4 2015-06-30
+0.9.1.dev5 2015-07-01
 ====
 * [+] Setters for vaccine intervention attributes.
 * [+] Ability to overwrite Deployment attributes.
