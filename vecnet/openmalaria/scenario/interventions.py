@@ -1075,7 +1075,7 @@ class ImportedInfections(Section):
 
         try:
             return int(timed.attrib["period"])
-        except AttributeError:
+        except KeyError:
             return 0
     @period.setter
     def period(self, value):
