@@ -1,3 +1,4 @@
+sudo: false
 language: python
 install: true
 script: py.test
