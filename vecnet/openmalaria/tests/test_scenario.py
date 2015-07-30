@@ -324,6 +324,16 @@ class TestScenario(unittest.TestCase):
         if deployment_to_delete is not None:
             scenario.interventions.human.et.remove(deployment_to_delete)
 
+        self.assertEqual(len(scenario.interventions.human.deployments), 0)
+
+        # Add a nameless deployment.
+        scenario.interventions.human.deployments = [{'components': ['Coartem'],
+            'timesteps': [{'time': 730, 'coverage': 0.8}]}]
+        self.assertEqual(len(scenario.interventions.human.deployments), 1)
+
+        for deployment in scenario.interventions.human.deployments:
+            self.assertRaises(AttributeError, lambda: deployment.name)
+
         vector_pop_xml = """<intervention name="Larviciding">
                               <description>
                                 <anopheles mosquito="gambiae">

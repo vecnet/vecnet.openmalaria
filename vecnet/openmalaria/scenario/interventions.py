@@ -731,7 +731,9 @@ class HumanInterventions(Section):
             component_ids = [id for id in deploy["components"] if id in self.components]
 
             deployment_element = Element("deployment")
-            deployment_element.attrib["name"] = deploy["name"]
+
+            if "name" in deploy:
+                deployment_element.attrib["name"] = deploy["name"]
 
             deployment = Deployment(deployment_element)
             deployment.components = component_ids
