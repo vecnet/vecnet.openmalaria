@@ -1,7 +1,7 @@
 =========
 Changelog
 =========
-0.9.1.dev5 2015-07-01
+0.9.1 2015-07-31
 ====
 * [+] Setters for vaccine intervention attributes.
 * [+] Ability to overwrite Deployment attributes.
@@ -10,6 +10,7 @@ Changelog
 * [+] Ability to delete individual interventions.
 * [+] Ability to remove <interventions> subsections by name.
 * [+] Support for <importedInfections> section in <interventions>.
+* [*] Deployment 'name' attribute is now optional when adding <deployment>s.
 
 0.9.0 2015-06-17
 ====
