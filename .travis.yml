@@ -1,4 +1,19 @@
-language: python
+sudo: false
+language: generic
+matrix:
+  include:
+    - python: 2.7
+      language: python
+      python: "2.7"
+      os: linux
+      env: PYTHON=/usr/bin/python2.7
+    - python: 2
+      os: osx
+      env: PYTHON=/usr/bin/python
+  allow_failures:
+    - os: osx
+before_install:
+  - source .travis.before_install.bash
 install: true
 script: py.test
 notifications:
@@ -11,4 +26,5 @@ deploy:
   password:
     secure: P6zKZHjUc/cFxdE1gYMx00NfShFFKdiZ9lDcMdP9Fk7d1chWId052De3n9boP8FcxJvqhMHf9GqM5Drmxk3rHtFBCDUcHPpFYQu3KOOejuMh3a3E748tQ8cNxv/R1X9bLQb8lc+m1/akO9U4xSppbypee7Xc7feIUGC/w4kHNDc=
   on:
+    all_branches: true
     tags: true

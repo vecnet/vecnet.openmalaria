@@ -282,18 +282,57 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(mda.treatment_options[0]["name"], "0.5")
         self.assertEqual(mda.treatment_options[0]["deploys"][0].p, 1)
 
+        # Test removal of a human intervention.
+        del scenario.interventions.human["testing"]
+        self.assertEqual(len(scenario.interventions.human), 3)
+
         # Test deployment section
         self.assertEqual(len(scenario.interventions.human.deployments), 1)
         for deployment in scenario.interventions.human.deployments:
             self.assertEqual(deployment.name, "Nets")
-            self.assertEqual(deployment.id, "GVI")
+            self.assertEqual(deployment.components[0], "GVI")
             self.assertEqual(len(deployment.timesteps), 185)
             self.assertEqual(deployment.timesteps[0]["coverage"], 0.6)
             self.assertEqual(deployment.timesteps[0]["time"], 730)
 
-            # print deployment.timesteps
-            # for timestep in deployment.timesteps:
-            # print timestep["time"], timestep["coverage"]
+            deployment.timesteps = [{"time": 73, "coverage": 0.7}, {"time": 730, "coverage": 0.7}]
+            deployment.continuous = [{"targetAgeYrs": 5}, {"targetAgeYrs": 10}]
+
+            self.assertEqual(len(deployment.timesteps), 2)
+            self.assertEqual(len(deployment.continuous), 2)
+            self.assertEqual(deployment.timesteps[0]["coverage"], 0.7)
+            self.assertEqual(deployment.timesteps[0]["time"], 73)
+            self.assertEqual(deployment.continuous[1]["targetAgeYrs"], 10)
+
+            deployment.components = ["GVI"]
+            self.assertEqual(deployment.components[0], "GVI")
+
+        scenario.interventions.human.deployments = [{'name': 'Test', 'components': ['Coartem', 'Invalid'],
+            'timesteps': [{'time': 730, 'coverage': 0.8}]}]
+
+        deployment_to_delete = None
+        for deployment in scenario.interventions.human.deployments:
+            self.assertEqual(deployment.name, "Test")
+            self.assertEqual(len(deployment.components), 1)
+            self.assertEqual(deployment.components[0], "Coartem")
+            self.assertEqual(deployment.timesteps[0]["time"], 730)
+            self.assertEqual(deployment.timesteps[0]["coverage"], 0.8)
+
+            if deployment.delete_component("Coartem") == 0:
+                deployment_to_delete = deployment.et
+
+        if deployment_to_delete is not None:
+            scenario.interventions.human.et.remove(deployment_to_delete)
+
+        self.assertEqual(len(scenario.interventions.human.deployments), 0)
+
+        # Add a nameless deployment.
+        scenario.interventions.human.deployments = [{'components': ['Coartem'],
+            'timesteps': [{'time': 730, 'coverage': 0.8}]}]
+        self.assertEqual(len(scenario.interventions.human.deployments), 1)
+
+        for deployment in scenario.interventions.human.deployments:
+            self.assertRaises(AttributeError, lambda: deployment.name)
 
         vector_pop_xml = """<intervention name="Larviciding">
                               <description>
@@ -341,6 +380,27 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(len(scenario.interventions.vectorPop), 2)
         self.assertTrue(scenario.interventions.vectorPop["test"] is not None)
         self.assertEqual(scenario.interventions.vectorPop["test"].name, "test")
+
+        # Test removal of a vectorPop intervention.
+        del scenario.interventions.vectorPop["test"]
+        self.assertEqual(len(scenario.interventions.vectorPop), 1)
+
+        del scenario.interventions.vectorPop["Larviciding"]
+
+        if len(scenario.interventions.vectorPop) == 0:
+            scenario.interventions.remove_section("vectorPop")
+
+        self.assertEqual(scenario.interventions.vectorPop.et, None)
+
+        # Imported Infection.
+        imported_infections = scenario.interventions.importedInfections
+        first_rate = imported_infections.rates[0]
+
+        self.assertEqual(first_rate["time"], 0)
+        self.assertEqual(first_rate["value"], 24)
+
+        imported_infections.period = 1
+        self.assertEqual(imported_infections.period, 1)
 
         # Scenario without interventions
         scenario1 = Scenario(
@@ -425,6 +485,14 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(pev.efficacyB, 10)
         self.assertEqual(tbv.initialEfficacy, [0.512, 0.64, 0.8])
         self.assertEqual(pev.initialEfficacy, [0.512, 0.64, 0.8])
+
+        tbv.decay.L = 2.0
+        tbv.efficacyB = float("8.2")
+        tbv.initialEfficacy = [0.5, 0.6, 0.9, 0.2]
+
+        self.assertEqual(tbv.decay.L, 2.0)
+        self.assertEqual(tbv.efficacyB, 8.2)
+        self.assertEqual(tbv.initialEfficacy[3], 0.2)
 
         self.assertEqual(len(scenario.interventions.human.deployments), 1)
 

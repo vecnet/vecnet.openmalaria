@@ -49,9 +49,25 @@ class Deployment(Section):
         return "name", str
 
     @property
-    @tag_value
-    def id(self):
-        return "component", "id", str
+    def components(self):
+        component_ids = []
+
+        for component in self.et.findall("component"):
+            component_ids.append(component.attrib["id"])
+
+        return component_ids
+    @components.setter
+    def components(self, value):
+        if value is None or len(value) == 0:
+            return
+
+        for component in self.et.findall("component"):
+            self.et.remove(component)
+
+        for index, component_id in enumerate(value):
+            component = Element("component")
+            component.attrib["id"] = component_id
+            self.et.insert(index, component)
 
     @property
     def timesteps(self):
@@ -62,6 +78,23 @@ class Deployment(Section):
                  "coverage": float(deploy.attrib["coverage"])}
             )
         return deployments
+    @timesteps.setter
+    def timesteps(self, value):
+        timed = self.et.find("timed")
+
+        if timed is not None:
+            for deploy in timed.findall("deploy"):
+                timed.remove(deploy)
+        else:
+            timed = Element("timed")
+            self.et.append(timed)
+            timed = self.et.find("timed")
+
+        for deploy in value:
+            deploy_element = Element("deploy")
+            deploy_element.attrib["time"] = deploy["time"]
+            deploy_element.attrib["coverage"] = deploy["coverage"]
+            timed.append(deploy_element)
 
     @property
     def continuous(self):
@@ -74,6 +107,35 @@ class Deployment(Section):
                     }
             )
         return deployments
+    @continuous.setter
+    def continuous(self, value):
+        continuous = self.et.find("continuous")
+
+        if continuous is not None:
+            for deploy in continuous:
+                continuous.remove(deploy)
+        else:
+            continuous = Element("continuous")
+            index = len(self.et.findall("component"))
+            self.et.insert(index, continuous)
+            continuous = self.et.find("continuous")
+
+        for deploy in value:
+            deploy_element = Element("deploy")
+            deploy_element.attrib["targetAgeYrs"] = deploy["targetAgeYrs"]
+            if "begin" in deploy:
+                deploy_element.attrib["begin"] = deploy["begin"]
+            if "end" in deploy:
+                deploy_element.attrib["end"] = deploy["end"]
+
+            continuous.append(deploy_element)
+
+    def delete_component(self, id):
+        for component in self.et.findall("component"):
+            if component.attrib["id"] == id:
+                self.et.remove(component)
+
+        return len(self.components)
 
 
 class Deployments(Section):
@@ -136,12 +198,27 @@ class Interventions(Section):
         """
         return VectorPop(self.et.find("vectorPop"))
 
+    @property
+    def importedInfections(self):
+        imported_infections_element = self.et.find("importedInfections")
+
+        if imported_infections_element is None:
+            return None
+
+        return ImportedInfections(imported_infections_element)
+
     def __getattr__(self, item):
         raise KeyError
 
     def add_section(self, name):
         elem = Element(name)
         self.et.append(elem)
+
+    def remove_section(self, name):
+        element = self.et.find(name)
+
+        if element is not None:
+            self.et.remove(element)
 
 
 class Component(Section):
@@ -562,6 +639,10 @@ class Vaccine(Component):
     @property
     def efficacyB(self):
         return float(self.vaccine.find("efficacyB").attrib["value"])
+    @efficacyB.setter
+    def efficacyB(self, value):
+        assert isinstance(value, float)
+        self.vaccine.find("efficacyB").attrib["value"] = str(value)
 
     @property
     def initialEfficacy(self):
@@ -569,6 +650,14 @@ class Vaccine(Component):
         for initial_efficacy in self.vaccine.findall("initialEfficacy"):
             values.append(float(initial_efficacy.attrib["value"]))
         return values
+    @initialEfficacy.setter
+    def initialEfficacy(self, value):
+        for initial_efficacy in self.vaccine.findall("initialEfficacy"):
+            self.vaccine.remove(initial_efficacy)
+        for new_value in value:
+            initial_efficacy = Element("initialEfficacy")
+            initial_efficacy.attrib["value"] = str(new_value)
+            self.vaccine.append(initial_efficacy)
 
 
 class HumanInterventions(Section):
@@ -627,6 +716,34 @@ class HumanInterventions(Section):
     @property  # deployment
     def deployments(self):
         return Deployments(self.et)
+    @deployments.setter
+    def deployments(self, value):
+        if self.et is None or value is None:
+            return
+
+        for deployment in self.et.findall("deployment"):
+            self.et.remove(deployment)
+
+        for deploy in value:
+            if "components" not in deploy or len(deploy["components"]) == 0:
+                continue
+
+            component_ids = [id for id in deploy["components"] if id in self.components]
+
+            deployment_element = Element("deployment")
+
+            if "name" in deploy:
+                deployment_element.attrib["name"] = deploy["name"]
+
+            deployment = Deployment(deployment_element)
+            deployment.components = component_ids
+
+            if "timesteps" in deploy:
+                deployment.timesteps = deploy["timesteps"]
+            if "continuous" in deploy:
+                deployment.timesteps = deploy["continuous"]
+
+            self.et.append(deployment.et)
 
     def __getitem__(self, item):
         """
@@ -642,6 +759,27 @@ class HumanInterventions(Section):
 
     def __len__(self):
         return len(self.components)
+
+    def __delitem__(self, key):
+        for component in self.et.findall("component"):
+            component_id = component.attrib["id"]
+            if component_id == key:
+                deployments_to_delete = []
+
+                for deployment in self.deployments:
+                    if deployment.delete_component(component_id) == 0:
+                        # Prepare deployment for removal.
+                        deployments_to_delete.append(deployment.et)
+
+                for deployment_to_delete in deployments_to_delete:
+                    self.et.remove(deployment_to_delete)
+
+                self.et.remove(component)
+
+                # TODO: Remove entire <human> section if this is the only component.
+
+                return
+        raise KeyError(key)
 
     def __iter__(self):
         """
@@ -884,6 +1022,15 @@ class VectorPop(Section):
     def __len__(self):
         return len(self.interventions)
 
+    def __delitem__(self, key):
+        for intervention in self.et.findall("intervention"):
+            if intervention.attrib["name"] == key:
+                self.et.remove(intervention)
+                # TODO: Remove entire <vectorPop> section if this is the only intervention.
+                return
+
+        raise KeyError(key)
+
     def __iter__(self):
         """
         Interator function. Allows using scenario.interventions.vectorPop in for statements
@@ -908,3 +1055,74 @@ class VectorPop(Section):
         :rtype: VectorPopIntervention
         """
         return self.interventions[item]
+
+
+class ImportedInfections(Section):
+    @property
+    @attribute
+    def name(self):  # name
+        """
+        Name of imported infection.
+        rtype: str
+        """
+        return "name", str
+    @name.setter
+    @attribute_setter(attrib_type=str)
+    def name(self, value):
+        pass  # attribute_setter decorator will change name attribute
+
+    @property
+    def period(self):
+        timed = self.et.find("timed")
+
+        try:
+            return int(timed.attrib["period"])
+        except KeyError:
+            return 0
+    @period.setter
+    def period(self, value):
+        timed = self.et.find("timed")
+
+        if timed is None:
+            timed_element = Element("timed")
+            self.et.append(timed_element)
+            timed = self.et.find("timed")
+
+        timed.attrib["period"] = str(value)
+
+    @property
+    def rates(self):
+        timed = self.et.find("timed")
+
+        if timed is None:
+            return
+
+        rates = []
+
+        for rate in timed.findall("rate"):
+            rates.append({
+                "time": int(rate.attrib["time"]),
+                "value": int(rate.attrib["value"])
+            })
+
+        return rates
+    @rates.setter
+    def rates(self, value):
+        if value is None or self.et is None:
+            return
+
+        timed = self.et.find("timed")
+
+        if timed is None:
+            timed_element = Element("timed")
+            self.et.append(timed_element)
+            timed = self.et.find("timed")
+
+        for rate in timed.findall("rate"):
+            timed.remove(rate)
+
+        for rate in value:
+            rate_element = Element("rate")
+            rate_element.attrib["time"] = str(rate["time"])
+            rate_element.attrib["value"] = str(rate["value"])
+            timed.append(rate_element)
