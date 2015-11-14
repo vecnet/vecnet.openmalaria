@@ -176,6 +176,24 @@ class TestScenario(unittest.TestCase):
             self.assertEqual(intervention.anophelesParams[0].preprandialKillingEffect, 0.7)
             self.assertEqual(intervention.anophelesParams[0].postprandialKillingEffect, 0)
 
+            intervention.anophelesParams[0].postprandialKillingEffect = 0.2
+            self.assertEqual(intervention.anophelesParams[0].postprandialKillingEffect, 0.2)
+
+            new_anopheles_params = {
+                "mosquito": "gambiae",
+                "propActive": 0.8,
+                "deterrency": 0.2222,
+                "preprandialKillingEffect": 0.9,
+                "postprandialKillingEffect": 0.1
+            }
+            intervention.add_or_update_anophelesParams(new_anopheles_params)
+
+            self.assertEqual(intervention.anophelesParams[0].mosquito, "gambiae")
+            self.assertEqual(intervention.anophelesParams[0].propActive, 0.8)
+            self.assertEqual(intervention.anophelesParams[0].deterrency, 0.2222)
+            self.assertEqual(intervention.anophelesParams[0].preprandialKillingEffect, 0.9)
+            self.assertEqual(intervention.anophelesParams[0].postprandialKillingEffect, 0.1)
+
             # Overwrite anophelesParams.
             anopheles_xml = """<anophelesParams mosquito="funestus" propActive="0.0">
                                 <deterrency value="0.0" />
@@ -201,24 +219,120 @@ class TestScenario(unittest.TestCase):
         scenario.interventions.human.add(component_xml)
         self.assertEqual(len(scenario.interventions.human), 2)
 
+        scenario.interventions.human.add(component_xml, "testing")
+        self.assertEqual(len(scenario.interventions.human), 3)
+        self.assertTrue(scenario.interventions.human["testing"] is not None)
+        self.assertEqual(scenario.interventions.human["testing"].id, "testing")
+
         ddt = scenario.interventions.human["DDT"]
         self.assertEqual(ddt.id, "DDT")
         self.assertEqual(ddt.name, "DDT")
         self.assertEqual(ddt.decay.L, 0.5)
         self.assertEqual(ddt.decay.function, "exponential")
 
+        mda_xml = """
+                    <component id="Coartem" name="Coartem">
+                        <MDA>
+                            <effects>
+                                <option name="0.5" pSelection="0.5">
+                                    <clearInfections stage="liver" timesteps="1"/>
+                                    <clearInfections stage="blood" timesteps="3"/>
+                                </option>
+                                <option name="0.2" pSelection="0.2">
+                                    <clearInfections stage="liver" timesteps="1"/>
+                                    <clearInfections stage="blood" timesteps="4"/>
+                                </option>
+                                <option name="0.3" pSelection="0.3">
+                                    <clearInfections stage="liver" timesteps="1"/>
+                                    <clearInfections stage="blood" timesteps="5"/>
+                                </option>
+                            </effects>
+                        </MDA>
+                    </component>
+                    """
+
+        scenario.interventions.human.add(mda_xml)
+        self.assertEqual(len(scenario.interventions.human), 4)
+
+        mda = scenario.interventions.human["Coartem"]
+        self.assertEqual(mda.id, "Coartem")
+        self.assertEqual(mda.name, "Coartem")
+        self.assertEqual(len(mda.treatment_options), 3)
+        self.assertEqual(mda.treatment_options[0]["name"], "0.5")
+
+        mda_params = {
+                "name": "0.5",
+                "pSelection": "0.5",
+                "deploys": [{
+                    "maxAge": "10",
+                    "minAge": "0",
+                    "p": "1",
+                    "components": ["Coartem"]
+                }],
+                "clearInfections": [{
+                    "timesteps": "2",
+                    "stage": "liver"
+                }, {
+                    "timesteps": "3",
+                    "stage": "blood"
+                }]
+        }
+        mda.add_or_update_treatment_option(mda_params)
+        self.assertEqual(len(mda.treatment_options), 3)
+        self.assertEqual(mda.treatment_options[0]["name"], "0.5")
+        self.assertEqual(mda.treatment_options[0]["deploys"][0].p, 1)
+
+        # Test removal of a human intervention.
+        del scenario.interventions.human["testing"]
+        self.assertEqual(len(scenario.interventions.human), 3)
+
         # Test deployment section
         self.assertEqual(len(scenario.interventions.human.deployments), 1)
         for deployment in scenario.interventions.human.deployments:
             self.assertEqual(deployment.name, "Nets")
-            self.assertEqual(deployment.id, "GVI")
+            self.assertEqual(deployment.components[0], "GVI")
             self.assertEqual(len(deployment.timesteps), 185)
             self.assertEqual(deployment.timesteps[0]["coverage"], 0.6)
             self.assertEqual(deployment.timesteps[0]["time"], 730)
 
-            # print deployment.timesteps
-            # for timestep in deployment.timesteps:
-            # print timestep["time"], timestep["coverage"]
+            deployment.timesteps = [{"time": 73, "coverage": 0.7}, {"time": 730, "coverage": 0.7}]
+            deployment.continuous = [{"targetAgeYrs": 5}, {"targetAgeYrs": 10}]
+
+            self.assertEqual(len(deployment.timesteps), 2)
+            self.assertEqual(len(deployment.continuous), 2)
+            self.assertEqual(deployment.timesteps[0]["coverage"], 0.7)
+            self.assertEqual(deployment.timesteps[0]["time"], 73)
+            self.assertEqual(deployment.continuous[1]["targetAgeYrs"], 10)
+
+            deployment.components = ["GVI"]
+            self.assertEqual(deployment.components[0], "GVI")
+
+        scenario.interventions.human.deployments = [{'name': 'Test', 'components': ['Coartem', 'Invalid'],
+            'timesteps': [{'time': 730, 'coverage': 0.8}]}]
+
+        deployment_to_delete = None
+        for deployment in scenario.interventions.human.deployments:
+            self.assertEqual(deployment.name, "Test")
+            self.assertEqual(len(deployment.components), 1)
+            self.assertEqual(deployment.components[0], "Coartem")
+            self.assertEqual(deployment.timesteps[0]["time"], 730)
+            self.assertEqual(deployment.timesteps[0]["coverage"], 0.8)
+
+            if deployment.delete_component("Coartem") == 0:
+                deployment_to_delete = deployment.et
+
+        if deployment_to_delete is not None:
+            scenario.interventions.human.et.remove(deployment_to_delete)
+
+        self.assertEqual(len(scenario.interventions.human.deployments), 0)
+
+        # Add a nameless deployment.
+        scenario.interventions.human.deployments = [{'components': ['Coartem'],
+            'timesteps': [{'time': 730, 'coverage': 0.8}]}]
+        self.assertEqual(len(scenario.interventions.human.deployments), 1)
+
+        for deployment in scenario.interventions.human.deployments:
+            self.assertRaises(AttributeError, lambda: deployment.name)
 
         vector_pop_xml = """<intervention name="Larviciding">
                               <description>
@@ -250,6 +364,43 @@ class TestScenario(unittest.TestCase):
 
                 anopheles.mosquito = "test"
                 self.assertEqual(anopheles.mosquito, "test")
+                anopheles.emergenceReduction = 0.3
+                self.assertEqual(anopheles.emergenceReduction, 0.3)
+
+            new_anopheles = {
+                "mosquito": "test",
+                "emergenceReduction": 0.9
+            }
+            intervention.add_or_update_anopheles(new_anopheles)
+
+            self.assertEqual(intervention.anopheles[0].mosquito, "test")
+            self.assertEqual(intervention.anopheles[0].emergenceReduction, 0.9)
+
+        scenario.interventions.vectorPop.add(vector_pop_xml, "test")
+        self.assertEqual(len(scenario.interventions.vectorPop), 2)
+        self.assertTrue(scenario.interventions.vectorPop["test"] is not None)
+        self.assertEqual(scenario.interventions.vectorPop["test"].name, "test")
+
+        # Test removal of a vectorPop intervention.
+        del scenario.interventions.vectorPop["test"]
+        self.assertEqual(len(scenario.interventions.vectorPop), 1)
+
+        del scenario.interventions.vectorPop["Larviciding"]
+
+        if len(scenario.interventions.vectorPop) == 0:
+            scenario.interventions.remove_section("vectorPop")
+
+        self.assertEqual(scenario.interventions.vectorPop.et, None)
+
+        # Imported Infection.
+        imported_infections = scenario.interventions.importedInfections
+        first_rate = imported_infections.rates[0]
+
+        self.assertEqual(first_rate["time"], 0)
+        self.assertEqual(first_rate["value"], 24)
+
+        imported_infections.period = 1
+        self.assertEqual(imported_infections.period, 1)
 
         # Scenario without interventions
         scenario1 = Scenario(
@@ -280,7 +431,7 @@ class TestScenario(unittest.TestCase):
         # No vectorPop section
         scenario = Scenario(
             open(os.path.join(base_dir, os.path.join("input", "scenario70k60c_no_interventions.xml"))).read())
-        self.assertEqual(scenario.interventions.vectorPop.interventions, [])
+        self.assertEqual(scenario.interventions.vectorPop.interventions, {})
         self.assertEqual(len(scenario.interventions.vectorPop), 0)
         i = None
         for i in scenario.interventions.vectorPop:
@@ -290,7 +441,7 @@ class TestScenario(unittest.TestCase):
         # Empty vectorPop section
         scenario = Scenario(
             open(os.path.join(base_dir, os.path.join("files", "test_scenario", "empty_vectorpop_section.xml"))).read())
-        self.assertEqual(scenario.interventions.vectorPop.interventions, [])
+        self.assertEqual(scenario.interventions.vectorPop.interventions, {})
         self.assertEqual(len(scenario.interventions.vectorPop), 0)
         i = None
         for i in scenario.interventions.vectorPop:
@@ -308,19 +459,14 @@ class TestScenario(unittest.TestCase):
         scenario = Scenario(
             open(os.path.join(base_dir, os.path.join("files", "test_scenario", "triple_larvacing.xml"))).read())
         self.assertEqual(len(scenario.interventions.vectorPop), 3)
-        interventions = []
-        for i in scenario.interventions.vectorPop:
-            interventions.append(i.name)
-        self.assertEqual(interventions, ["int1", "int2", "int3"])
-        self.assertEqual(scenario.interventions.vectorPop[0].name, "int1")
-        self.assertEqual(scenario.interventions.vectorPop[1].name, "int2")
-        self.assertEqual(scenario.interventions.vectorPop[2].name, "int3")
-        self.assertRaises(IndexError, lambda: scenario.interventions.vectorPop[3])
-        self.assertRaises(TypeError, lambda: scenario.interventions.vectorPop["string"])
+        self.assertEqual(scenario.interventions.vectorPop["int1"].name, "int1")
+        self.assertEqual(scenario.interventions.vectorPop["int2"].name, "int2")
+        self.assertEqual(scenario.interventions.vectorPop["int3"].name, "int3")
+        self.assertRaises(KeyError, lambda: scenario.interventions.vectorPop["int4"])
 
         # test name setter
-        scenario.interventions.vectorPop[0].name = "new name"
-        self.assertEqual(scenario.interventions.vectorPop[0].name, "new name")
+        scenario.interventions.vectorPop["int1"].name = "new name"
+        self.assertEqual(scenario.interventions.vectorPop["new name"].name, "new name")
 
     def test_vaccine_interventions(self):
         scenario = Scenario(open(os.path.join(base_dir, os.path.join("files", "test_scenario", "vaccine_interventions.xml"))).read())
@@ -339,6 +485,14 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(pev.efficacyB, 10)
         self.assertEqual(tbv.initialEfficacy, [0.512, 0.64, 0.8])
         self.assertEqual(pev.initialEfficacy, [0.512, 0.64, 0.8])
+
+        tbv.decay.L = 2.0
+        tbv.efficacyB = float("8.2")
+        tbv.initialEfficacy = [0.5, 0.6, 0.9, 0.2]
+
+        self.assertEqual(tbv.decay.L, 2.0)
+        self.assertEqual(tbv.efficacyB, 8.2)
+        self.assertEqual(tbv.initialEfficacy[3], 0.2)
 
         self.assertEqual(len(scenario.interventions.human.deployments), 1)
 

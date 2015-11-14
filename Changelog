@@ -1,6 +1,24 @@
 =========
 Changelog
 =========
+0.9.1 2015-07-31
+====
+* [+] Setters for vaccine intervention attributes.
+* [+] Ability to overwrite Deployment attributes.
+* [+] Ability to overwrite <deployment>s for human interventions.
+* [+] Ability to delete individual components of a deployment.
+* [+] Ability to delete individual interventions.
+* [+] Ability to remove <interventions> subsections by name.
+* [+] Support for <importedInfections> section in <interventions>.
+* [*] Deployment 'name' attribute is now optional when adding <deployment>s.
+
+0.9.0 2015-06-17
+====
+* [+] Ability to add/update intervention sections (vectorPop, human).
+* [+] Ability to add/update intervention subsections and attributes.
+* [*] Added missing property setters for relevant intervention subsections.
+* [*] Documentation links updated.
+
 0.8.9 2015-04-30
 ====
 * [*] Correctly append new anopheles snippets to entomology vector section.

@@ -12,8 +12,34 @@
 from xml.etree.ElementTree import Element
 from xml.etree import ElementTree
 
-from vecnet.openmalaria.scenario.core import Section, attribute, attribute_setter, section, tag_value
+from vecnet.openmalaria.scenario.core import Section, attribute, attribute_setter, section, tag_value, tag_value_setter
 from vecnet.openmalaria.scenario.healthsystem import HealthSystem
+
+
+class Deploy(Section):
+    @property
+    @attribute
+    def maxAge(self):
+        return "maxAge", float
+
+    @property
+    @attribute
+    def minAge(self):
+        return "minAge", float
+
+    @property
+    @attribute
+    def p(self):
+        return "p", float
+
+    @property
+    def components(self):
+        component_ids = []
+
+        for component in self.et.findall("component"):
+            component_ids.append(component.attrib["id"])
+
+        return component_ids
 
 
 class Deployment(Section):
@@ -23,9 +49,25 @@ class Deployment(Section):
         return "name", str
 
     @property
-    @tag_value
-    def id(self):
-        return "component", "id", str
+    def components(self):
+        component_ids = []
+
+        for component in self.et.findall("component"):
+            component_ids.append(component.attrib["id"])
+
+        return component_ids
+    @components.setter
+    def components(self, value):
+        if value is None or len(value) == 0:
+            return
+
+        for component in self.et.findall("component"):
+            self.et.remove(component)
+
+        for index, component_id in enumerate(value):
+            component = Element("component")
+            component.attrib["id"] = component_id
+            self.et.insert(index, component)
 
     @property
     def timesteps(self):
@@ -36,6 +78,23 @@ class Deployment(Section):
                  "coverage": float(deploy.attrib["coverage"])}
             )
         return deployments
+    @timesteps.setter
+    def timesteps(self, value):
+        timed = self.et.find("timed")
+
+        if timed is not None:
+            for deploy in timed.findall("deploy"):
+                timed.remove(deploy)
+        else:
+            timed = Element("timed")
+            self.et.append(timed)
+            timed = self.et.find("timed")
+
+        for deploy in value:
+            deploy_element = Element("deploy")
+            deploy_element.attrib["time"] = deploy["time"]
+            deploy_element.attrib["coverage"] = deploy["coverage"]
+            timed.append(deploy_element)
 
     @property
     def continuous(self):
@@ -48,6 +107,35 @@ class Deployment(Section):
                     }
             )
         return deployments
+    @continuous.setter
+    def continuous(self, value):
+        continuous = self.et.find("continuous")
+
+        if continuous is not None:
+            for deploy in continuous:
+                continuous.remove(deploy)
+        else:
+            continuous = Element("continuous")
+            index = len(self.et.findall("component"))
+            self.et.insert(index, continuous)
+            continuous = self.et.find("continuous")
+
+        for deploy in value:
+            deploy_element = Element("deploy")
+            deploy_element.attrib["targetAgeYrs"] = deploy["targetAgeYrs"]
+            if "begin" in deploy:
+                deploy_element.attrib["begin"] = deploy["begin"]
+            if "end" in deploy:
+                deploy_element.attrib["end"] = deploy["end"]
+
+            continuous.append(deploy_element)
+
+    def delete_component(self, id):
+        for component in self.et.findall("component"):
+            if component.attrib["id"] == id:
+                self.et.remove(component)
+
+        return len(self.components)
 
 
 class Deployments(Section):
@@ -110,12 +198,27 @@ class Interventions(Section):
         """
         return VectorPop(self.et.find("vectorPop"))
 
+    @property
+    def importedInfections(self):
+        imported_infections_element = self.et.find("importedInfections")
+
+        if imported_infections_element is None:
+            return None
+
+        return ImportedInfections(imported_infections_element)
+
     def __getattr__(self, item):
         raise KeyError
 
     def add_section(self, name):
         elem = Element(name)
         self.et.append(elem)
+
+    def remove_section(self, name):
+        element = self.et.find(name)
+
+        if element is not None:
+            self.et.remove(element)
 
 
 class Component(Section):
@@ -178,16 +281,28 @@ class AnophelesParams(Section):
     @tag_value
     def deterrency(self):
         return "deterrency", "value", float
+    @deterrency.setter
+    @tag_value_setter(tag="deterrency", attrib="value")
+    def deterrency(self, value):
+        pass
 
     @property
     @tag_value
     def preprandialKillingEffect(self):
         return "preprandialKillingEffect", "value", float
+    @preprandialKillingEffect.setter
+    @tag_value_setter(tag="preprandialKillingEffect", attrib="value")
+    def preprandialKillingEffect(self, value):
+        pass
 
     @property
     @tag_value
     def postprandialKillingEffect(self):
         return "postprandialKillingEffect", "value", float
+    @postprandialKillingEffect.setter
+    @tag_value_setter(tag="postprandialKillingEffect", attrib="value")
+    def postprandialKillingEffect(self, value):
+        pass
 
 
 class ITN(Component):
@@ -268,26 +383,46 @@ class Decay(Section):
     @attribute
     def function(self):
         return "function", str
+    @function.setter
+    @attribute_setter(attrib_type=str)
+    def function(self, value):
+        pass
 
     @property
     @attribute
     def L(self):
         return "L", float
+    @L.setter
+    @attribute_setter(attrib_type=float)
+    def L(self, value):
+        pass
 
     @property
     @attribute
     def k(self):
         return "k", float
+    @k.setter
+    @attribute_setter(attrib_type=float)
+    def k(self, value):
+        pass
 
     @property
     @attribute
     def mu(self):
         return "mu", float
+    @mu.setter
+    @attribute_setter(attrib_type=float)
+    def mu(self, value):
+        pass
 
     @property
     @attribute
     def sigma(self):
         return "sigma", float
+    @sigma.setter
+    @attribute_setter(attrib_type=float)
+    def sigma(self, value):
+        pass
 
 
 class GVI(Component):
@@ -295,6 +430,56 @@ class GVI(Component):
         super(self.__class__, self).__init__(et)
         self.gvi = et.find("GVI")
         self.id = self.et.attrib["id"]
+
+    @property
+    def anopheles_xml_snippet(self):
+        xml = """<anophelesParams mosquito="gambiae" propActive="0">
+                    <deterrency value="0.0" />
+                    <preprandialKillingEffect value="0" />
+                    <postprandialKillingEffect value="0" />
+                  </anophelesParams>"""
+
+        return xml
+
+    def add_or_update_anophelesParams(self, params):
+        et = None
+        is_update = False
+
+        for a_param in self.gvi.findall("anophelesParams"):
+            if a_param.attrib["mosquito"] == params["mosquito"]:
+                et = a_param
+                is_update = True
+                break
+
+        if et is None:
+            et = ElementTree.fromstring(self.anopheles_xml_snippet)
+
+        anopheles = AnophelesParams(et)
+
+        anopheles.mosquito = str(params["mosquito"])
+        if params["propActive"] is not None:
+            try:
+                anopheles.propActive = float(params["propActive"])
+            except ValueError:
+                pass
+        if params["deterrency"] is not None:
+            try:
+                anopheles.deterrency = float(params["deterrency"])
+            except ValueError:
+                pass
+        if params["preprandialKillingEffect"] is not None:
+            try:
+                anopheles.preprandialKillingEffect = float(params["preprandialKillingEffect"])
+            except ValueError:
+                pass
+        if params["postprandialKillingEffect"] is not None:
+            try:
+                anopheles.postprandialKillingEffect = float(params["postprandialKillingEffect"])
+            except ValueError:
+                pass
+
+        if not is_update:
+            self.gvi.append(anopheles.et)
 
     @property
     def decay(self):
@@ -330,6 +515,105 @@ class GVI(Component):
             self.gvi.append(et)
 
 
+class MDA(Component):
+    def __init__(self, et):
+        super(self.__class__, self).__init__(et)
+        self.mda = et.find("MDA")
+        self.id = self.et.attrib["id"]
+
+    @property
+    def treatment_option_xml_snippet(self):
+        xml = """<option name="0.5" pSelection="0.5">
+                </option>"""
+
+        return xml
+
+    def add_or_update_treatment_option(self, params):
+        et = None
+        is_update = False
+
+        effects = self.mda.find("effects")
+
+        if effects is None:
+            new_effects = Element("effects")
+            self.mda.append(new_effects)
+            effects = self.mda.find("effects")
+
+        for option in effects.findall("option"):
+            if option.attrib["name"] == params["name"]:
+                et = option
+                is_update = True
+                break
+
+        if et is None:
+            et = ElementTree.fromstring(self.treatment_option_xml_snippet)
+
+        treatment_option = et
+
+        treatment_option.attrib["name"] = str(params["name"])
+        if "pSelection" in params and params["pSelection"] is not None:
+            treatment_option.attrib["pSelection"] = params["pSelection"]
+
+        for deploy in treatment_option.findall("deploy"):
+            treatment_option.remove(deploy)
+        for clear_infection in treatment_option.findall("clearInfections"):
+            treatment_option.remove(clear_infection)
+
+        if "deploys" in params and params["deploys"] is not None:
+            for deploy in params["deploys"]:
+                deploy_element = Element("deploy")
+                deploy_element.attrib["maxAge"] = deploy["maxAge"]
+                deploy_element.attrib["minAge"] = deploy["minAge"]
+                deploy_element.attrib["p"] = deploy["p"]
+
+                for component_id in deploy["components"]:
+                    component = Element("component")
+                    component.attrib["id"] = component_id
+                    deploy_element.append(component)
+
+                treatment_option.append(deploy_element)
+
+        if "clearInfections" in params and params["clearInfections"] is not None:
+            for clear_infection in params["clearInfections"]:
+                clear_infection_element = Element("clearInfections")
+                clear_infection_element.attrib["stage"] = clear_infection["stage"]
+                clear_infection_element.attrib["timesteps"] = clear_infection["timesteps"]
+
+                treatment_option.append(clear_infection_element)
+
+        if not is_update:
+            effects.append(treatment_option)
+
+    @property
+    def treatment_options(self):
+        treatment_options = []
+
+        for option in self.mda.find("effects").findall("option"):
+            option_info = {
+                "name": "",
+                "pSelection": float(option.attrib["pSelection"]),
+                "deploys": [],
+                "clearInfections": []
+            }
+
+            if "name" in option.attrib:
+                option_info["name"] = option.attrib["name"]
+
+            for deploy_section in option.findall("deploy"):
+                option_info["deploys"].append(Deploy(deploy_section))
+
+            for clear_infection in option.findall("clearInfections"):
+                clear_infection_info = {
+                    "stage": clear_infection.attrib["stage"],
+                    "timesteps": int(clear_infection.attrib["timesteps"])
+                }
+                option_info["clearInfections"].append(clear_infection_info)
+
+            treatment_options.append(option_info)
+
+        return treatment_options
+
+
 class Vaccine(Component):
     def __init__(self, et):
         super(self.__class__, self).__init__(et)
@@ -355,6 +639,10 @@ class Vaccine(Component):
     @property
     def efficacyB(self):
         return float(self.vaccine.find("efficacyB").attrib["value"])
+    @efficacyB.setter
+    def efficacyB(self, value):
+        assert isinstance(value, float)
+        self.vaccine.find("efficacyB").attrib["value"] = str(value)
 
     @property
     def initialEfficacy(self):
@@ -362,13 +650,21 @@ class Vaccine(Component):
         for initial_efficacy in self.vaccine.findall("initialEfficacy"):
             values.append(float(initial_efficacy.attrib["value"]))
         return values
+    @initialEfficacy.setter
+    def initialEfficacy(self, value):
+        for initial_efficacy in self.vaccine.findall("initialEfficacy"):
+            self.vaccine.remove(initial_efficacy)
+        for new_value in value:
+            initial_efficacy = Element("initialEfficacy")
+            initial_efficacy.attrib["value"] = str(new_value)
+            self.vaccine.append(initial_efficacy)
 
 
 class HumanInterventions(Section):
     """
     List of human interventions
     """
-    def add(self, intervention):
+    def add(self, intervention, id=None):
         """
         Add an intervention to vectorPop section.
         intervention is either ElementTree or xml snippet
@@ -384,12 +680,19 @@ class HumanInterventions(Section):
             component = ITN(et)
         elif et.find("GVI") is not None:
             component = GVI(et)
+        elif et.find("MDA") is not None:
+            component = MDA(et)
         elif et.find("TBV") is not None or et.find("PEV") is not None or et.find("BSV") is not None:
             component = Vaccine(et)
         else:
             return
 
         assert isinstance(component.name, (str, unicode))
+
+        if id is not None:
+            assert isinstance(id, (str, unicode))
+            et.attrib["id"] = id
+
         index = len(self.et.findall("component"))
         self.et.insert(index, et)
 
@@ -404,6 +707,8 @@ class HumanInterventions(Section):
                 human_interventions[component.attrib["id"]] = ITN(component)
             if component.find("GVI") is not None:
                 human_interventions[component.attrib["id"]] = GVI(component)
+            if component.find("MDA") is not None:
+                human_interventions[component.attrib["id"]] = MDA(component)
             if component.find("TBV") is not None or component.find("PEV") is not None or component.find("BSV") is not None:
                 human_interventions[component.attrib["id"]] = Vaccine(component)
         return human_interventions
@@ -411,6 +716,34 @@ class HumanInterventions(Section):
     @property  # deployment
     def deployments(self):
         return Deployments(self.et)
+    @deployments.setter
+    def deployments(self, value):
+        if self.et is None or value is None:
+            return
+
+        for deployment in self.et.findall("deployment"):
+            self.et.remove(deployment)
+
+        for deploy in value:
+            if "components" not in deploy or len(deploy["components"]) == 0:
+                continue
+
+            component_ids = [id for id in deploy["components"] if id in self.components]
+
+            deployment_element = Element("deployment")
+
+            if "name" in deploy:
+                deployment_element.attrib["name"] = deploy["name"]
+
+            deployment = Deployment(deployment_element)
+            deployment.components = component_ids
+
+            if "timesteps" in deploy:
+                deployment.timesteps = deploy["timesteps"]
+            if "continuous" in deploy:
+                deployment.timesteps = deploy["continuous"]
+
+            self.et.append(deployment.et)
 
     def __getitem__(self, item):
         """
@@ -426,6 +759,27 @@ class HumanInterventions(Section):
 
     def __len__(self):
         return len(self.components)
+
+    def __delitem__(self, key):
+        for component in self.et.findall("component"):
+            component_id = component.attrib["id"]
+            if component_id == key:
+                deployments_to_delete = []
+
+                for deployment in self.deployments:
+                    if deployment.delete_component(component_id) == 0:
+                        # Prepare deployment for removal.
+                        deployments_to_delete.append(deployment.et)
+
+                for deployment_to_delete in deployments_to_delete:
+                    self.et.remove(deployment_to_delete)
+
+                self.et.remove(component)
+
+                # TODO: Remove entire <human> section if this is the only component.
+
+                return
+        raise KeyError(key)
 
     def __iter__(self):
         """
@@ -466,16 +820,28 @@ class Anopheles(Section):
     @tag_value
     def seekingDeathRateIncrease(self):
         return "seekingDeathRateIncrease", "initial", float
+    @seekingDeathRateIncrease.setter
+    @tag_value_setter(tag="seekingDeathRateIncrease", attrib="initial")
+    def seekingDeathRateIncrease(self, value):
+        pass
 
     @property
     @tag_value
     def probDeathOvipositing(self):
         return "probDeathOvipositing", "initial", float
+    @probDeathOvipositing.setter
+    @tag_value_setter(tag="probDeathOvipositing", attrib="initial")
+    def probDeathOvipositing(self, value):
+        pass
 
     @property
     @tag_value
     def emergenceReduction(self):
         return "emergenceReduction", "initial", float
+    @emergenceReduction.setter
+    @tag_value_setter(tag="emergenceReduction", attrib="initial")
+    def emergenceReduction(self, value):
+        pass
 
     @property
     def decays(self):
@@ -496,6 +862,60 @@ class VectorPopIntervention(Section):
     /scenario/intervention/vectorPop/intervention
     An intervention which may have various effects on the vector populations as a whole
     """
+    @property
+    def anopheles_xml_snippet(self):
+        xml = """<anopheles mosquito="gambiae">
+                    <emergenceReduction initial=".8">
+                        <decay L="0.2465753424657534" function="step"/>
+                    </emergenceReduction>
+                 </anopheles>"""
+
+        return xml
+
+    def add_or_update_anopheles(self, params):
+        et = None
+        is_update = False
+        desc = self.et.find("description")
+
+        if desc is not None:
+            for anopheles in desc.findall("anopheles"):
+                if anopheles.attrib["mosquito"] == params["mosquito"]:
+                    et = anopheles
+                    is_update = True
+                    break
+
+        if et is None:
+            et = ElementTree.fromstring(self.anopheles_xml_snippet)
+
+        anopheles = Anopheles(et)
+
+        if not is_update:
+            anopheles.mosquito = str(params["mosquito"])
+
+        if "seekingDeathRateIncrease" in params and params["seekingDeathRateIncrease"] is not None:
+            try:
+                anopheles.seekingDeathRateIncrease = float(params["seekingDeathRateIncrease"])
+            except ValueError:
+                pass
+        if "probDeathOvipositing" in params and params["probDeathOvipositing"] is not None:
+            try:
+                anopheles.probDeathOvipositing = float(params["probDeathOvipositing"])
+            except ValueError:
+                pass
+        if "emergenceReduction" in params and params["emergenceReduction"] is not None:
+            try:
+                anopheles.emergenceReduction = float(params["emergenceReduction"])
+            except ValueError:
+                pass
+
+        if not is_update:
+            if desc is None:
+                new_description_element = ElementTree.Element("description")
+                self.et.insert(0, new_description_element)
+                desc = self.et.find("description")
+
+            desc.append(anopheles.et)
+
     @property
     @attribute
     def name(self):  # name
@@ -568,7 +988,7 @@ class VectorPop(Section):
     A list of parameterisations of generic vector host-inspecific interventions.
     https://github.com/SwissTPH/openmalaria/wiki/GeneratedSchema32Doc#elt-vectorPop
     """
-    def add(self, intervention):
+    def add(self, intervention, name=None):
         """
         Add an intervention to vectorPop section.
         intervention is either ElementTree or xml snippet
@@ -581,21 +1001,35 @@ class VectorPop(Section):
         vector_pop = VectorPopIntervention(et)
 
         assert isinstance(vector_pop.name, (str, unicode))
+
+        if name is not None:
+            assert isinstance(name, (str, unicode))
+            et.attrib["name"] = name
+
         index = len(self.et.findall("intervention"))
         self.et.insert(index, et)
 
     @property
     def interventions(self):
-        """ List of interventions in /scenario/interventions/vectorPop section """
-        array = []
+        """ Dictionary of interventions in /scenario/interventions/vectorPop section """
+        interventions = {}
         if self.et is None:
-            return array
+            return interventions
         for intervention in self.et.findall("intervention"):
-            array.append(VectorPopIntervention(intervention))
-        return array
+            interventions[intervention.attrib['name']] = VectorPopIntervention(intervention)
+        return interventions
 
     def __len__(self):
         return len(self.interventions)
+
+    def __delitem__(self, key):
+        for intervention in self.et.findall("intervention"):
+            if intervention.attrib["name"] == key:
+                self.et.remove(intervention)
+                # TODO: Remove entire <vectorPop> section if this is the only intervention.
+                return
+
+        raise KeyError(key)
 
     def __iter__(self):
         """
@@ -607,8 +1041,88 @@ class VectorPop(Section):
         """
         if len(self.interventions) == 0:
             return
-        for intervention in self.interventions:
+        for intervention_name, intervention in self.interventions.iteritems():
             yield intervention
 
     def __getitem__(self, item):
+        """
+        :rtype: VectorPopIntervention
+        """
         return self.interventions[item]
+
+    def __getattr__(self, item):
+        """
+        :rtype: VectorPopIntervention
+        """
+        return self.interventions[item]
+
+
+class ImportedInfections(Section):
+    @property
+    @attribute
+    def name(self):  # name
+        """
+        Name of imported infection.
+        rtype: str
+        """
+        return "name", str
+    @name.setter
+    @attribute_setter(attrib_type=str)
+    def name(self, value):
+        pass  # attribute_setter decorator will change name attribute
+
+    @property
+    def period(self):
+        timed = self.et.find("timed")
+
+        try:
+            return int(timed.attrib["period"])
+        except KeyError:
+            return 0
+    @period.setter
+    def period(self, value):
+        timed = self.et.find("timed")
+
+        if timed is None:
+            timed_element = Element("timed")
+            self.et.append(timed_element)
+            timed = self.et.find("timed")
+
+        timed.attrib["period"] = str(value)
+
+    @property
+    def rates(self):
+        timed = self.et.find("timed")
+
+        if timed is None:
+            return
+
+        rates = []
+
+        for rate in timed.findall("rate"):
+            rates.append({
+                "time": int(rate.attrib["time"]),
+                "value": int(rate.attrib["value"])
+            })
+
+        return rates
+    @rates.setter
+    def rates(self, value):
+        if value is None or self.et is None:
+            return
+
+        timed = self.et.find("timed")
+
+        if timed is None:
+            timed_element = Element("timed")
+            self.et.append(timed_element)
+            timed = self.et.find("timed")
+
+        for rate in timed.findall("rate"):
+            timed.remove(rate)
+
+        for rate in value:
+            rate_element = Element("rate")
+            rate_element.attrib["time"] = str(rate["time"])
+            rate_element.attrib["value"] = str(rate["value"])
+            timed.append(rate_element)
