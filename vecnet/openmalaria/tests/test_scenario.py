@@ -367,6 +367,11 @@ class TestScenario(unittest.TestCase):
                 anopheles.emergenceReduction = 0.3
                 self.assertEqual(anopheles.emergenceReduction, 0.3)
 
+                self.assertIsNone(anopheles.seekingDeathRateIncrease)
+                anopheles.seekingDeathRateIncrease = 0.4
+                self.assertIsNotNone(anopheles.et.find("seekingDeathRateIncrease"))
+                self.assertEqual(anopheles.seekingDeathRateIncrease, 0.4)
+
             new_anopheles = {
                 "mosquito": "test",
                 "emergenceReduction": 0.9

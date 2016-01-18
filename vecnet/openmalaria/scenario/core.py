@@ -69,7 +69,14 @@ def tag_value_setter(tag, attrib):
     """
     def outer(func):
         def inner(self, value):
-            self.et.find(tag).attrib[attrib] = str(value)
+            tag_elem = self.et.find(tag)
+
+            if tag_elem is None:
+                et = ElementTree.fromstring("<{}></{}>".format(tag, tag))
+                self.et.append(et)
+                tag_elem = self.et.find(tag)
+
+            tag_elem.attrib[attrib] = str(value)
         return inner
     return outer
 
