@@ -892,19 +892,34 @@ class VectorPopIntervention(Section):
         if not is_update:
             anopheles.mosquito = str(params["mosquito"])
 
+        default_decay_string = "<decay L='0.2465753424657534' function='step' />"
+        new_decay_et = ElementTree.fromstring(default_decay_string)
+
         if "seekingDeathRateIncrease" in params and params["seekingDeathRateIncrease"] is not None:
             try:
                 anopheles.seekingDeathRateIncrease = float(params["seekingDeathRateIncrease"])
+
+                section = anopheles.et.find("seekingDeathRateIncrease")
+                if section.find("decay") is None:
+                    section.append(new_decay_et)
             except ValueError:
                 pass
         if "probDeathOvipositing" in params and params["probDeathOvipositing"] is not None:
             try:
                 anopheles.probDeathOvipositing = float(params["probDeathOvipositing"])
+
+                section = anopheles.et.find("probDeathOvipositing")
+                if section.find("decay") is None:
+                    section.append(new_decay_et)
             except ValueError:
                 pass
         if "emergenceReduction" in params and params["emergenceReduction"] is not None:
             try:
                 anopheles.emergenceReduction = float(params["emergenceReduction"])
+
+                section = anopheles.et.find("emergenceReduction")
+                if section.find("decay") is None:
+                    section.append(new_decay_et)
             except ValueError:
                 pass
 
