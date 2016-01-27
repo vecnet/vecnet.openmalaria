@@ -457,22 +457,22 @@ class GVI(Component):
         anopheles = AnophelesParams(et)
 
         anopheles.mosquito = str(params["mosquito"])
-        if params["propActive"] is not None:
+        if "propActive" in params and params["propActive"] is not None:
             try:
                 anopheles.propActive = float(params["propActive"])
             except ValueError:
                 pass
-        if params["deterrency"] is not None:
+        if "deterrency" in params and params["deterrency"] is not None:
             try:
                 anopheles.deterrency = float(params["deterrency"])
             except ValueError:
                 pass
-        if params["preprandialKillingEffect"] is not None:
+        if "preprandialKillingEffect" in params and params["preprandialKillingEffect"] is not None:
             try:
                 anopheles.preprandialKillingEffect = float(params["preprandialKillingEffect"])
             except ValueError:
                 pass
-        if params["postprandialKillingEffect"] is not None:
+        if "postprandialKillingEffect" in params and params["postprandialKillingEffect"] is not None:
             try:
                 anopheles.postprandialKillingEffect = float(params["postprandialKillingEffect"])
             except ValueError:
