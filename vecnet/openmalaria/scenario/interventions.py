@@ -481,6 +481,13 @@ class GVI(Component):
         if not is_update:
             self.gvi.append(anopheles.et)
 
+    def remove_anophelesParams(self, name):
+        for a_param in self.gvi.findall("anophelesParams"):
+            if a_param.attrib["mosquito"] == name:
+                self.gvi.remove(a_param)
+
+        #TODO: Need to flag entire section for removal if empty.
+
     @property
     def decay(self):
         """
@@ -930,6 +937,16 @@ class VectorPopIntervention(Section):
                 desc = self.et.find("description")
 
             desc.append(anopheles.et)
+
+    def remove_anopheles(self, name):
+        desc = self.et.find("description")
+
+        if desc is not None:
+            for anopheles in desc.findall("anopheles"):
+                if anopheles.attrib["mosquito"] == name:
+                    desc.remove(anopheles)
+
+        #TODO: Need to flag entire section for removal if empty.
 
     @property
     @attribute

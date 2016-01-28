@@ -194,6 +194,11 @@ class TestScenario(unittest.TestCase):
             self.assertEqual(intervention.anophelesParams[0].preprandialKillingEffect, 0.9)
             self.assertEqual(intervention.anophelesParams[0].postprandialKillingEffect, 0.1)
 
+            # Test removal of anophelesParams.
+            self.assertEqual(len(intervention.anophelesParams), 1)
+            intervention.remove_anophelesParams(intervention.anophelesParams[0].mosquito)
+            self.assertEqual(len(intervention.anophelesParams), 0)
+
             # Overwrite anophelesParams.
             anopheles_xml = """<anophelesParams mosquito="funestus" propActive="0.0">
                                 <deterrency value="0.0" />
@@ -389,6 +394,12 @@ class TestScenario(unittest.TestCase):
         # Test removal of a vectorPop intervention.
         del scenario.interventions.vectorPop["test"]
         self.assertEqual(len(scenario.interventions.vectorPop), 1)
+
+        # Test removal of anopheles.
+        intervention = scenario.interventions.vectorPop["Larviciding"]
+        self.assertEqual(len(intervention.anopheles), 1)
+        intervention.remove_anopheles(intervention.anopheles[0].mosquito)
+        self.assertEqual(len(intervention.anopheles), 0)
 
         del scenario.interventions.vectorPop["Larviciding"]
 
