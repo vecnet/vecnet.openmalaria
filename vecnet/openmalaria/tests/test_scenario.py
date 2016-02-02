@@ -235,27 +235,11 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(ddt.decay.L, 0.5)
         self.assertEqual(ddt.decay.function, "exponential")
 
-        mda_xml = """
-                    <component id="Coartem" name="Coartem">
-                        <MDA>
-                            <effects>
-                                <option name="0.5" pSelection="0.5">
-                                    <clearInfections stage="liver" timesteps="1"/>
-                                    <clearInfections stage="blood" timesteps="3"/>
-                                </option>
-                                <option name="0.2" pSelection="0.2">
-                                    <clearInfections stage="liver" timesteps="1"/>
-                                    <clearInfections stage="blood" timesteps="4"/>
-                                </option>
-                                <option name="0.3" pSelection="0.3">
-                                    <clearInfections stage="liver" timesteps="1"/>
-                                    <clearInfections stage="blood" timesteps="5"/>
-                                </option>
-                            </effects>
-                        </MDA>
-                    </component>
-                    """
+        mda_xml = ""
+        with open(os.path.join(base_dir, os.path.join("files/test_scenario", "mda_snippet.xml")), 'r') as snippet_file:
+            mda_xml = snippet_file.read()
 
+        self.assertNotEqual(mda_xml, "")
         scenario.interventions.human.add(mda_xml)
         self.assertEqual(len(scenario.interventions.human), 4)
 

@@ -1,0 +1,19 @@
+<component id="Coartem" name="Coartem">
+	<MDA>
+		<effects>
+			<option name="0.5" pSelection="0.5">
+				<clearInfections stage="liver" timesteps="1"/>
+				<clearInfections stage="blood" timesteps="3"/>
+			</option>
+			<option name="0.2" pSelection="0.2">
+				<clearInfections stage="liver" timesteps="1"/>
+				<clearInfections stage="blood" timesteps="4"/>
+			</option>
+			<option name="0.3" pSelection="0.3">
+				<clearInfections stage="liver" timesteps="1"/>
+				<clearInfections stage="blood" timesteps="5"/>
+			</option>
+		</effects>
+	</MDA>
+</component>
+
