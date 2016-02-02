@@ -322,15 +322,11 @@ class TestScenario(unittest.TestCase):
         for deployment in scenario.interventions.human.deployments:
             self.assertRaises(AttributeError, lambda: deployment.name)
 
-        vector_pop_xml = """<intervention name="Larviciding">
-                              <description>
-                                <anopheles mosquito="gambiae">
-                                  <emergenceReduction initial="0.8">
-                                    <decay L="0.2465753424657534" function="step" />
-                                  </emergenceReduction>
-                                </anopheles>
-                              </description>
-                            </intervention>"""
+        vector_pop_xml = ""
+        with open(os.path.join(base_dir, os.path.join("files/test_scenario", "vectorpop_snippet.xml")), 'r') as snippet_file:
+            vector_pop_xml = snippet_file.read()
+
+        self.assertNotEqual(vector_pop_xml, "")
 
         if len(scenario.interventions.vectorPop) == 0:
             scenario.interventions.add_section("vectorPop")
