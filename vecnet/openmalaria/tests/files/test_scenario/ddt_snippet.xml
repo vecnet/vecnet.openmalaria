@@ -1,0 +1,5 @@
+<component id="DDT" name="DDT">
+	<GVI>
+		<decay L="0.5" function="exponential"/>
+	</GVI>
+</component>

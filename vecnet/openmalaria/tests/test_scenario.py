@@ -214,17 +214,16 @@ class TestScenario(unittest.TestCase):
             self.assertEqual(intervention.anophelesParams[0].preprandialKillingEffect, 0.0)
             self.assertEqual(intervention.anophelesParams[0].postprandialKillingEffect, 0)
 
-        component_xml = """<component id="DDT" name="DDT">
-                             <GVI>
-                               <decay L="0.5" function="exponential"/>
-                             </GVI>
-                           </component>"""
+        ddt_xml = ""
+        with open(os.path.join(base_dir, os.path.join("files/test_scenario", "ddt_snippet.xml")), 'r') as snippet_file:
+            ddt_xml = snippet_file.read()
 
+        self.assertNotEqual(ddt_xml, "")
         self.assertEqual(len(scenario.interventions.human), 1)
-        scenario.interventions.human.add(component_xml)
+        scenario.interventions.human.add(ddt_xml)
         self.assertEqual(len(scenario.interventions.human), 2)
 
-        scenario.interventions.human.add(component_xml, "testing")
+        scenario.interventions.human.add(ddt_xml, "testing")
         self.assertEqual(len(scenario.interventions.human), 3)
         self.assertTrue(scenario.interventions.human["testing"] is not None)
         self.assertEqual(scenario.interventions.human["testing"].id, "testing")
