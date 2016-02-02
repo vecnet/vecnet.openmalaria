@@ -200,11 +200,11 @@ class TestScenario(unittest.TestCase):
             self.assertEqual(len(intervention.anophelesParams), 0)
 
             # Overwrite anophelesParams.
-            anopheles_xml = """<anophelesParams mosquito="funestus" propActive="0.0">
-                                <deterrency value="0.0" />
-                                <preprandialKillingEffect value="0.0" />
-                                <postprandialKillingEffect value="0.0" />
-                               </anophelesParams>"""
+            anopheles_xml = ""
+            with open(os.path.join(base_dir, os.path.join("files/test_scenario", "anopheles_params_snippet.xml")), 'r') as snippet_file:
+                anopheles_xml = snippet_file.read()
+
+            self.assertNotEqual(anopheles_xml, "")
             intervention.anophelesParams = [anopheles_xml]
 
             self.assertEqual(len(intervention.anophelesParams), 1)
@@ -214,17 +214,16 @@ class TestScenario(unittest.TestCase):
             self.assertEqual(intervention.anophelesParams[0].preprandialKillingEffect, 0.0)
             self.assertEqual(intervention.anophelesParams[0].postprandialKillingEffect, 0)
 
-        component_xml = """<component id="DDT" name="DDT">
-                             <GVI>
-                               <decay L="0.5" function="exponential"/>
-                             </GVI>
-                           </component>"""
+        ddt_xml = ""
+        with open(os.path.join(base_dir, os.path.join("files/test_scenario", "ddt_snippet.xml")), 'r') as snippet_file:
+            ddt_xml = snippet_file.read()
 
+        self.assertNotEqual(ddt_xml, "")
         self.assertEqual(len(scenario.interventions.human), 1)
-        scenario.interventions.human.add(component_xml)
+        scenario.interventions.human.add(ddt_xml)
         self.assertEqual(len(scenario.interventions.human), 2)
 
-        scenario.interventions.human.add(component_xml, "testing")
+        scenario.interventions.human.add(ddt_xml, "testing")
         self.assertEqual(len(scenario.interventions.human), 3)
         self.assertTrue(scenario.interventions.human["testing"] is not None)
         self.assertEqual(scenario.interventions.human["testing"].id, "testing")
@@ -235,27 +234,11 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(ddt.decay.L, 0.5)
         self.assertEqual(ddt.decay.function, "exponential")
 
-        mda_xml = """
-                    <component id="Coartem" name="Coartem">
-                        <MDA>
-                            <effects>
-                                <option name="0.5" pSelection="0.5">
-                                    <clearInfections stage="liver" timesteps="1"/>
-                                    <clearInfections stage="blood" timesteps="3"/>
-                                </option>
-                                <option name="0.2" pSelection="0.2">
-                                    <clearInfections stage="liver" timesteps="1"/>
-                                    <clearInfections stage="blood" timesteps="4"/>
-                                </option>
-                                <option name="0.3" pSelection="0.3">
-                                    <clearInfections stage="liver" timesteps="1"/>
-                                    <clearInfections stage="blood" timesteps="5"/>
-                                </option>
-                            </effects>
-                        </MDA>
-                    </component>
-                    """
+        mda_xml = ""
+        with open(os.path.join(base_dir, os.path.join("files/test_scenario", "mda_snippet.xml")), 'r') as snippet_file:
+            mda_xml = snippet_file.read()
 
+        self.assertNotEqual(mda_xml, "")
         scenario.interventions.human.add(mda_xml)
         self.assertEqual(len(scenario.interventions.human), 4)
 
@@ -339,15 +322,11 @@ class TestScenario(unittest.TestCase):
         for deployment in scenario.interventions.human.deployments:
             self.assertRaises(AttributeError, lambda: deployment.name)
 
-        vector_pop_xml = """<intervention name="Larviciding">
-                              <description>
-                                <anopheles mosquito="gambiae">
-                                  <emergenceReduction initial="0.8">
-                                    <decay L="0.2465753424657534" function="step" />
-                                  </emergenceReduction>
-                                </anopheles>
-                              </description>
-                            </intervention>"""
+        vector_pop_xml = ""
+        with open(os.path.join(base_dir, os.path.join("files/test_scenario", "vectorpop_snippet.xml")), 'r') as snippet_file:
+            vector_pop_xml = snippet_file.read()
+
+        self.assertNotEqual(vector_pop_xml, "")
 
         if len(scenario.interventions.vectorPop) == 0:
             scenario.interventions.add_section("vectorPop")

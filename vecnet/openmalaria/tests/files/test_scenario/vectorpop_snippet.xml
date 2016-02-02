@@ -1,0 +1,9 @@
+<intervention name="Larviciding">
+	<description>
+		<anopheles mosquito="gambiae">
+			<emergenceReduction initial="0.8">
+				<decay L="0.2465753424657534" function="step" />
+			</emergenceReduction>
+		</anopheles>
+	</description>
+</intervention>
