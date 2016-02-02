@@ -23,10 +23,10 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 
 class TestScenario(unittest.TestCase):
     def setUp(self):
-        pass
+        self.scenario = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c.xml"))).read())
 
     def test_scenario(self):
-        scenario = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c.xml"))).read())
+        scenario = self.scenario
         # Reading attributes
         self.assertEqual(scenario.name, "Olyset Duo")
         self.assertEqual(scenario.schemaVersion, 32)
@@ -56,7 +56,7 @@ class TestScenario(unittest.TestCase):
         self.assertIsInstance(scenario.monitoring, Monitoring)
 
     def test_monitoring(self):
-        scenario = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c.xml"))).read())
+        scenario = self.scenario
         self.assertEqual(scenario.monitoring.name, "Monthly Surveys")
         self.assertEqual(scenario.monitoring.detectionLimit, 100.0)
         self.assertEqual(scenario.monitoring.surveys, [730, 736, 742, 748])
@@ -69,7 +69,7 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(scenario.monitoring.SurveyOptions, ['nHost', 'nPatent', 'nUncomp', 'simulatedEIR', 'nMassGVI'])
 
     def test_healthsystem(self):
-        scenario = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c.xml"))).read())
+        scenario = self.scenario
 
         self.assertEqual(scenario.healthSystem.ImmediateOutcomes.name, "Kenya ACT")
         self.assertEqual(scenario.healthSystem.ImmediateOutcomes.pSeekOfficialCareUncomplicated1, 0.04)
@@ -111,7 +111,7 @@ class TestScenario(unittest.TestCase):
 
 
     def test_entomology(self):
-        scenario = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c.xml"))).read())
+        scenario = self.scenario
 
         # Reading attributes
         self.assertEqual(scenario.entomology.name, "Kenya Lowlands from EMOD")
@@ -163,7 +163,7 @@ class TestScenario(unittest.TestCase):
             print vector
 
     def test_interventions(self):
-        scenario = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c.xml"))).read())
+        scenario = self.scenario
         self.assertEqual(scenario.interventions.changeHS, [])
         self.assertIs(scenario.interventions.changeEIR, None)
         for intervention in scenario.interventions.human:
