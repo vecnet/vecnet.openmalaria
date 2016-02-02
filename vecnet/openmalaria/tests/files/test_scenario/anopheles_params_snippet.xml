@@ -1,0 +1,5 @@
+<anophelesParams mosquito="funestus" propActive="0.0">
+	<deterrency value="0.0" />
+	<preprandialKillingEffect value="0.0" />
+	<postprandialKillingEffect value="0.0" />
+</anophelesParams>

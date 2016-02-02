@@ -200,11 +200,11 @@ class TestScenario(unittest.TestCase):
             self.assertEqual(len(intervention.anophelesParams), 0)
 
             # Overwrite anophelesParams.
-            anopheles_xml = """<anophelesParams mosquito="funestus" propActive="0.0">
-                                <deterrency value="0.0" />
-                                <preprandialKillingEffect value="0.0" />
-                                <postprandialKillingEffect value="0.0" />
-                               </anophelesParams>"""
+            anopheles_xml = ""
+            with open(os.path.join(base_dir, os.path.join("files/test_scenario", "anopheles_params_snippet.xml")), 'r') as snippet_file:
+                anopheles_xml = snippet_file.read()
+
+            self.assertNotEqual(anopheles_xml, "")
             intervention.anophelesParams = [anopheles_xml]
 
             self.assertEqual(len(intervention.anophelesParams), 1)
