@@ -26,10 +26,10 @@ continuousMeasuresDescription = \
             "averaged across humans",
         "input EIR":
             "Requested entomological infection rate. This is a fixed periodic value, for comparison with simulated EIR."
-            "Units (from schema version 24): inoculations per adult per timestep.",
+            "Units: inoculations per adult per timestep.",
         "simulated EIR":
             "EIR acting on simulated humans. "
-            "Units: from schema version 26, inoculations per adult per timestep, "
+            "Units: inoculations per adult per timestep, "
             "previously inoculations per person per timestep.",
         "hosts":
             "Total number of human hosts (fixed)",

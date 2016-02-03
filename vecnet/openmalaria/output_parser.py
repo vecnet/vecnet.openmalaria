@@ -174,9 +174,9 @@ continuousFileMap = \
          "averaged across humans"),
         ("input EIR", "30 - 32",
          "Requested entomological infection rate. This is a fixed periodic value, for comparison with simulated EIR. "
-         "Units (from schema version 24): inoculations per adult per timestep."),
+         "Units: inoculations per adult per timestep."),
         ("simulated EIR", "30 - 32",
-         "EIR acting on simulated humans. Units: from schema version 26, inoculations per adult per timestep, "
+         "EIR acting on simulated humans. Units: inoculations per adult per timestep, "
          "previously inoculations per person per timestep."),
         ("hosts", "30 - 32", "Total number of human hosts (fixed)"),
         ("host demography", "30 - 32", "Number of humans less than 1, 5, 10, 15, and 25 years of age respectively"),
