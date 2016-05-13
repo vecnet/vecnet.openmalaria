@@ -43,6 +43,12 @@ class Deploy(Section):
 
 
 class Deployment(Section):
+    """ /scenario/intervention/human/deployment (multiple)
+    """
+    def create_from_xml(self, xml):
+        et = ElementTree.fromstring(xml)
+        self.et = et
+
     @property
     @attribute
     def name(self):
@@ -99,6 +105,8 @@ class Deployment(Section):
     @property
     def continuous(self):
         deployments = []
+        if self.et.find("continuous") is None:
+            return None
         for deploy in self.et.find("continuous").findall("deploy"):
             deployments.append(
                     {"targetAgeYrs": float(deploy.attrib["targetAgeYrs"]),
@@ -666,7 +674,7 @@ class HumanInterventions(Section):
     """
     def add(self, intervention, id=None):
         """
-        Add an intervention to vectorPop section.
+        Add an intervention to intervention/human section.
         intervention is either ElementTree or xml snippet
         """
         if self.et is None:
@@ -725,6 +733,13 @@ class HumanInterventions(Section):
             self.et.remove(deployment)
 
         for deploy in value:
+            if "xml" in deploy:
+                # Preserve deployment section as is
+                deployment = Deployment(None)
+                deployment.create_from_xml(deploy["xml"])
+                self.et.append(deployment.et)
+                continue
+
             if "components" not in deploy or len(deploy["components"]) == 0:
                 continue
 
