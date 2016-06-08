@@ -150,19 +150,26 @@ class Deployments(Section):
     """
     Deployments defined in /scenario/interventions/human section
     """
-    def __iter__(self):
-        if self.et is None:
-            return
-        if self.et.find("deployment") is None:
-            return
+    @property
+    def deployments(self):
+        if self.et is None or self.et.find("deployment") is None:
+            return []
+
+        deployments = []
         for deployment in self.et.findall("deployment"):
-            yield Deployment(deployment)
+            deployments.append(Deployment(deployment))
+
+        return deployments
+
+    def __iter__(self):
+        for deployment in self.deployments:
+            yield deployment
+
+    def __getitem__(self, index):
+        return self.deployments[index]
 
     def __len__(self):
-        i = 0
-        for deployment in self:
-            i += 1
-        return i
+        return len(self.deployments)
 
 
 class Interventions(Section):
