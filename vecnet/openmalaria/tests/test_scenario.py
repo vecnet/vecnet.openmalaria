@@ -276,6 +276,11 @@ class TestScenario(unittest.TestCase):
 
         # Test deployment section
         self.assertEqual(len(scenario.interventions.human.deployments), 1)
+        deployments = scenario.interventions.human.deployments
+        deployment = deployments[0]
+        self.assertEqual(deployment.name, "Nets")
+        self.assertRaises(IndexError, lambda: deployments[1])
+
         for deployment in scenario.interventions.human.deployments:
             self.assertEqual(deployment.name, "Nets")
             self.assertEqual(deployment.components[0], "GVI")
