@@ -35,7 +35,7 @@ setup(
     scripts=['scripts/om_expand.cmd', 'scripts/om_expand'],
     install_requires=[],
     classifiers=[
-        "Development Status :: 3 - Beta",
+        "Development Status :: 4 - Beta",
         "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
         "Intended Audience :: Developers",
         "Operating System :: OS Independent",
