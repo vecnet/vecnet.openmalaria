@@ -8,3 +8,6 @@ elif [ "$TRAVIS_OS_NAME" == "osx" ]; then
 	source /tmp/venv/bin/activate
 	pip install -U pytest
 fi
+
+pip install coverage
+pip install coveralls
