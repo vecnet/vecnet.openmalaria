@@ -55,6 +55,9 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(hasattr(scenario, "monitoring"), True)
         self.assertIsInstance(scenario.monitoring, Monitoring)
 
+    def test_section_xml(self):
+        self.assertTrue(isinstance(self.scenario.monitoring.xml, str))
+
     def test_monitoring(self):
         scenario = self.scenario
         self.assertEqual(scenario.monitoring.name, "Monthly Surveys")
