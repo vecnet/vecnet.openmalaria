@@ -19,7 +19,7 @@ before_install:
 after_success:
   - coveralls
 install: true
-script: coverage py.test
+script: py.test -cov vecnet.openmalaria
 notifications:
   email:
     on_success: never
