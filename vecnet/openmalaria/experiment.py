@@ -12,6 +12,8 @@
 import json
 import re
 import os
+import io
+import six
 from .helpers import prime_numbers
 
 
@@ -33,10 +35,10 @@ class ExperimentSpecification:
     """
     def __init__(self, experiment):
         # Accept both json string and dictionary as an input. string is converted to dict automatically
-        if isinstance(experiment, (str, unicode)):
+        if isinstance(experiment, six.string_types):
             experiment_directory = os.path.dirname(experiment) 
             experiment = json.loads(experiment)
-        if isinstance(experiment, file):
+        if isinstance(experiment, io.IOBase):
             experiment_directory = os.path.dirname(experiment.name) 
             experiment = json.load(experiment)
         if not isinstance(experiment, dict):
@@ -163,7 +165,7 @@ class ExperimentSpecification:
             if generate_seed:
                 # Replace seed if requested by the user
                 if "@seed@" in scenario.xml:
-                    scenario.xml = scenario.xml.replace("@seed@", str(seed.next()))
+                    scenario.xml = scenario.xml.replace("@seed@", str(next(seed)))
                 else:
                     raise(RuntimeError("@seed@ placeholder is not found"))
             yield scenario

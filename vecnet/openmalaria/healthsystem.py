@@ -141,7 +141,7 @@ def get_percentage_from_prob(prob):
     assert prob >= 0
     assert prob <= 1
 
-    percentages = probability_list.keys()
+    percentages = list(probability_list.keys())
     percentages.sort()
     for percentage in percentages:
         if prob < probability_list[percentage]:

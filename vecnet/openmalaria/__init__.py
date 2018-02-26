@@ -25,8 +25,9 @@
 # else:
 #     __version__ = _dist.version
 
+import six
 from xml.etree import ElementTree
-import StringIO
+from io import StringIO
 from xml.etree.ElementTree import ParseError
 
 
@@ -34,8 +35,8 @@ def get_schema_version_from_xml(xml):
     """ Get schemaVersion attribute from OpenMalaria scenario file
     xml - open file or content of xml document to be processed
     """
-    if isinstance(xml, (str, unicode)):
-        xml = StringIO.StringIO(xml)
+    if isinstance(xml, six.string_types):
+        xml = StringIO(xml)
     try:
         tree = ElementTree.parse(xml)
     except ParseError:

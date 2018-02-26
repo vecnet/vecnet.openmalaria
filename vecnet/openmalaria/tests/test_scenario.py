@@ -23,7 +23,7 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 
 class TestScenario(unittest.TestCase):
     def setUp(self):
-        self.scenario = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c.xml"))).read())
+        self.scenario = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c.xml")), "r").read())
 
     def test_scenario(self):
         scenario = self.scenario
@@ -160,7 +160,7 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(len(scenario3.entomology.vectors), 0)
         self.assertRaises(AttributeError, scenario3.entomology.vectors.add, "<anopheles/>")
         for vector in scenario3.entomology.vectors:
-            print vector
+            print(vector)
 
     def test_interventions(self):
         scenario = self.scenario
@@ -435,7 +435,7 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(len(scenario.interventions.vectorPop), 0)
         i = None
         for i in scenario.interventions.vectorPop:
-            print i.name
+            print(i.name)
         self.assertIsNone(i)  # make sure iterator returns an empty set
 
         # Empty vectorPop section
@@ -445,7 +445,7 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(len(scenario.interventions.vectorPop), 0)
         i = None
         for i in scenario.interventions.vectorPop:
-            print i.name
+            print(i.name)
         self.assertIsNone(i)  # make sure iterator returns an empty set
 
         # Test vectorPop section with exactly one intervention

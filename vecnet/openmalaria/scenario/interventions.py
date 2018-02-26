@@ -11,6 +11,7 @@
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 from xml.etree.ElementTree import Element
 from xml.etree import ElementTree
+import six
 
 from vecnet.openmalaria.scenario.core import Section, attribute, attribute_setter, section, tag_value, tag_value_setter
 from vecnet.openmalaria.scenario.healthsystem import HealthSystem
@@ -360,10 +361,10 @@ class ITN(Component):
             self.itn.remove(a_param) 
 
         for a_param in anopheles_params:
-            assert isinstance(a_param, (str, unicode))
+            assert isinstance(a_param, six.string_types)
             et = ElementTree.fromstring(a_param)
             anopheles = AnophelesParams(et)
-            assert isinstance(anopheles.mosquito, (str, unicode))
+            assert isinstance(anopheles.mosquito, six.string_types)
             assert isinstance(anopheles.propActive, float)
             assert isinstance(anopheles.deterrency, float)
             assert isinstance(anopheles.preprandialKillingEffect, float)
@@ -526,10 +527,10 @@ class GVI(Component):
             self.gvi.remove(a_param) 
 
         for a_param in anopheles_params:
-            assert isinstance(a_param, (str, unicode))
+            assert isinstance(a_param, six.string_types)
             et = ElementTree.fromstring(a_param)
             anopheles = AnophelesParams(et)
-            assert isinstance(anopheles.mosquito, (str, unicode))
+            assert isinstance(anopheles.mosquito, six.string_types)
             assert isinstance(anopheles.propActive, float)
             assert isinstance(anopheles.deterrency, float)
             assert isinstance(anopheles.preprandialKillingEffect, float)
@@ -694,7 +695,7 @@ class HumanInterventions(Section):
         if self.et is None:
             return
 
-        assert isinstance(intervention, (str, unicode))
+        assert isinstance(intervention, six.string_types)
         et = ElementTree.fromstring(intervention)
         component = None
 
@@ -709,10 +710,10 @@ class HumanInterventions(Section):
         else:
             return
 
-        assert isinstance(component.name, (str, unicode))
+        assert isinstance(component.name, six.string_types)
 
         if id is not None:
-            assert isinstance(id, (str, unicode))
+            assert isinstance(id, six.string_types)
             et.attrib["id"] = id
 
         index = len(self.et.findall("component"))
@@ -821,7 +822,7 @@ class HumanInterventions(Section):
         """
         if not self.components:
             return
-        for intervention_name, intervention in self.components.iteritems():
+        for intervention_name, intervention in self.components.items():
             yield intervention
 
 
@@ -1006,10 +1007,10 @@ class VectorPopIntervention(Section):
                 desc.remove(anoph) 
 
             for a in anopheles:
-                assert isinstance(a, (str, unicode))
+                assert isinstance(a, six.string_types)
                 et = ElementTree.fromstring(a)
                 anopheles = Anopheles(et)
-                assert isinstance(anopheles.mosquito, (str, unicode))
+                assert isinstance(anopheles.mosquito, six.string_types)
                 if anopheles.seekingDeathRateIncrease is not None:
                     assert isinstance(anopheles.seekingDeathRateIncrease, float)
                 if anopheles.probDeathOvipositing is not None:
@@ -1050,14 +1051,14 @@ class VectorPop(Section):
         if self.et is None:
             return
 
-        assert isinstance(intervention, (str, unicode))
+        assert isinstance(intervention, six.string_types)
         et = ElementTree.fromstring(intervention)
         vector_pop = VectorPopIntervention(et)
 
-        assert isinstance(vector_pop.name, (str, unicode))
+        assert isinstance(vector_pop.name, six.string_types)
 
         if name is not None:
-            assert isinstance(name, (str, unicode))
+            assert isinstance(name, six.string_types)
             et.attrib["name"] = name
 
         index = len(self.et.findall("intervention"))
@@ -1095,7 +1096,7 @@ class VectorPop(Section):
         """
         if len(self.interventions) == 0:
             return
-        for intervention_name, intervention in self.interventions.iteritems():
+        for intervention_name, intervention in self.interventions.items():
             yield intervention
 
     def __getitem__(self, item):

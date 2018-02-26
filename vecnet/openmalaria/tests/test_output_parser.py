@@ -50,12 +50,32 @@ class TestOutputParser(unittest.TestCase):
                                      cts_output_file=open(os.path.join(base_dir, "test1_ctsout.txt")))
         self.assertEqual(len(output_parser.cts_output_data["N_v0(arabiensis)"]), 1461)
         self.assertEqual(output_parser.get_cts_measures(),
-                         ['alpha_i(arabiensis)', 'P_B(funestus)', 'IRS coverage', 'ITN coverage', 'alpha_i(minor)',
-                          'GVI coverage', 'P_B(gambiae)', 'N_v0(arabiensis)', 'P_B(arabiensis)', 'human infectiousness',
-                          'num transmitting humans', 'alpha_i(gambiae)', 'immunity Y', 'N_v0(gambiae)',
-                          'new infections', 'P_B(minor)', 'immunity h', 'P_C*P_D(arabiensis)', 'simulated EIR',
-                          'P_C*P_D(funestus)', 'N_v0(funestus)', 'alpha_i(funestus)', 'P_C*P_D(minor)',
-                          'P_C*P_D(gambiae)', 'input EIR', 'N_v0(minor)']
+                         ['input EIR',
+                          'simulated EIR',
+                          'human infectiousness',
+                          'N_v0(gambiae)',
+                          'N_v0(arabiensis)',
+                          'N_v0(funestus)',
+                          'N_v0(minor)',
+                          'immunity h',
+                          'immunity Y',
+                          'new infections',
+                          'num transmitting humans',
+                          'ITN coverage',
+                          'IRS coverage',
+                          'GVI coverage',
+                          'alpha_i(gambiae)',
+                          'alpha_i(arabiensis)',
+                          'alpha_i(funestus)',
+                          'alpha_i(minor)',
+                          'P_B(gambiae)',
+                          'P_B(arabiensis)',
+                          'P_B(funestus)',
+                          'P_B(minor)',
+                          'P_C*P_D(gambiae)',
+                          'P_C*P_D(arabiensis)',
+                          'P_C*P_D(funestus)',
+                          'P_C*P_D(minor)']
                          )
         self.assertEqual(len(output_parser.survey_time_list), 241)
         self.assertEqual(len(output_parser.survey_output_data[(34, "funestus")]), 241)

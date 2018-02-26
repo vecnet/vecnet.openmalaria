@@ -1,6 +1,9 @@
 =========
 Changelog
 =========
+0.9.3 2018-02-27
+* [+] Added support for Python 3
+
 0.9.2 2017-02-27
 * [+] Add __getitem__ container method to Deployments section. (This allows one to obtain a deployment by index: deployment = scenario.interventions.human.deployments[1])
 

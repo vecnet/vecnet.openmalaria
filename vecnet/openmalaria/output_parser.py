@@ -8,17 +8,17 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License (MPL), version 2.0.  If a copy of the MPL was not distributed
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
-import StringIO
-from scenario.scenario import Scenario
-
+from collections import OrderedDict
+from io import StringIO
+from .scenario.scenario import Scenario
+import six
 
 class OutputParser:
     def __init__(self, input_file,
                  survey_output_file=None,
                  cts_output_file=None):
-        if isinstance(input_file, (str, unicode)):
-            input_file = StringIO.StringIO(input_file)
+        if isinstance(input_file, six.string_types):
+            input_file = StringIO(input_file)
         self.xml = input_file.read()
         self.scenario = Scenario(self.xml)
 
@@ -45,8 +45,8 @@ class OutputParser:
         #  5	0.434047	0
         #  ...
         if cts_output_file is not None:
-            if isinstance(cts_output_file, (str, unicode)):
-                cts_output_file = StringIO.StringIO(cts_output_file)
+            if isinstance(cts_output_file, six.string_types):
+                cts_output_file = StringIO(cts_output_file)
             # skip first line in cts output file
             # (##  ##)
             cts_output_file.readline()
@@ -59,7 +59,10 @@ class OutputParser:
                 raise TypeError("Invalid ctsoutput file, first column is not timestep")
 
             # Parse data in continuous output
-            cts_output_data = {measure: [] for measure in measures}
+            cts_output_data = OrderedDict()
+            for measure in measures:
+                cts_output_data[measure] = []
+            # cts_output_data = {measure: [] for measure in measures}
 
             for line in cts_output_file:  # readline()
                 data = line.split("\t")
@@ -88,8 +91,8 @@ class OutputParser:
         #  2	0	36	0.170824
         #  ...
         if survey_output_file is not None:
-            if isinstance(survey_output_file, (str, unicode)):
-                survey_output_file = StringIO.StringIO(survey_output_file)
+            if isinstance(survey_output_file, six.string_types):
+                survey_output_file = StringIO(survey_output_file)
             survey_output_data = dict()
             for line in survey_output_file:
                 # Split string line into four numbers
@@ -130,10 +133,10 @@ class OutputParser:
             return survey_output_data
 
     def get_cts_measures(self):
-        return self.cts_output_data.keys()
+        return list(self.cts_output_data.keys())
 
     def get_survey_measures(self):
-        return self.survey_output_data.keys()
+        return list(self.survey_output_data.keys())
 
     def get_monitoring_age_group(self, third_dimension):
         return self.scenario.monitoring.ageGroup.group[third_dimension]

@@ -7,6 +7,11 @@ matrix:
       python: "2.7"
       os: linux
       env: PYTHON=/usr/bin/python2.7
+    - python: 3.5
+      language: python
+      python: "3.5"
+      os: linux
+      env: PYTHON=/usr/bin/python3.5
     - python: 2
       os: osx
       env: PYTHON=/usr/bin/python
