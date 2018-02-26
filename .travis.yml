@@ -19,6 +19,8 @@ matrix:
     - os: osx
 before_install:
   - source .travis.before_install.bash
+after_success:
+  - coveralls
 install: true
 script: py.test
 notifications:
