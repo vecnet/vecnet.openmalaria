@@ -38,9 +38,15 @@ class ExperimentSpecification:
         if isinstance(experiment, six.string_types):
             experiment_directory = os.path.dirname(experiment) 
             experiment = json.loads(experiment)
-        if isinstance(experiment, io.IOBase):
-            experiment_directory = os.path.dirname(experiment.name) 
-            experiment = json.load(experiment)
+        if six.PY3:
+            if isinstance(experiment, io.IOBase):
+                experiment_directory = os.path.dirname(experiment.name)
+                experiment = json.load(experiment)
+        else:
+            if isinstance(experiment, file):
+                experiment_directory = os.path.dirname(experiment.name)
+                experiment = json.load(experiment)
+
         if not isinstance(experiment, dict):
             raise TypeError("experiment should be either string or dict")
 

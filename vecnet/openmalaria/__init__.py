@@ -27,7 +27,11 @@
 
 import six
 from xml.etree import ElementTree
-from io import StringIO
+if six.PY3:
+    from io import StringIO
+else:
+    from StringIO import StringIO
+
 from xml.etree.ElementTree import ParseError
 
 

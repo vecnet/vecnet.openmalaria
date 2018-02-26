@@ -117,7 +117,10 @@ class Scenario(Section):
         else:
             ElementTree.register_namespace("om", "http://openmalaria.org/schema/scenario_32")
 
-        data = ElementTree.tostring(self.root, encoding="unicode")
+        if six.PY3:
+            data = ElementTree.tostring(self.root, encoding="unicode")
+        else:
+            data = ElementTree.tostring(self.root)
         return '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n' + data
 
     def __init__(self, xml):
