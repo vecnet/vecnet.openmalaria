@@ -22,6 +22,8 @@ install: true
 script: py.test --cov vecnet.openmalaria
 notifications:
   email:
+    recipients:
+      - avyushko@nd.edu
     on_success: never
     on_failure: always
 deploy:

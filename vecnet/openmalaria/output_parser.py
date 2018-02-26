@@ -8,10 +8,13 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License (MPL), version 2.0.  If a copy of the MPL was not distributed
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
-from collections import OrderedDict
-from io import StringIO
-from .scenario.scenario import Scenario
 import six
+from collections import OrderedDict
+if six.PY3:
+    from io import StringIO
+else:
+    from StringIO import StringIO
+from .scenario.scenario import Scenario
 
 class OutputParser:
     def __init__(self, input_file,
