@@ -71,6 +71,11 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(scenario.monitoring.continuous, ['simulated EIR', 'GVI coverage', 'Input EIR'])
         self.assertEqual(scenario.monitoring.SurveyOptions, ['nHost', 'nPatent', 'nUncomp', 'simulatedEIR', 'nMassGVI'])
 
+    def test_monitoring_surveys_float(self):
+        with open(os.path.join(base_dir, os.path.join("input", "scenario70k60c_surveys_float.xml")), "r") as fp:
+            scenario = Scenario(fp.read())
+        self.assertEqual(scenario.monitoring.surveys, [730, 736, 742, 748])
+
     def test_healthsystem(self):
         scenario = self.scenario
 

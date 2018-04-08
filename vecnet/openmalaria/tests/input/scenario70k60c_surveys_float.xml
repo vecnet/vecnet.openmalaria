@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<om:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Olyset Duo" schemaVersion="32" xsi:schemaLocation="http://openmalaria.org/schema/scenario_32 scenario_32.xsd" xmlns:om="http://openmalaria.org/schema/scenario_32">
+  <demography maximumAgeYrs="90" name="Rachuonyo" popSize="1000"> 
+    <ageGroup lowerbound="0">
+      <group poppercent="2.6" upperbound="1"/>
+      <group poppercent="13.1" upperbound="5"/>
+      <group poppercent="15.2" upperbound="10"/>
+      <group poppercent="13.8" upperbound="15"/>
+      <group poppercent="10" upperbound="20"/>
+      <group poppercent="8.6" upperbound="25"/>
+      <group poppercent="7.2" upperbound="30"/>
+      <group poppercent="6" upperbound="35"/>
+      <group poppercent="4.7" upperbound="40"/>
+      <group poppercent="4.1" upperbound="45"/>
+      <group poppercent="3.5" upperbound="50"/>
+      <group poppercent="2.9" upperbound="55"/>
+      <group poppercent="2.2" upperbound="60"/>
+      <group poppercent="1.9" upperbound="65"/>
+      <group poppercent="1.3" upperbound="70"/>
+      <group poppercent="1.1" upperbound="75"/>
+      <group poppercent="0.6" upperbound="80"/>
+      <group poppercent="1" upperbound="85"/>
+      <group poppercent="0.1" upperbound="90"/>
+    </ageGroup>
+  </demography>
+  <monitoring name="Monthly Surveys">
+    <continuous period="1">
+      <option name="input EIR" value="false"/>
+      <option name="simulated EIR" value="true"/>
+      <option name="human infectiousness" value="false"/>
+      <option name="N_v0" value="false"/>
+      <option name="immunity h" value="false"/>
+      <option name="immunity Y" value="false"/>
+      <option name="new infections" value="false"/>
+      <option name="num transmitting humans" value="false"/>
+      <option name="ITN coverage" value="false"/>
+      <option name="IRS coverage" value="false"/>
+      <option name="GVI coverage" value="true"/>
+      <option name="alpha" value="false"/>
+      <option name="P_B" value="false"/>
+      <option name="P_C*P_D" value="false"/>
+    </continuous>
+    <SurveyOptions> 
+      <option name="nHost" value="true"/>
+      <option name="nPatent" value="true"/>
+      <option name="sumlogDens" value="false"/>
+      <option name="nTransmit" value="false"/>
+      <option name="nTreatments1" value="false"/>
+      <option name="nTreatments2" value="false"/>
+      <option name="nTreatments3" value="false"/>
+      <option name="nUncomp" value="true"/>
+      <option name="nSevere" value="false"/>
+      <option name="nDirDeaths" value="false"/>
+      <option name="nEPIVaccinations" value="false"/>
+      <option name="nMassVaccinations" value="false"/>
+      <option name="annAvgK" value="false"/>
+      <option name="Vector_Nv0" value="false"/>
+      <option name="Vector_Nv" value="false"/>
+      <option name="Vector_Ov" value="false"/>
+      <option name="Vector_Sv" value="false"/>
+      <option name="inputEIR" value="false"/>
+      <option name="simulatedEIR" value="true"/>
+      <option name="allCauseIMR" value="false"/>
+      <option name="nMDAs" value="false"/>
+      <option name="nCtsMDA" value="false"/>
+      <option name="nMassITNs" value="false"/>
+      <option name="nMassGVI" value="true"/>
+    </SurveyOptions>
+    <surveys detectionLimit="100">
+			<surveyTime>730.0</surveyTime> <!-- Trash -->
+			<surveyTime>736.0</surveyTime> <!-- January, Year 1 -->
+			<surveyTime>742.0</surveyTime>
+			<surveyTime>748.0</surveyTime>
+    </surveys>
+    <ageGroup lowerbound="0">
+      <group upperbound="90"/>
+    </ageGroup>
+  </monitoring>
+  <interventions name="Olyset">
+    <human>
+      <component id="GVI" name="Nets">
+        <GVI>
+          <decay L="50" function="step"/>
+          <anophelesParams mosquito="gambiae" propActive="0.7"> 
+            <deterrency value=".23076923077" />
+            <preprandialKillingEffect value="0.7" />
+            <postprandialKillingEffect value="0" />
+          </anophelesParams>
+        </GVI>
+      </component>
+      <deployment name="Nets">
+        <component id="GVI"/>
+        <timed>
+          <cumulativeCoverage component="GVI" />
+          <deploy coverage="0.6" time="730"/>
+          <deploy coverage="0.6" time="736"/>
+          <deploy coverage="0.6" time="742"/>
+          <deploy coverage="0.6" time="748"/>
+          <deploy coverage="0.6" time="754"/>
+          <deploy coverage="0.6" time="760"/>
+          <deploy coverage="0.6" time="766"/>
+          <deploy coverage="0.6" time="772"/>
+          <deploy coverage="0.6" time="778"/>
+          <deploy coverage="0.6" time="784"/>
+          <deploy coverage="0.6" time="790"/>
+          <deploy coverage="0.6" time="796"/>
+          <deploy coverage="0.6" time="802"/>
+          <deploy coverage="0.6" time="808"/>
+          <deploy coverage="0.6" time="814"/>
+          <deploy coverage="0.6" time="820"/>
+          <deploy coverage="0.6" time="826"/>
+          <deploy coverage="0.6" time="832"/>
+          <deploy coverage="0.6" time="838"/>
+          <deploy coverage="0.6" time="844"/>
+          <deploy coverage="0.6" time="850"/>
+          <deploy coverage="0.6" time="856"/>
+          <deploy coverage="0.6" time="862"/>
+          <deploy coverage="0.6" time="868"/>
+          <deploy coverage="0.6" time="874"/>
+          <deploy coverage="0.6" time="880"/>
+          <deploy coverage="0.6" time="886"/>
+          <deploy coverage="0.6" time="892"/>
+          <deploy coverage="0.6" time="898"/>
+          <deploy coverage="0.6" time="904"/>
+          <deploy coverage="0.6" time="910"/>
+          <deploy coverage="0.6" time="916"/>
+          <deploy coverage="0.6" time="922"/>
+          <deploy coverage="0.6" time="928"/>
+          <deploy coverage="0.6" time="934"/>
+          <deploy coverage="0.6" time="940"/>
+          <deploy coverage="0.6" time="946"/>
+          <deploy coverage="0.6" time="952"/>
+          <deploy coverage="0.6" time="958"/>
+          <deploy coverage="0.6" time="964"/>
+          <deploy coverage="0.6" time="970"/>
+          <deploy coverage="0.6" time="976"/>
+          <deploy coverage="0.6" time="982"/>
+          <deploy coverage="0.6" time="988"/>
+          <deploy coverage="0.6" time="994"/>
+          <deploy coverage="0.6" time="1000"/>
+          <deploy coverage="0.6" time="1006"/>
+          <deploy coverage="0.6" time="1012"/>
+          <deploy coverage="0.6" time="1018"/>
+          <deploy coverage="0.6" time="1024"/>
+          <deploy coverage="0.6" time="1030"/>
+          <deploy coverage="0.6" time="1036"/>
+          <deploy coverage="0.6" time="1042"/>
+          <deploy coverage="0.6" time="1048"/>
+          <deploy coverage="0.6" time="1054"/>
+          <deploy coverage="0.6" time="1060"/>
+          <deploy coverage="0.6" time="1066"/>
+          <deploy coverage="0.6" time="1072"/>
+          <deploy coverage="0.6" time="1078"/>
+          <deploy coverage="0.6" time="1084"/>
+          <deploy coverage="0.6" time="1090"/>
+          <deploy coverage="0.6" time="1096"/>
+          <deploy coverage="0.6" time="1102"/>
+          <deploy coverage="0.6" time="1108"/>
+          <deploy coverage="0.6" time="1114"/>
+          <deploy coverage="0.6" time="1120"/>
+          <deploy coverage="0.6" time="1126"/>
+          <deploy coverage="0.6" time="1132"/>
+          <deploy coverage="0.6" time="1138"/>
+          <deploy coverage="0.6" time="1144"/>
+          <deploy coverage="0.6" time="1150"/>
+          <deploy coverage="0.6" time="1156"/>
+          <deploy coverage="0.6" time="1162"/>
+          <deploy coverage="0.6" time="1168"/>
+          <deploy coverage="0.6" time="1174"/>
+          <deploy coverage="0.6" time="1180"/>
+          <deploy coverage="0.6" time="1186"/>
+          <deploy coverage="0.6" time="1192"/>
+          <deploy coverage="0.6" time="1198"/>
+          <deploy coverage="0.6" time="1204"/>
+          <deploy coverage="0.6" time="1210"/>
+          <deploy coverage="0.6" time="1216"/>
+          <deploy coverage="0.6" time="1222"/>
+          <deploy coverage="0.6" time="1228"/>
+          <deploy coverage="0.6" time="1234"/>
+          <deploy coverage="0.6" time="1240"/>
+          <deploy coverage="0.6" time="1246"/>
+          <deploy coverage="0.6" time="1252"/>
+          <deploy coverage="0.6" time="1258"/>
+          <deploy coverage="0.6" time="1264"/>
+          <deploy coverage="0.6" time="1270"/>
+          <deploy coverage="0.6" time="1276"/>
+          <deploy coverage="0.6" time="1282"/>
+          <deploy coverage="0.6" time="1288"/>
+          <deploy coverage="0.6" time="1294"/>
+          <deploy coverage="0.6" time="1300"/>
+          <deploy coverage="0.6" time="1306"/>
+          <deploy coverage="0.6" time="1312"/>
+          <deploy coverage="0.6" time="1318"/>
+          <deploy coverage="0.6" time="1324"/>
+          <deploy coverage="0.6" time="1330"/>
+          <deploy coverage="0.6" time="1336"/>
+          <deploy coverage="0.6" time="1342"/>
+          <deploy coverage="0.6" time="1348"/>
+          <deploy coverage="0.6" time="1354"/>
+          <deploy coverage="0.6" time="1360"/>
+          <deploy coverage="0.6" time="1366"/>
+          <deploy coverage="0.6" time="1372"/>
+          <deploy coverage="0.6" time="1378"/>
+          <deploy coverage="0.6" time="1384"/>
+          <deploy coverage="0.6" time="1390"/>
+          <deploy coverage="0.6" time="1396"/>
+          <deploy coverage="0.6" time="1402"/>
+          <deploy coverage="0.6" time="1408"/>
+          <deploy coverage="0.6" time="1414"/>
+          <deploy coverage="0.6" time="1420"/>
+          <deploy coverage="0.6" time="1426"/>
+          <deploy coverage="0.6" time="1432"/>
+          <deploy coverage="0.6" time="1438"/>
+          <deploy coverage="0.6" time="1444"/>
+          <deploy coverage="0.6" time="1450"/>
+          <deploy coverage="0.6" time="1456"/>
+          <deploy coverage="0.6" time="1462"/>
+          <deploy coverage="0.6" time="1468"/>
+          <deploy coverage="0.6" time="1474"/>
+          <deploy coverage="0.6" time="1480"/>
+          <deploy coverage="0.6" time="1486"/>
+          <deploy coverage="0.6" time="1492"/>
+          <deploy coverage="0.6" time="1498"/>
+          <deploy coverage="0.6" time="1504"/>
+          <deploy coverage="0.6" time="1510"/>
+          <deploy coverage="0.6" time="1516"/>
+          <deploy coverage="0.6" time="1522"/>
+          <deploy coverage="0.6" time="1528"/>
+          <deploy coverage="0.6" time="1534"/>
+          <deploy coverage="0.6" time="1540"/>
+          <deploy coverage="0.6" time="1546"/>
+          <deploy coverage="0.6" time="1552"/>
+          <deploy coverage="0.6" time="1558"/>
+          <deploy coverage="0.6" time="1564"/>
+          <deploy coverage="0.6" time="1570"/>
+          <deploy coverage="0.6" time="1576"/>
+          <deploy coverage="0.6" time="1582"/>
+          <deploy coverage="0.6" time="1588"/>
+          <deploy coverage="0.6" time="1594"/>
+          <deploy coverage="0.6" time="1600"/>
+          <deploy coverage="0.6" time="1606"/>
+          <deploy coverage="0.6" time="1612"/>
+          <deploy coverage="0.6" time="1618"/>
+          <deploy coverage="0.6" time="1624"/>
+          <deploy coverage="0.6" time="1630"/>
+          <deploy coverage="0.6" time="1636"/>
+          <deploy coverage="0.6" time="1642"/>
+          <deploy coverage="0.6" time="1648"/>
+          <deploy coverage="0.6" time="1654"/>
+          <deploy coverage="0.6" time="1660"/>
+          <deploy coverage="0.6" time="1666"/>
+          <deploy coverage="0.6" time="1672"/>
+          <deploy coverage="0.6" time="1678"/>
+          <deploy coverage="0.6" time="1684"/>
+          <deploy coverage="0.6" time="1690"/>
+          <deploy coverage="0.6" time="1696"/>
+          <deploy coverage="0.6" time="1702"/>
+          <deploy coverage="0.6" time="1708"/>
+          <deploy coverage="0.6" time="1714"/>
+          <deploy coverage="0.6" time="1720"/>
+          <deploy coverage="0.6" time="1726"/>
+          <deploy coverage="0.6" time="1732"/>
+          <deploy coverage="0.6" time="1738"/>
+          <deploy coverage="0.6" time="1744"/>
+          <deploy coverage="0.6" time="1750"/>
+          <deploy coverage="0.6" time="1756"/>
+          <deploy coverage="0.6" time="1762"/>
+          <deploy coverage="0.6" time="1768"/>
+          <deploy coverage="0.6" time="1774"/>
+          <deploy coverage="0.6" time="1780"/>
+          <deploy coverage="0.6" time="1786"/>
+          <deploy coverage="0.6" time="1792"/>
+          <deploy coverage="0.6" time="1798"/>
+          <deploy coverage="0.6" time="1804"/>
+          <deploy coverage="0.6" time="1810"/>
+          <deploy coverage="0.6" time="1816"/>
+          <deploy coverage="0.6" time="1822"/>
+          <deploy coverage="0.6" time="1828"/>
+          <deploy coverage="0.6" time="1834"/>
+        </timed>
+      </deployment>
+    </human>
+		<importedInfections> <!-- For low EIR -->
+			<timed>
+				<rate time="0" value="24"/>
+			</timed>
+		</importedInfections>
+  </interventions>
+  <healthSystem>
+			<ImmediateOutcomes name="Kenya ACT">
+					<drugRegimen firstLine="ACT" inpatient="QN" secondLine="QN"/>
+					<initialACR>
+							<ACT value="0.96"/>
+							<QN value="0.998"/>
+							<selfTreatment value="0.63"/>
+					</initialACR>
+					<compliance>
+							<ACT value="0.892"/>
+							<selfTreatment value="0.85"/>
+					</compliance>
+					<nonCompliersEffective>
+							<ACT value="0.8544"/>
+							<selfTreatment value="0"/>
+					</nonCompliersEffective>
+					<treatmentActions>
+						<ACT name="clear blood-stage infections">
+							<clearInfections stage="blood" timesteps="1"/>
+						</ACT>
+						<QN name="clear blood-stage infections">
+							<clearInfections stage="blood" timesteps="1"/>
+						</QN>
+					</treatmentActions>	
+					<pSeekOfficialCareUncomplicated1 value="0.04"/>
+					<pSelfTreatUncomplicated value="0.0212"/>
+					<pSeekOfficialCareUncomplicated2 value="0.04"/>
+					<pSeekOfficialCareSevere value="0.48"/>
+			</ImmediateOutcomes>
+			<CFR>
+					<group lowerbound="0.00" value="0.0918900"/>
+					<group lowerbound="0.25" value="0.0810811"/>
+					<group lowerbound="0.75" value="0.0648649"/>
+					<group lowerbound="1.50" value="0.0689189"/>
+					<group lowerbound="2.50" value="0.0675676"/>
+					<group lowerbound="3.50" value="0.0297297"/>
+					<group lowerbound="4.50" value="0.0459459"/>
+					<group lowerbound="7.50" value="0.0945946"/>
+					<group lowerbound="12.5" value="0.1243243"/>
+					<group lowerbound="15.0" value="0.1378378"/>
+			</CFR>
+			<pSequelaeInpatient interpolation="none">
+					<group lowerbound="0.0" value="0.0132"/>
+					<group lowerbound="5.0" value="0.005"/>
+			</pSequelaeInpatient>
+	</healthSystem>
+  <entomology mode="dynamic" name="Kenya Lowlands from EMOD" scaledAnnualEIR="25">
+			<vector>
+					<anopheles mosquito="gambiae" propInfected="0.078" propInfectious="0.015">
+							<seasonality annualEIR="1" input="EIR">
+									<monthlyValues smoothing="fourier">
+											<value>0.0468</value>
+											<value>0.0447</value>
+											<value>0.0374</value>
+											<value>0.0417</value>
+											<value>0.0629</value>
+											<value>0.0658</value>
+											<value>0.0423</value>
+											<value>0.0239</value>
+											<value>0.0203</value>
+											<value>0.0253</value>
+											<value>0.0331</value>
+											<value>0.0728</value>
+									</monthlyValues>
+							</seasonality>
+							<mosq minInfectedThreshold="0.001">
+									<mosqRestDuration value="2"/>
+									<extrinsicIncubationPeriod value="12"/>
+									<mosqLaidEggsSameDayProportion value="0.313"/>
+									<mosqSeekingDuration value="0.33"/>
+									<mosqSurvivalFeedingCycleProbability value="0.623"/>
+									<availabilityVariance value="0"/>
+									<mosqProbBiting mean="0.95" variance="0"/>
+									<mosqProbFindRestSite mean="0.95" variance="0"/>
+									<mosqProbResting mean="0.99" variance="0"/>
+									<mosqProbOvipositing value="0.88"/>
+									<mosqHumanBloodIndex value=".85"/>
+							</mosq>
+							<nonHumanHosts name="unprotectedAnimals">
+									<mosqRelativeEntoAvailability value="1.0"/>
+									<mosqProbBiting value="0.95"/>
+									<mosqProbFindRestSite value="0.95"/>
+									<mosqProbResting value="0.99"/>
+							</nonHumanHosts>
+					</anopheles>
+					<nonHumanHosts name="unprotectedAnimals" number="1.0"/>
+			</vector>
+	</entomology>
+  <model>
+    <ModelOptions/>
+    <clinical healthSystemMemory="6"/>
+    <human>
+      <availabilityToMosquitoes>
+        <group lowerbound="0.0" value="0.225940909648"/>
+        <group lowerbound="1.0" value="0.286173633441"/>
+        <group lowerbound="2.0" value="0.336898395722"/>
+        <group lowerbound="3.0" value="0.370989854675"/>
+        <group lowerbound="4.0" value="0.403114915112"/>
+        <group lowerbound="5.0" value="0.442585112522"/>
+        <group lowerbound="6.0" value="0.473839351511"/>
+        <group lowerbound="7.0" value="0.512630464378"/>
+        <group lowerbound="8.0" value="0.54487872702"/>
+        <group lowerbound="9.0" value="0.581527755812"/>
+        <group lowerbound="10.0" value="0.630257580698"/>
+        <group lowerbound="11.0" value="0.663063362714"/>
+        <group lowerbound="12.0" value="0.702417432755"/>
+        <group lowerbound="13.0" value="0.734605377277"/>
+        <group lowerbound="14.0" value="0.788908765653"/>
+        <group lowerbound="15.0" value="0.839587932303"/>
+        <group lowerbound="20.0" value="1.0"/>
+        <group lowerbound="20.0" value="1.0"/>
+      </availabilityToMosquitoes>
+    </human>
+    <parameters interval="5" iseed="0" latentp="3">
+      <parameter include="false" name="'-ln(1-Sinf)'" number="1" value="0.050736"/>
+      <parameter include="false" name="Estar" number="2" value="0.03247"/>
+      <parameter include="false" name="Simm" number="3" value="0.138161050830301"/>
+      <parameter include="false" name="Xstar_p" number="4" value="1514.385853233699891"/>
+      <parameter include="false" name="gamma_p" number="5" value="2.03692533424484"/>
+      <parameter include="false" name="sigma2i" number="6" value="10.173598698525799"/>
+      <parameter include="false" name="CumulativeYstar" number="7" value="35158523.31132510304451"/>
+      <parameter include="false" name="CumulativeHstar" number="8" value="97.334652723897705"/>
+      <parameter include="false" name="'-ln(1-alpha_m)'" number="9" value="2.33031045876193"/>
+      <parameter include="false" name="decay_m" number="10" value="2.53106547375805"/>
+      <parameter include="false" name="sigma2_0" number="11" value="0.655747311168152"/>
+      <parameter include="false" name="Xstar_v" number="12" value="0.916181104713054"/>
+      <parameter include="false" name="Ystar2" number="13" value="6502.26335600001039"/>
+      <parameter include="false" name="alpha" number="14" value="142601.912520000012591"/>
+      <parameter include="false" name="Density bias (non Garki)" number="15" value="0.177378570987455"/>
+      <parameter include="false" name="        sigma2        " number="16" value="0.05"/>
+      <parameter include="false" name="log oddsr CF community" number="17" value="0.736202"/>
+      <parameter include="false" name="Indirect risk cofactor" number="18" value="0.018777338"/>
+      <parameter include="false" name="Non-malaria infant mortality" number="19" value="49.539046599999999"/>
+      <parameter include="false" name="Density bias (Garki)" number="20" value="4.79610772546704"/>
+      <parameter include="false" name="Severe Malaria Threshhold" number="21" value="784455.599999999976717"/>
+      <parameter include="false" name="Immunity Penalty" number="22" value="1"/>
+      <parameter include="false" name="Immune effector decay" number="23" value="0"/>
+      <parameter include="false" name="comorbidity intercept" number="24" value="0.0968"/>
+      <parameter include="false" name="Ystar half life" number="25" value="0.275437402"/>
+      <parameter include="false" name="Ystar1" number="26" value="0.596539864"/>
+      <parameter include="false" name="Asexual immunity decay" number="27" value="0"/>
+      <parameter include="false" name="Ystar0" number="28" value="296.302437899999973"/>
+      <parameter include="false" name="Idete multiplier" number="29" value="2.797523626"/>
+      <parameter include="false" name="critical age for comorbidity" number="30" value="0.117383"/>
+    </parameters>
+  </model>
+</om:scenario>
