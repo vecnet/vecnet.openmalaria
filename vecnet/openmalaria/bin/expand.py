@@ -40,7 +40,7 @@ def main(filename, generate_seed=False):
         csvfile.write("\n")
         i += 1
     csvfile.close()
-    print "%s scenarios generated" % (i-1)
+    print("%s scenarios generated" % (i-1))
     return 0
 
 if __name__ == "__main__":
@@ -55,6 +55,6 @@ if __name__ == "__main__":
         status = main(filename=args.exp_spec_name,
                       generate_seed=args.seed)
     except (RuntimeError, IOError) as e:
-        print "Error: %s" % e
+        print("Error: %s" % e)
         status = 1
     sys.exit(status)
