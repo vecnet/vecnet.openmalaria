@@ -7,17 +7,23 @@ matrix:
       python: "2.7"
       os: linux
       env: PYTHON=/usr/bin/python2.7
-    - python: 2
-      os: osx
-      env: PYTHON=/usr/bin/python
+    - python: 3.5
+      language: python
+      python: "3.5"
+      os: linux
+      env: PYTHON=/usr/bin/python3.5
   allow_failures:
     - os: osx
 before_install:
   - source .travis.before_install.bash
+after_success:
+  - coveralls
 install: true
-script: py.test
+script: py.test --cov vecnet.openmalaria
 notifications:
   email:
+    recipients:
+      - avyushko@nd.edu
     on_success: never
     on_failure: always
 deploy:

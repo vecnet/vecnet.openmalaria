@@ -11,7 +11,7 @@
 from xml.etree.ElementTree import Element
 from xml.etree import ElementTree
 from vecnet.openmalaria.scenario.core import Section, attribute, tag_value, section, attribute_setter, tag_value_setter
-
+import six
 
 class Seasonality(Section):
     @property  # input
@@ -144,7 +144,7 @@ class Vector(Section):
         """
         return "mosquito", str
     @mosquito.setter
-    @attribute_setter(attrib_type=(str, unicode))
+    @attribute_setter(attrib_type=six.string_types)
     def mosquito(self, value):
         pass  # attribute_setter decorator will change mosquito attribute
 
@@ -211,7 +211,7 @@ class Vectors():
         # 3. If there are IRS interventions, for every IRS section add anophelesParams section
         # (irs_anophelesParams field in AnophelesSnippets models)
 
-        assert isinstance(vector, (str, unicode))
+        assert isinstance(vector, six.string_types)
         et = ElementTree.fromstring(vector)
         # check if it is valid vector
         mosquito = Vector(et)

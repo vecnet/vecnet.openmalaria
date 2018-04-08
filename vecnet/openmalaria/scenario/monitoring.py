@@ -130,7 +130,8 @@ class Monitoring(Section):
         # (root tag was <scenario> prior to schema 32, and then it was switched to <om:scenario>)
         try:
             for item in self.et.find("surveys").findall("surveyTime"):
-                survey_time_list.append(int(item.text))
+                # Converting to float first to allow values like 730.0
+                survey_time_list.append(int(float(item.text)))
         except AttributeError:
             return None
         return survey_time_list

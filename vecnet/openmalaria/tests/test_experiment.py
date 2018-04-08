@@ -13,6 +13,7 @@
 import unittest
 import json
 import os
+import six
 
 from vecnet.openmalaria.experiment import ExperimentSpecification
 
@@ -25,7 +26,7 @@ class TestExperimentDescription(unittest.TestCase):
 
     @staticmethod
     def do_test(experiment, generate_seed=False):
-        if isinstance(experiment, (str, unicode)):
+        if isinstance(experiment, six.string_types):
             with open(experiment) as fp:
                 exp = ExperimentSpecification(fp)
         else:

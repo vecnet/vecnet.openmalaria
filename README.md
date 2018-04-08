@@ -3,6 +3,7 @@
 [![Version](https://img.shields.io/pypi/v/vecnet.openmalaria.svg)](https://pypi.python.org/pypi/vecnet.openmalaria)
 [![License](https://img.shields.io/pypi/l/vecnet.openmalaria.svg)](https://pypi.python.org/pypi/vecnet.openmalaria)
 [![Python](https://img.shields.io/pypi/pyversions/vecnet.openmalaria.svg)](https://pypi.python.org/pypi/vecnet.openmalaria)
+[![Coverage Status](https://coveralls.io/repos/github/vecnet/vecnet.openmalaria/badge.svg?branch=develop)](https://coveralls.io/github/vecnet/vecnet.openmalaria?branch=develop)
 vecnet.openmalaria
 ==================
 

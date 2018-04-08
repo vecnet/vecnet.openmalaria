@@ -9,7 +9,7 @@
 # License (MPL), version 2.0.  If a copy of the MPL was not distributed
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 from xml.etree import ElementTree
-
+import six
 
 def attribute(func):
     """
@@ -93,4 +93,8 @@ class Section(object):
         """
         :rtype: str
         """
-        return ElementTree.tostring(self.et)
+        if six.PY3:
+            data = ElementTree.tostring(self.et, encoding="unicode")
+        else:
+            data = ElementTree.tostring(self.et)
+        return data

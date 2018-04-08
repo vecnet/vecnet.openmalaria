@@ -9,8 +9,9 @@
 # License (MPL), version 2.0.  If a copy of the MPL was not distributed
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 from xml.etree import ElementTree
+import six
 
-from vecnet.openmalaria.scenario.core import Section, tag_value, tag_value_setter, attribute, attribute_setter, section
+from vecnet.openmalaria.scenario.core import Section, tag_value, tag_value_setter, attribute, section
 
 __author__ = 'Alexander'
 
@@ -208,7 +209,7 @@ class Drugs():
         self.et = et
 
     def add(self, name, value, sections):
-        assert isinstance(name, (str, unicode))
+        assert isinstance(name, six.string_types)
         drug = ElementTree.Element(name)
         drug.attrib["value"] = str(value)
 
@@ -330,7 +331,7 @@ class ImmediateOutcomes(Section):
 
     @firstLine.setter
     def firstLine(self, value):
-        assert isinstance(value, (str, unicode))
+        assert isinstance(value, six.string_types)
         self.et.find("drugRegimen").attrib["firstLine"] = value
 
     @property  # secondLine

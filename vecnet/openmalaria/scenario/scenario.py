@@ -9,6 +9,7 @@
 # License (MPL), version 2.0.  If a copy of the MPL was not distributed
 # with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 from xml.etree import ElementTree
+import six
 
 from vecnet.openmalaria.scenario.core import attribute, Section, section, attribute_setter
 from vecnet.openmalaria.scenario.demography import Demography
@@ -71,7 +72,7 @@ class Scenario(Section):
         return "name", str
     @name.setter
     def name(self, name):
-        assert isinstance(name, (str, unicode))
+        assert isinstance(name, six.string_types)
         self.et.attrib["name"] = name
 
     @property
@@ -116,7 +117,11 @@ class Scenario(Section):
         else:
             ElementTree.register_namespace("om", "http://openmalaria.org/schema/scenario_32")
 
-        return '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n' + ElementTree.tostring(self.root)
+        if six.PY3:
+            data = ElementTree.tostring(self.root, encoding="unicode")
+        else:
+            data = ElementTree.tostring(self.root)
+        return '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n' + data
 
     def __init__(self, xml):
         # self.xml = xml

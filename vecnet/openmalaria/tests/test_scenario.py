@@ -23,7 +23,7 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 
 class TestScenario(unittest.TestCase):
     def setUp(self):
-        self.scenario = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c.xml"))).read())
+        self.scenario = Scenario(open(os.path.join(base_dir, os.path.join("input", "scenario70k60c.xml")), "r").read())
 
     def test_scenario(self):
         scenario = self.scenario
@@ -55,6 +55,9 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(hasattr(scenario, "monitoring"), True)
         self.assertIsInstance(scenario.monitoring, Monitoring)
 
+    def test_section_xml(self):
+        self.assertTrue(isinstance(self.scenario.monitoring.xml, str))
+
     def test_monitoring(self):
         scenario = self.scenario
         self.assertEqual(scenario.monitoring.name, "Monthly Surveys")
@@ -67,6 +70,11 @@ class TestScenario(unittest.TestCase):
         scenario.monitoring.continuous = measures
         self.assertEqual(scenario.monitoring.continuous, ['simulated EIR', 'GVI coverage', 'Input EIR'])
         self.assertEqual(scenario.monitoring.SurveyOptions, ['nHost', 'nPatent', 'nUncomp', 'simulatedEIR', 'nMassGVI'])
+
+    def test_monitoring_surveys_float(self):
+        with open(os.path.join(base_dir, os.path.join("input", "scenario70k60c_surveys_float.xml")), "r") as fp:
+            scenario = Scenario(fp.read())
+        self.assertEqual(scenario.monitoring.surveys, [730, 736, 742, 748])
 
     def test_healthsystem(self):
         scenario = self.scenario
@@ -160,7 +168,7 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(len(scenario3.entomology.vectors), 0)
         self.assertRaises(AttributeError, scenario3.entomology.vectors.add, "<anopheles/>")
         for vector in scenario3.entomology.vectors:
-            print vector
+            print(vector)
 
     def test_interventions(self):
         scenario = self.scenario
@@ -435,7 +443,7 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(len(scenario.interventions.vectorPop), 0)
         i = None
         for i in scenario.interventions.vectorPop:
-            print i.name
+            print(i.name)
         self.assertIsNone(i)  # make sure iterator returns an empty set
 
         # Empty vectorPop section
@@ -445,7 +453,7 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(len(scenario.interventions.vectorPop), 0)
         i = None
         for i in scenario.interventions.vectorPop:
-            print i.name
+            print(i.name)
         self.assertIsNone(i)  # make sure iterator returns an empty set
 
         # Test vectorPop section with exactly one intervention
