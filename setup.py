@@ -33,7 +33,7 @@ setup(
     packages=find_packages(),  # https://pythonhosted.org/setuptools/setuptools.html#using-find-packages
     namespace_packages=['vecnet', ],
     scripts=['scripts/om_expand.cmd', 'scripts/om_expand'],
-    install_requires=[],
+    install_requires=['six'],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
