@@ -1,7 +1,8 @@
 =========
 Changelog
 =========
-New
+
+0.9.5 2018-04-14
 * [*] Added six as a dependency
 * [*] Reverted changes made in 0.9.4. Web interface needs a fix instead
 
