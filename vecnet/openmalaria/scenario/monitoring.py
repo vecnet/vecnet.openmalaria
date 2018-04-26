@@ -131,7 +131,7 @@ class Monitoring(Section):
         try:
             for item in self.et.find("surveys").findall("surveyTime"):
                 # Converting to float first to allow values like 730.0
-                survey_time_list.append(int(float(item.text)))
+                survey_time_list.append(int(item.text))
         except AttributeError:
             return None
         return survey_time_list
