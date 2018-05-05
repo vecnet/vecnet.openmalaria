@@ -81,7 +81,7 @@ def set_survey_times(sim_start_date, monitor_yrs, monitor_mos, monitor_start_dat
             timesteps_to_add_for_month = 0
 
             if month_count % 12 == 0:  # Begin next year.
-                new_timestep = TIMESTEPS_PER_YEAR * (month / 12)
+                new_timestep = TIMESTEPS_PER_YEAR * int(month / 12)
                 month_count = 0
             elif month_count == 2:
                 timesteps_to_add_for_month = 5

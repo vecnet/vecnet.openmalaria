@@ -18,7 +18,7 @@ from vecnet.openmalaria.scenario import Scenario
 from vecnet.openmalaria.scenario.entomology import Vector
 from vecnet.openmalaria.scenario.monitoring import Monitoring
 
-base_dir = os.path.dirname(os.path.abspath(__file__))
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 class TestScenario(unittest.TestCase):
